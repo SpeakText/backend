@@ -1,8 +1,8 @@
-package com.speaktext.backend.member.presentation;
+package com.speaktext.backend.author.presentation;
 
-import com.speaktext.backend.member.application.SignInService;
-import com.speaktext.backend.member.application.dto.SignInSuccessResponse;
-import com.speaktext.backend.member.presentation.dto.SignInRequest;
+import com.speaktext.backend.author.application.AuthorSignInService;
+import com.speaktext.backend.author.application.dto.SignInSuccessResponse;
+import com.speaktext.backend.author.presentation.dto.SignInRequest;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/member")
+@RequestMapping("/api/author")
 @RequiredArgsConstructor
-public class SignInController {
+public class AuthorSignInController {
 
-    private final SignInService signInService;
+    private final AuthorSignInService signInService;
 
     @PostMapping("/signin")
     public ResponseEntity<SignInSuccessResponse> signIn(

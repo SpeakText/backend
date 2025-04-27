@@ -1,4 +1,4 @@
-package com.speaktext.backend.member.application.exception;
+package com.speaktext.backend.auth.exception;
 
 import com.speaktext.backend.common.exception.BaseException;
 import com.speaktext.backend.common.exception.BaseExceptionType;

@@ -1,4 +1,4 @@
-package com.speaktext.backend.member.domain;
+package com.speaktext.backend.common.util;
 
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;

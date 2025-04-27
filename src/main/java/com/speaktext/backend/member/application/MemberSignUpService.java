@@ -2,18 +2,18 @@ package com.speaktext.backend.member.application;
 
 import com.speaktext.backend.member.application.dto.SignUpSuccessResponse;
 import com.speaktext.backend.member.domain.Member;
-import com.speaktext.backend.member.domain.PasswordEncoder;
+import com.speaktext.backend.common.util.PasswordEncoder;
 import com.speaktext.backend.member.domain.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class SignUpService {
+public class MemberSignUpService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public SignUpService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    public MemberSignUpService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
     }

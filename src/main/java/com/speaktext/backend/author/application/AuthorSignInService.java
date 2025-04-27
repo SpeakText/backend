@@ -1,0 +1,35 @@
+package com.speaktext.backend.author.application;
+
+import com.speaktext.backend.auth.application.SessionService;
+import com.speaktext.backend.auth.exception.AuthException;
+import com.speaktext.backend.author.application.dto.SignInSuccessResponse;
+import com.speaktext.backend.author.domain.Author;
+import com.speaktext.backend.author.domain.AuthorRepository;
+import com.speaktext.backend.common.util.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import static com.speaktext.backend.auth.UserType.AUTHOR;
+import static com.speaktext.backend.auth.exception.AuthExceptionType.NO_SUCH_AUTHOR;
+
+@Service
+public class AuthorSignInService {
+
+    private final PasswordEncoder passwordEncoder;
+    private final SessionService sessionService;
+    private final AuthorRepository authorRepository;
+
+    public AuthorSignInService(PasswordEncoder passwordEncoder, SessionService sessionService, AuthorRepository authorRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.sessionService = sessionService;
+        this.authorRepository = authorRepository;
+    }
+
+    public SignInSuccessResponse signIn(String id, String rawPassword) {
+        Author author = authorRepository.findByIdentifier(id)
+                .orElseThrow(() -> new AuthException(NO_SUCH_AUTHOR));
+        author.isPasswordMatch(rawPassword, passwordEncoder);
+        String sessionId = sessionService.createSession(author.getAuthorId(), AUTHOR);
+        return new SignInSuccessResponse(sessionId);
+    }
+
+}

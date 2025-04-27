@@ -1,11 +1,12 @@
 package com.speaktext.backend.member.domain;
 
-import com.speaktext.backend.member.application.exception.AuthException;
+import com.speaktext.backend.common.util.PasswordEncoder;
+import com.speaktext.backend.auth.exception.AuthException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.speaktext.backend.member.application.exception.AuthExceptionType.PASSWORD_NOT_MATCH;
+import static com.speaktext.backend.auth.exception.AuthExceptionType.PASSWORD_NOT_MATCH;
 
 @Entity
 @NoArgsConstructor
