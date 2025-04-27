@@ -1,6 +1,7 @@
 package com.speaktext.backend.infra.session;
 
-import com.speaktext.backend.member.domain.SessionManager;
+import com.speaktext.backend.auth.SessionManager;
+import com.speaktext.backend.auth.SessionUser;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -10,17 +11,15 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class InMemorySessionManager implements SessionManager {
 
-    private final Map<String, String> sessions = new ConcurrentHashMap<>();
+    private final Map<String, SessionUser> sessions = new ConcurrentHashMap<>();
 
     @Override
-    public String createSession(String memberId) {
-        String sessionId = UUID.randomUUID().toString();
-        sessions.put(sessionId, memberId);
-        return sessionId;
+    public void saveSession(String sessionId, SessionUser sessionUser) {
+        sessions.put(sessionId, sessionUser);
     }
 
     @Override
-    public String findUserId(String sessionId) {
+    public SessionUser findSession(String sessionId) {
         return sessions.get(sessionId);
     }
 
