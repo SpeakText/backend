@@ -10,7 +10,7 @@ public class Author {
     private Long authorId;
 
     @Column(nullable = false, unique = true, length = 64)
-    private String id;
+    private String identifier;
 
     @Column(nullable = false, length = 64)
     private String password;
