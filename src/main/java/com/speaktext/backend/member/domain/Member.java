@@ -41,7 +41,7 @@ public class Member {
 
     public void isPasswordMatch(String rawPassword, PasswordEncoder passwordEncoder) {
         try {
-            passwordEncoder.matches(password, rawPassword);
+            passwordEncoder.matches(rawPassword, this.password);
         } catch (Exception e) {
             throw new AuthException(PASSWORD_NOT_MATCH);
         }
