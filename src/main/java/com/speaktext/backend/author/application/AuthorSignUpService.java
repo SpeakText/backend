@@ -2,7 +2,7 @@ package com.speaktext.backend.author.application;
 
 import com.speaktext.backend.author.application.dto.SignUpSuccessResponse;
 import com.speaktext.backend.author.domain.Author;
-import com.speaktext.backend.author.domain.AuthorRepository;
+import com.speaktext.backend.author.domain.repository.AuthorRepository;
 import com.speaktext.backend.common.util.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

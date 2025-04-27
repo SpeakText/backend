@@ -1,5 +1,6 @@
-package com.speaktext.backend.author.domain;
+package com.speaktext.backend.author.domain.repository;
 
+import com.speaktext.backend.author.domain.Author;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

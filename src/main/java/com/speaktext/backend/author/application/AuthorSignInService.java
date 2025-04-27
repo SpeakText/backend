@@ -4,7 +4,7 @@ import com.speaktext.backend.auth.application.SessionService;
 import com.speaktext.backend.auth.exception.AuthException;
 import com.speaktext.backend.author.application.dto.SignInSuccessResponse;
 import com.speaktext.backend.author.domain.Author;
-import com.speaktext.backend.author.domain.AuthorRepository;
+import com.speaktext.backend.author.domain.repository.AuthorRepository;
 import com.speaktext.backend.common.util.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
