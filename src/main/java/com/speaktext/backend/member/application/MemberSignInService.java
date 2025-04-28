@@ -6,23 +6,19 @@ import com.speaktext.backend.auth.exception.AuthException;
 import com.speaktext.backend.member.domain.Member;
 import com.speaktext.backend.common.util.PasswordEncoder;
 import com.speaktext.backend.member.domain.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import static com.speaktext.backend.common.type.UserType.MEMBER;
 import static com.speaktext.backend.auth.exception.AuthExceptionType.NO_SUCH_MEMBER;
 
 @Service
+@RequiredArgsConstructor
 public class MemberSignInService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final SessionService sessionService;
-
-    public MemberSignInService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, SessionService sessionService) {
-        this.memberRepository = memberRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.sessionService = sessionService;
-    }
 
     public SignInSuccessResponse signIn(String id, String rawPassword) {
         Member member = memberRepository.findByIdentifier(id)

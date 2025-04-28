@@ -6,23 +6,19 @@ import com.speaktext.backend.author.application.dto.SignInSuccessResponse;
 import com.speaktext.backend.author.domain.Author;
 import com.speaktext.backend.author.domain.repository.AuthorRepository;
 import com.speaktext.backend.common.util.PasswordEncoder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import static com.speaktext.backend.common.type.UserType.AUTHOR;
 import static com.speaktext.backend.auth.exception.AuthExceptionType.NO_SUCH_AUTHOR;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorSignInService {
 
     private final PasswordEncoder passwordEncoder;
     private final SessionService sessionService;
     private final AuthorRepository authorRepository;
-
-    public AuthorSignInService(PasswordEncoder passwordEncoder, SessionService sessionService, AuthorRepository authorRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.sessionService = sessionService;
-        this.authorRepository = authorRepository;
-    }
 
     public SignInSuccessResponse signIn(String id, String rawPassword) {
         Author author = authorRepository.findByIdentifier(id)
