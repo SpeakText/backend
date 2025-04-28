@@ -19,20 +19,21 @@ public class BookInspectionService {
         this.pendingBookRepository = pendingBookRepository;
     }
 
-    public void requestInspection(BookInspectionCommand command) {
+    public void requestInspection(BookInspectionCommand command, Long authorId) {
         String rawText = readTxtFile(command.txtFile());
         rawTextStorage.save(rawText, command.identificationNumber());
-        PendingBook pendingBook = createPendingBook(command);
+        PendingBook pendingBook = createPendingBook(command, authorId);
         pendingBookRepository.save(pendingBook);
     }
 
-    private PendingBook createPendingBook(BookInspectionCommand command) {
+    private PendingBook createPendingBook(BookInspectionCommand command, Long authorId) {
         PendingBook pendingBook = PendingBook.of(
                 command.title(),
                 command.description(),
                 command.coverUrl(),
                 command.price(),
-                command.identificationNumber()
+                command.identificationNumber(),
+                authorId
         );
         pendingBook.pending();
         return pendingBook;

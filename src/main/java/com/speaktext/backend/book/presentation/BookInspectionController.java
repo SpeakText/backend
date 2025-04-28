@@ -1,5 +1,6 @@
 package com.speaktext.backend.book.presentation;
 
+import com.speaktext.backend.auth.Author;
 import com.speaktext.backend.book.application.BookInspectionService;
 import com.speaktext.backend.book.application.mapper.BookInspectionMapper;
 import com.speaktext.backend.book.presentation.dto.BookInspectionRequest;
@@ -21,10 +22,12 @@ public class BookInspectionController {
 
     @PostMapping("/inspection")
     public ResponseEntity<Void> requestPendingBook(
-            @Valid @ModelAttribute BookInspectionRequest request
+            @Valid @ModelAttribute BookInspectionRequest request,
+            @Author Long authorId
     ) {
         bookInspectionService.requestInspection(
-            bookInspectionMapper.toCommand(request)
+            bookInspectionMapper.toCommand(request),
+            authorId
         );
         return ResponseEntity.ok().build();
     }

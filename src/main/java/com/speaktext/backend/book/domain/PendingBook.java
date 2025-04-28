@@ -1,5 +1,6 @@
 package com.speaktext.backend.book.domain;
 
+import com.speaktext.backend.author.domain.Author;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ public class PendingBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pendingBookId;
+    private Long authorId;
 
     @Column(nullable = false)
     private String title;
@@ -37,16 +39,17 @@ public class PendingBook {
     protected PendingBook() {
     }
 
-    private PendingBook(String title, String description, String coverUrl, BigDecimal price, String identificationNumber) {
+    private PendingBook(String title, String description, String coverUrl, BigDecimal price, String identificationNumber, Long authorId) {
         this.title = title;
         this.description = description;
         this.coverUrl = coverUrl;
         this.price = price;
         this.identificationNumber = identificationNumber;
+        this.authorId = authorId;
     }
 
-    public static PendingBook of(String title, String description, String coverUrl, BigDecimal price, String identificationNumber) {
-        return new PendingBook(title, description, coverUrl, price, identificationNumber);
+    public static PendingBook of(String title, String description, String coverUrl, BigDecimal price, String identificationNumber, Long authorId) {
+        return new PendingBook(title, description, coverUrl, price, identificationNumber, authorId);
     }
 
     public void pending() {
