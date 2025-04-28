@@ -36,3 +36,5 @@ out/
 .vscode/
 
 application.yml
+templates/
+static/

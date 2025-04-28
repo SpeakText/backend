@@ -1,4 +1,4 @@
-package com.speaktext.backend.auth;
+package com.speaktext.backend.auth.presentation.anotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

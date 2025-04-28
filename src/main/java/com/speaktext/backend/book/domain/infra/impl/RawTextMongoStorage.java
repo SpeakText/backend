@@ -1,7 +1,6 @@
-package com.speaktext.backend.book.domain.infra;
+package com.speaktext.backend.book.domain.infra.impl;
 
 import com.speaktext.backend.book.domain.RawText;
-import com.speaktext.backend.book.domain.infra.impl.RawTextMongoRepository;
 import com.speaktext.backend.book.domain.repository.RawTextStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,6 +14,13 @@ public class RawTextMongoStorage implements RawTextStorage {
     @Override
     public void save(String rawText, String identificationNumber) {
         rawTextMongoRepository.save(new RawText(identificationNumber, rawText));
+    }
+
+    @Override
+    public String load(String identificationNumber) {
+        RawText rawText = rawTextMongoRepository.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new IllegalArgumentException("해당 식별번호의 원문이 존재하지 않습니다."));
+        return rawText.getRawText();
     }
 
 }

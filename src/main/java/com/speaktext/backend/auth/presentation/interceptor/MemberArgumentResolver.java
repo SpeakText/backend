@@ -1,7 +1,10 @@
-package com.speaktext.backend.auth;
+package com.speaktext.backend.auth.presentation.interceptor;
 
+import com.speaktext.backend.auth.presentation.anotation.Member;
+import com.speaktext.backend.auth.SessionManager;
+import com.speaktext.backend.auth.SessionUser;
+import com.speaktext.backend.common.type.UserType;
 import com.speaktext.backend.auth.exception.AuthException;
-import com.speaktext.backend.auth.exception.AuthExceptionType;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -31,10 +34,23 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
-        String sessionId = request.getHeader("SESSIONID");
+        String sessionId = extractSessionIdFromCookie();
         SessionUser sessionUser = validateSession(sessionId);
         validateMemberRole(sessionUser);
         return sessionUser.userId();
+    }
+
+    private String extractSessionIdFromCookie() {
+        if (request.getCookies() == null) {
+            return null;
+        }
+
+        for (var cookie : request.getCookies()) {
+            if ("SESSIONID".equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+        return null;
     }
 
     private SessionUser validateSession(String sessionId) {

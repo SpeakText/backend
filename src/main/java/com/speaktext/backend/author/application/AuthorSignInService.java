@@ -9,7 +9,7 @@ import com.speaktext.backend.common.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.speaktext.backend.auth.UserType.AUTHOR;
+import static com.speaktext.backend.common.type.UserType.AUTHOR;
 import static com.speaktext.backend.auth.exception.AuthExceptionType.NO_SUCH_AUTHOR;
 
 @Service
