@@ -2,7 +2,7 @@ package com.speaktext.backend.auth.application;
 
 import com.speaktext.backend.auth.SessionManager;
 import com.speaktext.backend.auth.SessionUser;
-import com.speaktext.backend.auth.UserType;
+import com.speaktext.backend.common.type.UserType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

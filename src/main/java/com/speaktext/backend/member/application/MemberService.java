@@ -14,7 +14,7 @@ import static com.speaktext.backend.auth.exception.AuthExceptionType.NO_SUCH_MEM
 
 @Service
 @RequiredArgsConstructor
-public class MemberSignInService {
+public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -26,6 +26,10 @@ public class MemberSignInService {
         member.isPasswordMatch(rawPassword, passwordEncoder);
         String sessionId = sessionService.createSession(member.getMemberId(), MEMBER);
         return new SignInSuccessResponse(sessionId);
+    }
+
+    public void signOut(String sessionId) {
+        sessionService.expireSession(sessionId);
     }
 
 }

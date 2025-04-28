@@ -14,7 +14,7 @@ import static com.speaktext.backend.auth.exception.AuthExceptionType.NO_SUCH_AUT
 
 @Service
 @RequiredArgsConstructor
-public class AuthorSignInService {
+public class AuthorService {
 
     private final PasswordEncoder passwordEncoder;
     private final SessionService sessionService;
@@ -26,6 +26,10 @@ public class AuthorSignInService {
         author.isPasswordMatch(rawPassword, passwordEncoder);
         String sessionId = sessionService.createSession(author.getAuthorId(), AUTHOR);
         return new SignInSuccessResponse(sessionId);
+    }
+
+    public void signOut(String sessionId) {
+        sessionService.expireSession(sessionId);
     }
 
 }
