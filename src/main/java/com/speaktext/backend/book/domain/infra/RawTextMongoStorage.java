@@ -13,7 +13,7 @@ public class RawTextMongoStorage implements RawTextStorage {
     private final RawTextMongoRepository rawTextMongoRepository;
 
     @Override
-    public void save(String identificationNumber, String rawText) {
+    public void save(String rawText, String identificationNumber) {
         rawTextMongoRepository.save(new RawText(identificationNumber, rawText));
     }
 
