@@ -1,4 +1,4 @@
-package com.speaktext.backend.infra.session;
+package com.speaktext.backend.auth.infra.session;
 
 import com.speaktext.backend.auth.SessionManager;
 import com.speaktext.backend.auth.SessionUser;
