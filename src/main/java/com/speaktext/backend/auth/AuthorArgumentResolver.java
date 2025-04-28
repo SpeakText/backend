@@ -4,6 +4,7 @@ import com.speaktext.backend.auth.exception.AuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -17,7 +18,6 @@ import static com.speaktext.backend.auth.exception.AuthExceptionType.*;
 @Component
 @RequiredArgsConstructor
 public class AuthorArgumentResolver implements HandlerMethodArgumentResolver {
-
     private final SessionManager sessionManager;
     private final HttpServletRequest request;
 
