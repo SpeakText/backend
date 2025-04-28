@@ -8,7 +8,7 @@ import com.speaktext.backend.common.util.PasswordEncoder;
 import com.speaktext.backend.member.domain.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
-import static com.speaktext.backend.auth.UserType.MEMBER;
+import static com.speaktext.backend.common.type.UserType.MEMBER;
 import static com.speaktext.backend.auth.exception.AuthExceptionType.NO_SUCH_MEMBER;
 
 @Service
