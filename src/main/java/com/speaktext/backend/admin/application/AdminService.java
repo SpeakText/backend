@@ -13,7 +13,7 @@ import static com.speaktext.backend.auth.exception.AuthExceptionType.NO_SUCH_MEM
 
 @Service
 @RequiredArgsConstructor
-public class AdminSignInService {
+public class AdminService {
 
     private final AdminRepository adminRepository;
     private final SessionService sessionService;
@@ -24,6 +24,10 @@ public class AdminSignInService {
         admin.isPasswordMatch(rawPassword);
         String sessionId = sessionService.createSession(admin.getAdminId(), ADMIN);
         return new SignInSuccessResponse(sessionId);
+    }
+
+    public void signOut(String sessionId) {
+        sessionService.expireSession(sessionId);
     }
 
 }
