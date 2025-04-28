@@ -1,14 +1,15 @@
 package com.speaktext.backend.book.domain;
 
-import com.speaktext.backend.author.domain.Author;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Entity
+@Getter
 public class PendingBook {
 
-    private enum InspectionStatus {
+    public enum InspectionStatus {
         REJECTED, PENDING, APPROVED
     }
 

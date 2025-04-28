@@ -1,10 +1,13 @@
 package com.speaktext.backend.book.application;
 
 import com.speaktext.backend.book.application.dto.BookInspectionCommand;
+import com.speaktext.backend.book.application.dto.BookInspectionMetaResponse;
 import com.speaktext.backend.book.domain.PendingBook;
 import com.speaktext.backend.book.domain.repository.PendingBookRepository;
 import com.speaktext.backend.book.domain.repository.RawTextStorage;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.speaktext.backend.common.util.FileReader.readTxtFile;
 
@@ -37,6 +40,16 @@ public class BookInspectionService {
         );
         pendingBook.pending();
         return pendingBook;
+    }
+
+    public List<BookInspectionMetaResponse> getPendingBooks() {
+        return pendingBookRepository.findPendingBooks().stream()
+                .map(BookInspectionMetaResponse::from)
+                .toList();
+    }
+
+    public String getRawText(String identificationNumber) {
+        return rawTextStorage.load(identificationNumber);
     }
 
 }

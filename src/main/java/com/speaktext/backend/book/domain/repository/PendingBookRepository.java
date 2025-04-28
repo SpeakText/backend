@@ -1,7 +1,11 @@
 package com.speaktext.backend.book.domain.repository;
 
 import com.speaktext.backend.book.domain.PendingBook;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-public interface PendingBookRepository extends JpaRepository<PendingBook, Long> {
+public interface PendingBookRepository {
+
+    void save(PendingBook pendingBook);
+    List<PendingBook> findPendingBooks();
+
 }
