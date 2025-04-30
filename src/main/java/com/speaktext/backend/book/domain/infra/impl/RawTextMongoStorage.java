@@ -23,4 +23,9 @@ public class RawTextMongoStorage implements RawTextStorage {
         return rawText.getRawText();
     }
 
+    @Override
+    public void delete(String identificationNumber) {
+        rawTextMongoRepository.deleteByIdentificationNumber(identificationNumber);
+    }
+
 }
