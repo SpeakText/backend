@@ -24,9 +24,30 @@ public class BookInspectionService {
 
     public void requestInspection(BookInspectionCommand command, Long authorId) {
         String rawText = readTxtFile(command.txtFile());
-        rawTextStorage.save(rawText, command.identificationNumber());
-        PendingBook pendingBook = createPendingBook(command, authorId);
-        pendingBookRepository.save(pendingBook);
+        saveWithCompensation(rawText, command, authorId);
+    }
+
+    private void saveWithCompensation(String rawText, BookInspectionCommand command, Long authorId) {
+        saveRawText(rawText, command.identificationNumber());
+        savePendingBookOrRollback(rawText, command, authorId);
+    }
+
+    private void saveRawText(String rawText, String identificationNumber) {
+        try {
+            rawTextStorage.save(rawText, identificationNumber);
+        } catch (Exception e) {
+            throw new IllegalStateException("원문 텍스트 저장 실패", e);
+        }
+    }
+
+    private void savePendingBookOrRollback(String rawText, BookInspectionCommand command, Long authorId) {
+        try {
+            PendingBook pendingBook = createPendingBook(command, authorId);
+            pendingBookRepository.save(pendingBook);
+        } catch (Exception e) {
+            rollbackRawText(command.identificationNumber());
+            throw new IllegalStateException("메타데이터 저장 실패, 원문 롤백 완료", e);
+        }
     }
 
     private PendingBook createPendingBook(BookInspectionCommand command, Long authorId) {
@@ -46,6 +67,14 @@ public class BookInspectionService {
         return pendingBookRepository.findPendingBooks().stream()
                 .map(BookInspectionMetaResponse::from)
                 .toList();
+    }
+
+    private void rollbackRawText(String identificationNumber) {
+        try {
+            rawTextStorage.delete(identificationNumber);
+        } catch (Exception rollbackEx) {
+            System.err.println("RawText 롤백 실패! 식별자: " + identificationNumber);
+        }
     }
 
     public String getRawText(String identificationNumber) {

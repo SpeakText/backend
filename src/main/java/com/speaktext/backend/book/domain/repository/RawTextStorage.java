@@ -4,5 +4,6 @@ public interface RawTextStorage {
 
     void save(String rawText, String identificationNumber);
     String load(String identificationNumber);
+    void delete(String identificationNumber);
 
 }

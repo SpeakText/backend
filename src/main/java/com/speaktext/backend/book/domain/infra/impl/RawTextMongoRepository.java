@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface RawTextMongoRepository extends MongoRepository<RawText, String> {
 
     Optional<RawText> findByIdentificationNumber(String identificationNumber);
+    void deleteByIdentificationNumber(String identificationNumber);
 
 }
