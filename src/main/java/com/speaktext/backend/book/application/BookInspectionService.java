@@ -5,6 +5,7 @@ import com.speaktext.backend.book.application.dto.BookInspectionMetaResponse;
 import com.speaktext.backend.book.domain.PendingBook;
 import com.speaktext.backend.book.domain.repository.PendingBookRepository;
 import com.speaktext.backend.book.domain.repository.RawTextStorage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,15 +14,11 @@ import java.util.List;
 import static com.speaktext.backend.common.util.FileReader.readTxtFile;
 
 @Service
+@RequiredArgsConstructor
 public class BookInspectionService {
 
     private final RawTextStorage rawTextStorage;
     private final PendingBookRepository pendingBookRepository;
-
-    public BookInspectionService(RawTextStorage rawTextStorage, PendingBookRepository pendingBookRepository) {
-        this.rawTextStorage = rawTextStorage;
-        this.pendingBookRepository = pendingBookRepository;
-    }
 
     public void requestInspection(BookInspectionCommand command, Long authorId) {
         String rawText = readTxtFile(command.txtFile());
