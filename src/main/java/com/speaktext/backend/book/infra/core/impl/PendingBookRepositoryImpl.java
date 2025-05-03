@@ -1,10 +1,13 @@
-package com.speaktext.backend.book.domain.infra.impl;
+package com.speaktext.backend.book.infra.core.impl;
 
 import com.speaktext.backend.book.domain.PendingBook;
 import com.speaktext.backend.book.domain.repository.PendingBookRepository;
+import com.speaktext.backend.book.exception.BookException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import static com.speaktext.backend.book.exception.BookExceptionType.NO_PENDING_BOOK;
 
 @Repository
 public class PendingBookRepositoryImpl implements PendingBookRepository {
@@ -13,6 +16,12 @@ public class PendingBookRepositoryImpl implements PendingBookRepository {
 
     public PendingBookRepositoryImpl(PendingBookJpaRepository pendingBookJpaRepository) {
         this.pendingBookJpaRepository = pendingBookJpaRepository;
+    }
+
+    @Override
+    public PendingBook find(Long pendingBookId) {
+        return this.pendingBookJpaRepository.findById(pendingBookId)
+                .orElseThrow(() -> new BookException(NO_PENDING_BOOK));
     }
 
     @Override

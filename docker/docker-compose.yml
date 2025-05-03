@@ -24,3 +24,16 @@ services:
       LANG: ko_KR.UTF-8
     restart: always
     command: --default-time-zone='+09:00'
+
+  speak-text-rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: speak-text-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_VHOST: /
+      TZ: Asia/Seoul
+    restart: always

@@ -7,6 +7,7 @@ import com.speaktext.backend.book.domain.repository.PendingBookRepository;
 import com.speaktext.backend.book.domain.repository.RawTextStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -77,4 +78,11 @@ public class BookInspectionService {
     public String getRawText(String identificationNumber) {
         return rawTextStorage.load(identificationNumber);
     }
+
+    @Transactional
+    public void approvePendingBook(Long pendingBookId) {
+        PendingBook pendingBook = pendingBookRepository.find(pendingBookId);
+        pendingBook.approve();
+    }
+
 }

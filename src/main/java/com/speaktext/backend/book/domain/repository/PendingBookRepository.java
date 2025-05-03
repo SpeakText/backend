@@ -7,8 +7,10 @@ import java.util.List;
 
 public interface PendingBookRepository {
 
+    PendingBook find(Long pendingBookId);
     void save(PendingBook pendingBook);
     List<PendingBook> findPendingBooks();
     PendingBook findByIdentificationNumber(String identificationNumber);
     void deleteByIdentificationNumber(@NotBlank String identificationNumber);
+
 }
