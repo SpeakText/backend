@@ -1,4 +1,4 @@
-package com.speaktext.backend.book.domain.infra.impl;
+package com.speaktext.backend.book.infra.core.impl;
 
 import com.speaktext.backend.book.domain.PendingBook;
 import org.springframework.data.jpa.repository.JpaRepository;

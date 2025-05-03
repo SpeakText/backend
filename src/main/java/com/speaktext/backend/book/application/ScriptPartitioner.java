@@ -1,7 +1,7 @@
 package com.speaktext.backend.book.application;
 
 import com.speaktext.backend.book.domain.PendingBook;
-import com.speaktext.backend.book.domain.PendingBookChunk;
+import com.speaktext.backend.book.domain.PendingBookChunks;
 import com.speaktext.backend.book.domain.repository.PendingBookRepository;
 import com.speaktext.backend.book.domain.repository.RawTextStorage;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +21,12 @@ public class ScriptPartitioner {
     private final PendingBookRepository pendingBookRepository;
     private final RawTextStorage rawTextStorage;
 
-    public void split(Long pendingBookId) {
+    public PendingBookChunks split(Long pendingBookId) {
         PendingBook pendingBook = pendingBookRepository.find(pendingBookId);
         String identificationNumber = pendingBook.getIdentificationNumber();
         String rawText = rawTextStorage.load(identificationNumber);
         List<String> chunks = splitIntoChunks(rawText, SPLIT_SIZE);
-        PendingBookChunks pendingBookChunks = PendingBookChunks.from(chunks);
+        return PendingBookChunks.from(chunks);
     }
 
     private List<String> splitIntoChunks(String rawText, int splitSize) {

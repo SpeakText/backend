@@ -1,9 +1,9 @@
 package com.speaktext.backend.book.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 public class PendingBookChunk {
 
     @Id
@@ -13,12 +13,24 @@ public class PendingBookChunk {
     @Column(length = 2000)
     String chunk;
 
-    public PendingBookChunk(String chunk) {
+    @Enumerated(EnumType.STRING)
+    private PendingBookChunkStatus status;
+
+    public PendingBookChunk(String chunk, PendingBookChunkStatus status) {
         this.chunk = chunk;
+        this.status = status;
     }
 
     public static PendingBookChunk from(String chunk) {
-        return new PendingBookChunk(chunk);
+        return new PendingBookChunk(chunk, PendingBookChunkStatus.PENDING);
+    }
+
+    public void markAsSent() {
+        this.status = PendingBookChunkStatus.SENT;
+    }
+
+    public void markAsFailed() {
+        this.status = PendingBookChunkStatus.FAILED;
     }
 
 }

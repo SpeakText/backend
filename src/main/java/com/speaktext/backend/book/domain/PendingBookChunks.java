@@ -1,6 +1,4 @@
-package com.speaktext.backend.book.application;
-
-import com.speaktext.backend.book.domain.PendingBookChunk;
+package com.speaktext.backend.book.domain;
 
 import java.util.List;
 
@@ -17,6 +15,10 @@ public class PendingBookChunks {
                 .map(PendingBookChunk::from)
                 .toList();
         return new PendingBookChunks(pendingBookChunks);
+    }
+
+    public List<PendingBookChunk> getPendingBookChunks() {
+        return pendingBookChunks;
     }
 
 }
