@@ -22,7 +22,7 @@ public class ScriptTransformationController {
             @Admin Long adminId,
             @RequestBody ScriptRequest request
     ) {
-        scriptTransformationService.generateScript(request.pendingBookId());
+        scriptTransformationService.announceScriptGeneration(request.pendingBookId());
         return ResponseEntity.noContent().build();
     }
 

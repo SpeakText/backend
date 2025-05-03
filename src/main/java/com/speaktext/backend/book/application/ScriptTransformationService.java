@@ -12,13 +12,17 @@ public class ScriptTransformationService {
     private final ScriptPartitioner scriptPartitioner;
     private final ChunkDispatcher chunkDispatcher;
 
-    public void generateScript(Long pendingBookId) {
+    public void announceScriptGeneration(Long pendingBookId) {
         scriptInvoker.announce(pendingBookId);
     }
 
-    public void splitPendingBookChunk(Long pendingBookId) {
+    public void prepareScriptGeneration(Long pendingBookId) {
         PendingBookChunks chunks = scriptPartitioner.split(pendingBookId);
         chunkDispatcher.dispatch(chunks);
+    }
+
+    public void generateScript(String pendingBookChunkId) {
+
     }
 
 }

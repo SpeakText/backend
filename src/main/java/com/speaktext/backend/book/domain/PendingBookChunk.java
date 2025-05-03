@@ -2,8 +2,11 @@ package com.speaktext.backend.book.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Entity
+@NoArgsConstructor
 public class PendingBookChunk {
 
     @Id
