@@ -57,4 +57,8 @@ public class PendingBook {
         this.inspectionStatus = InspectionStatus.PENDING;
     }
 
+    public void approve() {
+        this.inspectionStatus = InspectionStatus.APPROVED;
+    }
+
 }

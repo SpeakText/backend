@@ -40,7 +40,7 @@ public class BookInspectionController {
     @GetMapping("/rawtext/{identificationNumber}")
     public String getRawText(
             @Admin Long adminId,
-            @PathVariable @NotBlank String identificationNumber
+            @PathVariable @NotBlank final String identificationNumber
     ) {
         return bookInspectionService.getRawText(identificationNumber);
     }
@@ -51,6 +51,15 @@ public class BookInspectionController {
     ) {
         List<BookInspectionMetaResponse> pendingBooks = bookInspectionService.getPendingBooks();
         return ResponseEntity.ok(pendingBooks);
+    }
+
+    @PutMapping("/approve/{pendingBookId}")
+    public ResponseEntity<Void> approvePendingBook(
+            @Admin Long adminId,
+            @PathVariable @NotBlank final Long pendingBookId
+    ) {
+        bookInspectionService.approvePendingBook(pendingBookId);
+        return ResponseEntity.ok().build();
     }
 
 }
