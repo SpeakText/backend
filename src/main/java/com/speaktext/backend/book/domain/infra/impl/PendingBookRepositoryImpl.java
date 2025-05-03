@@ -25,4 +25,14 @@ public class PendingBookRepositoryImpl implements PendingBookRepository {
         return pendingBookJpaRepository.findByInspectionStatus(PendingBook.InspectionStatus.PENDING);
     }
 
+    @Override
+    public PendingBook findByIdentificationNumber(String identificationNumber) {
+        return pendingBookJpaRepository.findByIdentificationNumber(identificationNumber);
+    }
+
+    @Override
+    public void deleteByIdentificationNumber(String identificationNumber) {
+        pendingBookJpaRepository.deleteByIdentificationNumber(identificationNumber);
+    }
+
 }
