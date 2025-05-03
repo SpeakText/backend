@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 public enum AuthorExceptionType implements BaseExceptionType {
+
     ALREADY_EXISTS_AUTHOR_ID(CONFLICT, "이미 존재하는 작가 ID입니다."),
     ;
 

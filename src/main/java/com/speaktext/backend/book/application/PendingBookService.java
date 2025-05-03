@@ -21,7 +21,7 @@ public class PendingBookService {
     public void deleteRawTextAndPendingBook(@NotBlank String identificationNumber) {
         validatePendingBook(identificationNumber);
 
-        String rawTextBackup = backupRawTextOrThrow(identificationNumber);
+        String rawTextBackup = rawTextStorage.load(identificationNumber);
 
         rawTextStorage.delete(identificationNumber);
 
@@ -34,14 +34,6 @@ public class PendingBookService {
 
         if (book.getInspectionStatus() != PendingBook.InspectionStatus.PENDING) {
             throw new PendingBookException(PENDING_BOOK_NOT_IN_PENDING_STATUS);
-        }
-    }
-
-    private String backupRawTextOrThrow(String identificationNumber) {
-        try {
-            return rawTextStorage.load(identificationNumber);
-        } catch (Exception e) {
-            throw new IllegalStateException("원문 백업 실패", e);
         }
     }
 
