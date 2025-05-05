@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "ExchangeRateOpenFeign", url = "${llm.api.url}")
-public interface LanguageModelClient {
+public interface ScriptGenerationClient {
 
     @PostMapping
     ScriptGenerationResponse generate(

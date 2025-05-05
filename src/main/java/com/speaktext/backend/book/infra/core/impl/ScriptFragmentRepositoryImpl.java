@@ -5,6 +5,7 @@ import com.speaktext.backend.book.domain.repository.ScriptFragmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -15,6 +16,11 @@ public class ScriptFragmentRepositoryImpl implements ScriptFragmentRepository {
 
     public Optional<ScriptFragment> findLastScriptFragment(String identificationNumber) {
         return scriptFragmentMongoRepository.findFirstByIdentificationNumberOrderByOrderIndexDesc(identificationNumber);
+    }
+
+    @Override
+    public void saveAll(List<ScriptFragment> scriptFragments) {
+        scriptFragmentMongoRepository.saveAll(scriptFragments);
     }
 
 }

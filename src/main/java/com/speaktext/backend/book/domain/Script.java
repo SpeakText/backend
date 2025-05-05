@@ -24,7 +24,7 @@ public class Script {
     private int fragmentsCount;
     private boolean isCompleted;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "script_main_characters", joinColumns = @JoinColumn(name = "script_id"))
     @MapKeyColumn(name = "character_name")
     @Column(name = "description")
@@ -39,6 +39,10 @@ public class Script {
                 .fragmentsCount(0)
                 .mainCharacters(Collections.emptyMap())
                 .build();
+    }
+
+    public void updateCharacterInfo(Map<String, String> updatedCharacters) {
+        this.mainCharacters = updatedCharacters;
     }
 
 }

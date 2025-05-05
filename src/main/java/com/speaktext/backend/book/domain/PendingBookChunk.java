@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class PendingBookChunk {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pendingBookChunkId;
 
     @Column(length = 2000)
