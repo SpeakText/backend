@@ -1,6 +1,7 @@
 package com.speaktext.backend.book.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.speaktext.backend.book.application.dto.CharacterInfoDto;
 import com.speaktext.backend.book.application.dto.ScriptGenerationResult;
 import com.speaktext.backend.book.domain.ScriptFragment;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class ScriptParser {
             int sepIndex = line.indexOf(":");
             if (sepIndex < 0) continue;
 
-            String speaker = line.substring(0, sepIndex).replaceAll("\"", "").trim();
+            String speaker = line.substring(0, sepIndex).trim(); // ex: character-1
             String utterance = line.substring(sepIndex + 1).trim().replaceAll("^\"|\"$", "");
 
             fragments.add(ScriptFragment.builder()
@@ -47,14 +48,24 @@ public class ScriptParser {
                     .build());
         }
 
-        Map<String, String> updatedCharacters = new HashMap<>();
+        Map<String, CharacterInfoDto> updatedCharacters = new LinkedHashMap<>();
         try {
-            updatedCharacters = objectMapper.readValue(characterJson, new com.fasterxml.jackson.core.type.TypeReference<>() {
-            });
+            Map<String, String> raw = objectMapper.readValue(characterJson, new com.fasterxml.jackson.core.type.TypeReference<>() {});
+            for (Map.Entry<String, String> entry : raw.entrySet()) {
+                String key = entry.getKey();
+                String[] parts = key.split(" - ");
+                if (parts.length == 2) {
+                    String name = parts[0].trim();
+                    String characterId = parts[1].trim();
+                    String description = entry.getValue();
+                    updatedCharacters.put(characterId, new CharacterInfoDto(name, description, characterId));
+                }
+            }
         } catch (Exception e) {
             log.warn("⚠️ 등장인물 JSON 파싱 실패", e);
         }
 
         return new ScriptGenerationResult(fragments, updatedCharacters);
     }
+
 }

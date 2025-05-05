@@ -1,5 +1,6 @@
 package com.speaktext.backend.book.application;
 
+import com.speaktext.backend.book.application.dto.CharacterInfoDto;
 import com.speaktext.backend.book.application.dto.ScriptGenerationResult;
 import com.speaktext.backend.client.ScriptGenerationClient;
 import com.speaktext.backend.client.dto.ScriptGenerationRequest;
@@ -20,7 +21,7 @@ public class LLMGenerator {
     private final ScriptPromptBuilder promptBuilder;
     private final ScriptParser parser;
 
-    public ScriptGenerationResult generate(String chunkText, Map<String, String> mainCharacters) {
+    public ScriptGenerationResult generate(String chunkText, Map<String, CharacterInfoDto> mainCharacters) {
         String systemPrompt = "당신은 소설을 스크립트 형태로 재구성하는 언어 분석가입니다.";
         String userPrompt = promptBuilder.build(chunkText, mainCharacters);
 

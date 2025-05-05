@@ -1,5 +1,6 @@
 package com.speaktext.backend.book.domain;
 
+import com.speaktext.backend.book.application.dto.CharacterInfoDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 @Builder
@@ -26,10 +28,9 @@ public class Script {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "script_main_characters", joinColumns = @JoinColumn(name = "script_id"))
-    @MapKeyColumn(name = "character_name")
-    @Column(name = "description")
-    @Getter
-    private Map<String, String> mainCharacters;
+    @MapKeyColumn(name = "character_key")
+    @Column(name = "character_info")
+    private Map<String, CharacterInfo> mainCharacters;
 
     public static Script createInitial(String identificationNumber) {
         return Script.builder()
@@ -41,8 +42,26 @@ public class Script {
                 .build();
     }
 
-    public void updateCharacterInfo(Map<String, String> updatedCharacters) {
-        this.mainCharacters = updatedCharacters;
+    public void updateCharacterInfo(Map<String, CharacterInfoDto> updatedCharacters) {
+        if (updatedCharacters == null) {
+            this.mainCharacters = Collections.emptyMap();
+        } else {
+            this.mainCharacters = updatedCharacters.entrySet().stream()
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            entry -> entry.getValue().toDomain()  // CharacterInfoDto → CharacterInfo
+                    ));
+        }
+    }
+
+    public Map<String, CharacterInfoDto> getMainCharacters() {
+        if (mainCharacters == null) return Collections.emptyMap();
+
+        return mainCharacters.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> CharacterInfoDto.from(entry.getValue())
+                ));
     }
 
 }

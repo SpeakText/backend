@@ -1,6 +1,8 @@
 package com.speaktext.backend.book.application;
 
+import com.speaktext.backend.book.application.dto.CharacterInfoDto;
 import com.speaktext.backend.book.application.dto.ScriptGenerationResult;
+import com.speaktext.backend.book.domain.CharacterInfo;
 import com.speaktext.backend.book.domain.PendingBookChunk;
 import com.speaktext.backend.book.domain.Script;
 import com.speaktext.backend.book.domain.repository.PendingBookChunkRepository;
@@ -31,7 +33,7 @@ public class ScriptGenerator {
                     Script newScript = Script.createInitial(identificationNumber);
                     return scriptRepository.save(newScript);
                 });
-        Map<String, String> mainCharacters = script.getMainCharacters();
+        Map<String, CharacterInfoDto> mainCharacters = script.getMainCharacters();
         ScriptGenerationResult generated = llmGenerator.generate(chunk.getChunk(), mainCharacters);
         script.updateCharacterInfo(generated.updatedCharacters());
         scriptRepository.save(script);

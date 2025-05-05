@@ -8,6 +8,6 @@ import java.util.Map;
 public record ScriptGenerationResult(
 
         List<ScriptFragment> fragments,
-        Map<String, String> updatedCharacters
+        Map<String, CharacterInfoDto> updatedCharacters
 
 ) {}

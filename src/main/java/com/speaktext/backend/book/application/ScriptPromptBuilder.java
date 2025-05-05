@@ -1,10 +1,12 @@
 package com.speaktext.backend.book.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.speaktext.backend.book.application.dto.CharacterInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -12,39 +14,81 @@ public class ScriptPromptBuilder {
 
     private final ObjectMapper objectMapper;
 
-    public String build(String chunkText, Map<String, String> characterDescriptions) {
+    public String build(String chunkText, Map<String, CharacterInfoDto> characterDescriptions) {
         try {
-            String jsonCharacters = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(characterDescriptions);
+            Map<String, String> promptCharacterMap = characterDescriptions.values().stream()
+                    .collect(Collectors.toMap(
+                            c -> c.name() + " - " + c.characterId(),
+                            CharacterInfoDto::description
+                    ));
+
+            String jsonCharacters = objectMapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(promptCharacterMap);
+
             return """
-                    다음은 소설의 일부입니다. 이 텍스트를 발화자-발화문, 나레이션으로 구성된 스크립트 형식으로 변환해주세요.
+당신은 소설의 일부를 스크립트 형식으로 변환하는 언어 분석가입니다.
 
-                    요구 형식:
-                    - "나레이션": "문장"
-                    - "등장인물 이름 또는 유추된 호칭": "발화문"
+아래 텍스트를 분석하여 **스크립트**와 **등장인물 정보 전체 목록**을 출력하세요.
 
-                    규칙:
-                    - 나레이션이면 하나의 문장, 발화문이면 따움표 안의 내용이 들어가야 합니다.
-                    - 말하는 사람이 확실하지 않으면, 등장인물 설명을 참고해서 가장 알맞은 이름이나 호칭("엄마", "지수", "선배", "철수" 등)을 직접 사용해주세요.
-                    - '나'라는 표현이 등장하면, 그 인물은 항상 주인공으로 간주해주세요. 이름이 이미 등장했다면 그 이름을 사용하고, 그렇지 않으면 '1인칭 화자' 라는 식으로 표현해주세요.
-                    - 가능한 경우 '인물1' 같은 임시 이름은 사용하지 마세요.
-                    - 새로운 인물이 등장하면 이름이나 호칭과 함께 설명을 추가해주세요. (예: "지수": "결단력 있는 남성, 주인공으로 추정")
-                    - 등장인물 정보가 변경되지 않았다면 그대로 두세요.
+---
 
-                    응답 형식:
-                    [스크립트 시작]
-                    (스크립트 형식으로 변환된 내용)
-                    [스크립트 끝]
+📌 변환 규칙 (꼭 지켜야 합니다):
 
-                    [등장인물 업데이트 시작]
-                    (변경되었거나 유지된 등장인물 JSON. 이름/호칭을 기준으로 작성)
-                    [등장인물 업데이트 끝]
+1. **텍스트의 모든 문장은 반드시 하나도 빠짐없이 변환되어야 하며**,  
+   어떤 문장도 생략, 요약, 병합, 재구성해서는 안 됩니다.  
+   👉 한 문장은 **하나의 발화 또는 나레이션**으로 변환되어야 합니다.
 
-                    이전 등장인물 목록 (JSON 형식):
-                    %s
+   ❌ 잘못된 예:  
+   "점순이는 집에 돌아왔다. 그녀는 닭을 들고 있었다." →  
+   `"character-1": "점순이는 닭을 들고 집에 돌아왔다."` (❌ 병합된 문장)
 
-                    이번 파트:
-                    %s
-                    """.formatted(jsonCharacters, chunkText);
+   ✅ 올바른 예:  
+   `"character-1": "점순이는 집에 돌아왔다."`  
+   `"character-1": "그녀는 닭을 들고 있었다."`
+
+2. 각 스크립트 라인은 다음 중 하나의 형식을 따라야 합니다:
+   - `"character-id": "발화문"`
+   - `나레이션 - narration: 설명문`
+
+3. **따옴표로 감싸진 문장**은 반드시 **발화문**으로 처리하고,
+   **그 외 문장**은 **나레이션**으로 간주합니다.
+
+4. `"나"`는 항상 1인칭 화자로, 별도 이름이 없는 경우 `character-1`로 지정하세요.
+
+5. **동일 인물 유추**: 예를 들어, "여성"과 "점순"이 같은 인물로 보이면 동일한 character-id를 사용하세요.
+
+---
+
+📌 응답 형식 예시:
+
+[스크립트 시작]
+character-1: "다녀왔어요."
+character-2: "어서 와, 점순아."
+나레이션 - narration: 점순은 신발을 벗고 조심스레 방으로 들어왔다.
+character-1: "오늘은 기분이 좀 이상해요."
+[스크립트 끝]
+
+[등장인물 업데이트 시작]
+{
+  "점순 - character-1": "처음에는 '여성'으로 등장했으나, 이름이 확인됨",
+  "엄마 - character-2": "점순의 어머니로 추정됨",
+  "아버지 - character-3": "무뚝뚝하지만 자상한 성격"
+}
+[등장인물 업데이트 끝]
+
+🛑 위 목록에는 **이전에 등장한 모든 인물**을 반드시 포함하세요. 이름이 변경되었거나 새로 등장했다면 설명도 업데이트하세요.
+
+---
+
+📌 이전 등장인물 목록 (JSON 형식):
+%s
+
+---
+
+📘 이번 파트 텍스트:
+%s
+""".formatted(jsonCharacters, chunkText);
+
         } catch (Exception e) {
             throw new RuntimeException("프롬프트 생성 실패", e);
         }
