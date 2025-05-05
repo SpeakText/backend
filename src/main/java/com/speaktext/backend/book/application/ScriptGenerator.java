@@ -1,15 +1,35 @@
 package com.speaktext.backend.book.application;
 
+import com.speaktext.backend.book.domain.PendingBookChunk;
+import com.speaktext.backend.book.domain.Script;
+import com.speaktext.backend.book.domain.ScriptFragment;
+import com.speaktext.backend.book.domain.repository.PendingBookChunkRepository;
+import com.speaktext.backend.book.domain.repository.ScriptRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+
 @Component
+@RequiredArgsConstructor
 public class ScriptGenerator {
 
-    public void generate() {
-        // 이전 스크립트 조회
-        // 누적 등장인물 정보 조회
-        // 프롬프트를 통한 결과 생성 -> 반환값은 List<ScriptFragment>, 등장인물 정보 업데이트
-        // Script 진행률 업데이트
+    private final ScriptFinder scriptFinder;
+    private final PendingBookChunkRepository pendingBookChunkRepository;
+    private final ScriptRepository scriptRepository;
+    private final LLMGenerator llmGenerator;
+
+    public void generate(Long pendingBookChunkId) {
+        PendingBookChunk chunk = pendingBookChunkRepository.findById(pendingBookChunkId);
+        String identificationNumber = chunk.getIdentificationNumber();
+        Script script = scriptFinder.findByIdentificationNumber(identificationNumber)
+                .orElseGet(() -> {
+                    Script newScript = Script.createInitial(identificationNumber);
+                    return scriptRepository.save(newScript);
+                });
+        Map<String, String> mainCharacters = script.getMainCharacters();
+        llmGenerator.generate(chunk.getChunk(), mainCharacters);
     }
 
 }

@@ -10,9 +10,9 @@ public class PendingBookChunks {
         this.pendingBookChunks = pendingBookChunks;
     }
 
-    public static PendingBookChunks from(List<String> chunks) {
+    public static PendingBookChunks of(List<String> chunks, String identificationNumber) {
         List<PendingBookChunk> pendingBookChunks = chunks.stream()
-                .map(PendingBookChunk::from)
+                .map(chunk -> PendingBookChunk.of(chunk, identificationNumber))
                 .toList();
         return new PendingBookChunks(pendingBookChunks);
     }

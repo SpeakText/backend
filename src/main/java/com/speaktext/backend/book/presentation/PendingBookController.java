@@ -25,4 +25,5 @@ public class PendingBookController {
         pendingBookService.deleteRawTextAndPendingBook(identificationNumber);
         return ResponseEntity.ok().build();
     }
+
 }

@@ -26,7 +26,7 @@ public class ScriptPartitioner {
         String identificationNumber = pendingBook.getIdentificationNumber();
         String rawText = rawTextStorage.load(identificationNumber);
         List<String> chunks = splitIntoChunks(rawText, SPLIT_SIZE);
-        return PendingBookChunks.from(chunks);
+        return PendingBookChunks.of(chunks, identificationNumber);
     }
 
     private List<String> splitIntoChunks(String rawText, int splitSize) {
