@@ -10,22 +10,25 @@ import lombok.NoArgsConstructor;
 public class PendingBookChunk {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pendingBookChunkId;
 
     @Column(length = 2000)
     String chunk;
 
+    private String identificationNumber;
+
     @Enumerated(EnumType.STRING)
     private PendingBookChunkStatus status;
 
-    public PendingBookChunk(String chunk, PendingBookChunkStatus status) {
+    public PendingBookChunk(String chunk, PendingBookChunkStatus status, String identificationNumber) {
         this.chunk = chunk;
         this.status = status;
+        this.identificationNumber = identificationNumber;
     }
 
-    public static PendingBookChunk from(String chunk) {
-        return new PendingBookChunk(chunk, PendingBookChunkStatus.PENDING);
+    public static PendingBookChunk of(String chunk, String identificationNumber) {
+        return new PendingBookChunk(chunk, PendingBookChunkStatus.PENDING, identificationNumber);
     }
 
     public void markAsSent() {

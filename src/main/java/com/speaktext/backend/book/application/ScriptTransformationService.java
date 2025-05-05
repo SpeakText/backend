@@ -21,8 +21,4 @@ public class ScriptTransformationService {
         chunkDispatcher.dispatch(chunks);
     }
 
-    public void generateScript(String pendingBookChunkId) {
-
-    }
-
 }

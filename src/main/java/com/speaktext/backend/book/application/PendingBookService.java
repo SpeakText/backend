@@ -18,13 +18,10 @@ public class PendingBookService {
     private final PendingBookRepository pendingBookRepository;
 
     @Transactional
-    public void deleteRawTextAndPendingBook(@NotBlank String identificationNumber) {
+    public void deleteRawTextAndPendingBook(String identificationNumber) {
         validatePendingBook(identificationNumber);
-
         String rawTextBackup = rawTextStorage.load(identificationNumber);
-
         rawTextStorage.delete(identificationNumber);
-
         deletePendingBookOrRollback(identificationNumber, rawTextBackup);
     }
 
