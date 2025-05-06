@@ -27,4 +27,10 @@ public class PendingBookChunks {
         return pendingBookChunks.size();
     }
 
+    public List<PendingBookChunk> getPendingBookChunkNotSent() {
+        return pendingBookChunks.stream()
+                .filter(pendingBookChunk -> pendingBookChunk.getStatus() != PendingBookChunkStatus.SENT)
+                .toList();
+    }
+
 }
