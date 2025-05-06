@@ -1,14 +1,17 @@
 package com.speaktext.backend.book.presentation;
 
 import com.speaktext.backend.auth.presentation.anotation.Admin;
+import com.speaktext.backend.auth.presentation.anotation.Author;
 import com.speaktext.backend.book.application.ScriptTransformationService;
+import com.speaktext.backend.book.application.dto.ScriptResponse;
+import com.speaktext.backend.book.presentation.dto.ScriptGetRequest;
 import com.speaktext.backend.book.presentation.dto.ScriptRequest;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +27,15 @@ public class ScriptTransformationController {
     ) {
         scriptTransformationService.announceScriptGeneration(request.pendingBookId());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/generated")
+    public ResponseEntity<List<ScriptResponse>> getScript(
+            @Author Long authorId,
+            @RequestBody ScriptGetRequest request
+    ) {
+        var script = scriptTransformationService.getScript(authorId, request.identificationNumber());
+        return ResponseEntity.ok(script);
     }
 
 }

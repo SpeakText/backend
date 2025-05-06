@@ -18,6 +18,12 @@ public class ScriptFragment {
 
     @Getter
     private String utterance;
-    private int orderIndex;
+
+    @Getter
+    private Long index;
+
+    public void confirmIdentificationNumber(String identificationNumber) {
+        this.identificationNumber = identificationNumber;
+    }
 
 }

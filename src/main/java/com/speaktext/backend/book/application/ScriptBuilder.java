@@ -24,7 +24,8 @@ public class ScriptBuilder {
                         Script.createInitial(
                                 pendingBook.getIdentificationNumber(),
                                 pendingBook.getTitle(),
-                                chunks.getNumberOfPendingBookChunks()
+                                chunks.getNumberOfPendingBookChunks(),
+                                pendingBook.getAuthorId()
                         )
                 );
         scriptRepository.save(script);

@@ -20,6 +20,8 @@ public class PendingBookChunk {
 
     @Enumerated(EnumType.STRING)
     private PendingBookChunkStatus status;
+
+    @Column(name = "chunk_index")
     private Long index;
 
     public PendingBookChunk(String chunk, PendingBookChunkStatus status, String identificationNumber, Long index) {

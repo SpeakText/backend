@@ -21,6 +21,10 @@ public class Script {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long scriptId;
 
+    @Getter
+    private Long authorId;
+
+    @Getter
     private String identificationNumber;
     private String title;
     private int fragmentsCount;
@@ -32,12 +36,13 @@ public class Script {
     @Column(name = "character_info")
     private Map<String, CharacterInfo> mainCharacters;
 
-    public static Script createInitial(String identificationNumber, String title, int fragmentsCount) {
+    public static Script createInitial(String identificationNumber, String title, int fragmentsCount, Long authorId) {
         return Script.builder()
                 .identificationNumber(identificationNumber)
                 .title(title)
                 .isCompleted(false)
-                .fragmentsCount(0)
+                .fragmentsCount(fragmentsCount)
+                .authorId(authorId)
                 .mainCharacters(Collections.emptyMap())
                 .build();
     }
@@ -49,7 +54,7 @@ public class Script {
             this.mainCharacters = updatedCharacters.entrySet().stream()
                     .collect(Collectors.toMap(
                             Map.Entry::getKey,
-                            entry -> entry.getValue().toDomain()  // CharacterInfoDto → CharacterInfo
+                            entry -> entry.getValue().toDomain()
                     ));
         }
     }
