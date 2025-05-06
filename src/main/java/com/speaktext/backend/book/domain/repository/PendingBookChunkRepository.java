@@ -9,6 +9,7 @@ public interface PendingBookChunkRepository {
     void save(PendingBookChunk pendingBookChunk);
     void saveAll(List<PendingBookChunk> pendingBookChunks);
     PendingBookChunk findById(Long pendingBookChunkId);
+    List<PendingBookChunk> findByIdentificationNumberOrderByIndex(String identificationNumber);
 
 }
 

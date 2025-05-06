@@ -34,4 +34,9 @@ public class PendingBookChunkRepositoryImpl implements PendingBookChunkRepositor
                 .orElseThrow(() -> new BookException(NO_PENDING_BOOK_CHUNK));
     }
 
+    @Override
+    public List<PendingBookChunk> findByIdentificationNumberOrderByIndex(String identificationNumber) {
+        return pendingBookChunkJpaRepository.findByIdentificationNumberOrderByIndexAsc(identificationNumber);
+    }
+
 }

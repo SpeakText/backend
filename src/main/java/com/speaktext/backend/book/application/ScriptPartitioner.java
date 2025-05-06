@@ -1,7 +1,9 @@
 package com.speaktext.backend.book.application;
 
 import com.speaktext.backend.book.domain.PendingBook;
+import com.speaktext.backend.book.domain.PendingBookChunk;
 import com.speaktext.backend.book.domain.PendingBookChunks;
+import com.speaktext.backend.book.domain.repository.PendingBookChunkRepository;
 import com.speaktext.backend.book.domain.repository.PendingBookRepository;
 import com.speaktext.backend.book.domain.repository.RawTextStorage;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +21,23 @@ public class ScriptPartitioner {
     private static final int SPLIT_SIZE = 500;
 
     private final PendingBookRepository pendingBookRepository;
+    private final PendingBookChunkRepository pendingBookChunkRepository;
     private final RawTextStorage rawTextStorage;
 
     public PendingBookChunks split(Long pendingBookId) {
         PendingBook pendingBook = pendingBookRepository.find(pendingBookId);
-        String identificationNumber = pendingBook.getIdentificationNumber();
+        String id = pendingBook.getIdentificationNumber();
+        List<PendingBookChunk> existing = pendingBookChunkRepository.findByIdentificationNumberOrderByIndex(id);
+        if (!existing.isEmpty()) {
+            return PendingBookChunks.of(existing.stream()
+                    .map(PendingBookChunk::getChunk)
+                    .toList(), id);
+        }
+
+        return splitAndReturnChunks(id);
+    }
+
+    private PendingBookChunks splitAndReturnChunks(String identificationNumber) {
         String rawText = rawTextStorage.load(identificationNumber);
         List<String> chunks = splitIntoChunks(rawText, SPLIT_SIZE);
         return PendingBookChunks.of(chunks, identificationNumber);

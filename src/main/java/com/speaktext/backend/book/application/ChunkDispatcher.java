@@ -16,9 +16,9 @@ public class ChunkDispatcher {
     private final ChunkUnitProcessor processor;
 
     public void dispatch(PendingBookChunks chunks) {
-        List<PendingBookChunk> pendingBookChunks = chunks.getPendingBookChunks();
-        repository.saveAll(pendingBookChunks);
-        pendingBookChunks.forEach(processor::process);
+        List<PendingBookChunk> pendingBookChunkNotSent = chunks.getPendingBookChunkNotSent();
+        repository.saveAll(pendingBookChunkNotSent);
+        pendingBookChunkNotSent.forEach(processor::process);
     }
 
 }

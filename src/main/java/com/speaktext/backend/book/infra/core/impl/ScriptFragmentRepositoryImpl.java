@@ -15,7 +15,12 @@ public class ScriptFragmentRepositoryImpl implements ScriptFragmentRepository {
     private final ScriptFragmentMongoRepository scriptFragmentMongoRepository;
 
     public Optional<ScriptFragment> findLastScriptFragment(String identificationNumber) {
-        return scriptFragmentMongoRepository.findFirstByIdentificationNumberOrderByOrderIndexDesc(identificationNumber);
+        return scriptFragmentMongoRepository.findFirstByIdentificationNumberOrderByIndexDesc(identificationNumber);
+    }
+
+    @Override
+    public List<ScriptFragment> findByIdentificationNumberOrderByIndex(String identificationNumber) {
+        return scriptFragmentMongoRepository.findAllByIdentificationNumberOrderByIndexAsc(identificationNumber);
     }
 
     @Override

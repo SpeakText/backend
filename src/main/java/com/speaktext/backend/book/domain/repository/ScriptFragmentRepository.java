@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface ScriptFragmentRepository {
 
     Optional<ScriptFragment> findLastScriptFragment(String identificationNumber);
+    List<ScriptFragment> findByIdentificationNumberOrderByIndex(String identificationNumber);
     void saveAll(List<ScriptFragment> scriptFragments);
 
 }
