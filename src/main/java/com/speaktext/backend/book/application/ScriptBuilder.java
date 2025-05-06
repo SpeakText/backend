@@ -19,12 +19,15 @@ public class ScriptBuilder {
     @Transactional
     public void build(PendingBookChunks chunks, Long pendingBookId) {
         PendingBook pendingBook = pendingBookRepository.find(pendingBookId);
-        Script newScript = Script.createInitial(
-                pendingBook.getIdentificationNumber(),
-                pendingBook.getTitle(),
-                chunks.getNumberOfPendingBookChunks()
-        );
-        scriptRepository.save(newScript);
+        Script script = scriptRepository.findByIdentificationNumber(pendingBook.getIdentificationNumber())
+                .orElse(
+                        Script.createInitial(
+                                pendingBook.getIdentificationNumber(),
+                                pendingBook.getTitle(),
+                                chunks.getNumberOfPendingBookChunks()
+                        )
+                );
+        scriptRepository.save(script);
     }
 
 }
