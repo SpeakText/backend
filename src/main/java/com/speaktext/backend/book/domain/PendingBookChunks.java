@@ -21,4 +21,8 @@ public class PendingBookChunks {
         return pendingBookChunks;
     }
 
+    public int getNumberOfPendingBookChunks() {
+        return pendingBookChunks.size();
+    }
+
 }

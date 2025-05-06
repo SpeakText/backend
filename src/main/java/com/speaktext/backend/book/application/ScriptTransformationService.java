@@ -11,6 +11,7 @@ public class ScriptTransformationService {
     private final ScriptInvoker scriptInvoker;
     private final ScriptPartitioner scriptPartitioner;
     private final ChunkDispatcher chunkDispatcher;
+    private final ScriptBuilder scriptBuilder;
 
     public void announceScriptGeneration(Long pendingBookId) {
         scriptInvoker.announce(pendingBookId);
@@ -18,6 +19,7 @@ public class ScriptTransformationService {
 
     public void prepareScriptGeneration(Long pendingBookId) {
         PendingBookChunks chunks = scriptPartitioner.split(pendingBookId);
+        scriptBuilder.build(chunks, pendingBookId);
         chunkDispatcher.dispatch(chunks);
     }
 

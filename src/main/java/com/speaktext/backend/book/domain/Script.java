@@ -32,10 +32,10 @@ public class Script {
     @Column(name = "character_info")
     private Map<String, CharacterInfo> mainCharacters;
 
-    public static Script createInitial(String identificationNumber) {
+    public static Script createInitial(String identificationNumber, String title, int fragmentsCount) {
         return Script.builder()
                 .identificationNumber(identificationNumber)
-                .title("Untitled")
+                .title(title)
                 .isCompleted(false)
                 .fragmentsCount(0)
                 .mainCharacters(Collections.emptyMap())
@@ -62,6 +62,11 @@ public class Script {
                         Map.Entry::getKey,
                         entry -> CharacterInfoDto.from(entry.getValue())
                 ));
+    }
+
+    public void increaseProgress() {
+        this.fragmentsCount--;
+        if (fragmentsCount <= 0) this.isCompleted = true;
     }
 
 }
