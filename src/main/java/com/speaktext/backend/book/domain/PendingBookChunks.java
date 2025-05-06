@@ -1,6 +1,7 @@
 package com.speaktext.backend.book.domain;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class PendingBookChunks {
 
@@ -11,8 +12,9 @@ public class PendingBookChunks {
     }
 
     public static PendingBookChunks of(List<String> chunks, String identificationNumber) {
+        AtomicLong indexCounter = new AtomicLong(0);
         List<PendingBookChunk> pendingBookChunks = chunks.stream()
-                .map(chunk -> PendingBookChunk.of(chunk, identificationNumber))
+                .map(chunk -> PendingBookChunk.of(chunk, identificationNumber, indexCounter.getAndIncrement()))
                 .toList();
         return new PendingBookChunks(pendingBookChunks);
     }

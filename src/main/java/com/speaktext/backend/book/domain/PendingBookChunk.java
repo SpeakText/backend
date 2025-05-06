@@ -20,15 +20,17 @@ public class PendingBookChunk {
 
     @Enumerated(EnumType.STRING)
     private PendingBookChunkStatus status;
+    private Long index;
 
-    public PendingBookChunk(String chunk, PendingBookChunkStatus status, String identificationNumber) {
+    public PendingBookChunk(String chunk, PendingBookChunkStatus status, String identificationNumber, Long index) {
         this.chunk = chunk;
         this.status = status;
         this.identificationNumber = identificationNumber;
+        this.index = index;
     }
 
-    public static PendingBookChunk of(String chunk, String identificationNumber) {
-        return new PendingBookChunk(chunk, PendingBookChunkStatus.PENDING, identificationNumber);
+    public static PendingBookChunk of(String chunk, String identificationNumber, Long index) {
+        return new PendingBookChunk(chunk, PendingBookChunkStatus.PENDING, identificationNumber, index);
     }
 
     public void markAsSent() {
