@@ -15,18 +15,17 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class Script {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long scriptId;
 
-    @Getter
     private Long authorId;
-
-    @Getter
     private String identificationNumber;
     private String title;
+    private int totalFragments;
     private int fragmentsCount;
     private boolean isCompleted;
 
@@ -41,7 +40,8 @@ public class Script {
                 .identificationNumber(identificationNumber)
                 .title(title)
                 .isCompleted(false)
-                .fragmentsCount(fragmentsCount)
+                .totalFragments(fragmentsCount)
+                .fragmentsCount(0)
                 .authorId(authorId)
                 .mainCharacters(Collections.emptyMap())
                 .build();
@@ -70,8 +70,10 @@ public class Script {
     }
 
     public void increaseProgress() {
-        this.fragmentsCount--;
-        if (fragmentsCount <= 0) this.isCompleted = true;
+        this.fragmentsCount++;
+        if (this.fragmentsCount == this.totalFragments) {
+            this.isCompleted = true;
+        }
     }
 
 }

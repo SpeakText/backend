@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +39,6 @@ public class ScriptParser {
 
     private List<ScriptFragment> parseFragments(String scriptText) {
         List<ScriptFragment> fragments = new ArrayList<>();
-        AtomicLong orderCounter = new AtomicLong(0);
 
         Arrays.stream(scriptText.split("\n"))
                 .map(String::trim)
@@ -51,7 +49,6 @@ public class ScriptParser {
                     String utterance = line.substring(sepIndex + 1).trim().replaceAll("^\"|\"$", "");
 
                     fragments.add(ScriptFragment.builder()
-                            .index(orderCounter.getAndIncrement())
                             .speaker(speaker)
                             .utterance(utterance)
                             .build());

@@ -1,7 +1,9 @@
 package com.speaktext.backend.book.application;
 
+import com.speaktext.backend.book.application.dto.ScriptMetaResponse;
 import com.speaktext.backend.book.application.dto.ScriptResponse;
 import com.speaktext.backend.book.domain.PendingBookChunks;
+import com.speaktext.backend.book.domain.Script;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,13 @@ public class ScriptTransformationService {
         var scripts = scriptSearcher.findScriptFragmentsByIdentificationNumber(authorId, identificationNumber);
         return scripts.stream()
                 .map(ScriptResponse::from)
+                .toList();
+    }
+
+    public List<ScriptMetaResponse> getAuthorScripts(Long authorId) {
+        var scripts = scriptSearcher.findAllScriptOfAuthor(authorId);
+        return scripts.stream()
+                .map(ScriptMetaResponse::from)
                 .toList();
     }
 

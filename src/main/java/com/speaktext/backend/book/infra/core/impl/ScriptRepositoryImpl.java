@@ -5,6 +5,7 @@ import com.speaktext.backend.book.domain.repository.ScriptRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -21,6 +22,11 @@ public class ScriptRepositoryImpl implements ScriptRepository {
     @Override
     public Optional<Script> findByIdentificationNumber(String identificationNumber) {
         return scriptJpaRepository.findByIdentificationNumber(identificationNumber);
+    }
+
+    @Override
+    public List<Script> findByAuthorId(Long authorId) {
+        return scriptJpaRepository.findByAuthorId(authorId);
     }
 
 }
