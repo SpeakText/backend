@@ -4,6 +4,7 @@ import com.speaktext.backend.book.application.dto.CharacterInfoDto;
 import com.speaktext.backend.book.application.dto.ScriptGenerationResult;
 import com.speaktext.backend.book.domain.PendingBookChunk;
 import com.speaktext.backend.book.domain.Script;
+import com.speaktext.backend.book.domain.ScriptFragment;
 import com.speaktext.backend.book.domain.repository.PendingBookChunkRepository;
 import com.speaktext.backend.book.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.domain.repository.ScriptRepository;
@@ -13,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static com.speaktext.backend.book.exception.BookExceptionType.SCRIPT_NOT_FOUND;
 
@@ -38,11 +41,20 @@ public class ScriptGenerator {
     }
 
     private void updateScriptStatus(Script script, ScriptGenerationResult generated) {
+        long startIndex = scriptSearcher.findLastScriptFragment(script.getIdentificationNumber())
+                .map(ScriptFragment::getIndex)
+                .orElse(0L);
+
+        AtomicLong orderCounter = new AtomicLong(startIndex);
+
         script.updateCharacterInfo(generated.updatedCharacters());
         script.increaseProgress();
-        generated.fragments().forEach(
-                scriptFragment -> scriptFragment.confirmIdentificationNumber(script.getIdentificationNumber())
-        );
+
+        generated.fragments().forEach(fragment -> {
+            fragment.confirmIdentificationNumber(script.getIdentificationNumber());
+            fragment.setIndex(orderCounter.incrementAndGet());
+        });
+
         scriptRepository.save(script);
         scriptFragmentRepository.saveAll(generated.fragments());
     }

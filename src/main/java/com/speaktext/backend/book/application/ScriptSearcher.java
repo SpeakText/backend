@@ -5,7 +5,6 @@ import com.speaktext.backend.book.domain.ScriptFragment;
 import com.speaktext.backend.book.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.exception.BookException;
-import com.speaktext.backend.book.exception.BookExceptionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +40,10 @@ public class ScriptSearcher {
 
     private boolean isScriptAuthor(Script script, Long authorId) {
         return script.getAuthorId().equals(authorId);
+    }
+
+    public List<Script> findAllScriptOfAuthor(Long authorId) {
+        return scriptRepository.findByAuthorId(authorId);
     }
 
 }

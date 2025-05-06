@@ -26,4 +26,8 @@ public class ScriptFragment {
         this.identificationNumber = identificationNumber;
     }
 
+    public void setIndex(long index) {
+        this.index = index;
+    }
+
 }
