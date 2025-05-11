@@ -6,15 +6,16 @@ import com.speaktext.backend.book.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.exception.BookException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.speaktext.backend.book.exception.BookExceptionType.*;
+import static com.speaktext.backend.book.exception.BookExceptionType.NOT_SCRIPT_AUTHOR;
+import static com.speaktext.backend.book.exception.BookExceptionType.SCRIPT_NOT_FOUND;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ScriptSearcher {
@@ -43,8 +44,8 @@ public class ScriptSearcher {
         return !script.getAuthorId().equals(authorId);
     }
 
-    public List<Script> findAllScriptOfAuthor(Long authorId) {
-        return scriptRepository.findByAuthorId(authorId);
+    public Page<Script> findByAuthorIdAndIsCompleted(Long authorId, boolean isCompleted, Pageable pageable) {
+        return scriptRepository.findByAuthorIdAndIsCompleted(authorId, isCompleted, pageable);
     }
 
 }

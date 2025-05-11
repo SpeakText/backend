@@ -3,8 +3,12 @@ package com.speaktext.backend.book.application;
 import com.speaktext.backend.book.application.dto.ScriptMetaResponse;
 import com.speaktext.backend.book.application.dto.ScriptModificationResponse;
 import com.speaktext.backend.book.application.dto.ScriptResponse;
+import com.speaktext.backend.book.domain.Script;
 import com.speaktext.backend.book.domain.ScriptFragment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +32,10 @@ public class ScriptService {
                 .toList();
     }
 
-    public List<ScriptMetaResponse> getAuthorScripts(Long authorId) {
-        var scripts = scriptSearcher.findAllScriptOfAuthor(authorId);
-        return scripts.stream()
-                .map(ScriptMetaResponse::from)
-                .toList();
+    public Page<ScriptMetaResponse> getAuthorScripts(Long authorId, boolean isCompleted, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Script> scripts = scriptSearcher.findByAuthorIdAndIsCompleted(authorId, isCompleted, pageable);
+        return scripts.map(ScriptMetaResponse::from);
     }
 
 
