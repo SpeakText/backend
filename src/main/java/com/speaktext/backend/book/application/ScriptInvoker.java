@@ -4,7 +4,6 @@ import com.speaktext.backend.book.application.event.ScriptGenerationEvent;
 import com.speaktext.backend.book.domain.PendingBook;
 import com.speaktext.backend.book.domain.repository.PendingBookRepository;
 import com.speaktext.backend.book.exception.BookException;
-import com.speaktext.backend.book.exception.BookExceptionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;

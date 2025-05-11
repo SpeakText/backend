@@ -2,10 +2,12 @@ package com.speaktext.backend.book.presentation;
 
 import com.speaktext.backend.auth.presentation.anotation.Admin;
 import com.speaktext.backend.auth.presentation.anotation.Author;
-import com.speaktext.backend.book.application.ScriptTransformationService;
+import com.speaktext.backend.book.application.ScriptService;
 import com.speaktext.backend.book.application.dto.ScriptMetaResponse;
+import com.speaktext.backend.book.application.dto.ScriptModificationResponse;
 import com.speaktext.backend.book.application.dto.ScriptResponse;
 import com.speaktext.backend.book.presentation.dto.ScriptGetRequest;
+import com.speaktext.backend.book.presentation.dto.ScriptModificationRequest;
 import com.speaktext.backend.book.presentation.dto.ScriptRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,16 +18,16 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/script/")
-public class ScriptTransformationController {
+public class ScriptController {
 
-    private final ScriptTransformationService scriptTransformationService;
+    private final ScriptService scriptService;
 
     @PostMapping("/generation")
     public ResponseEntity<Void> generateScript(
             @Admin Long adminId,
             @RequestBody ScriptRequest request
     ) {
-        scriptTransformationService.announceScriptGeneration(request.pendingBookId());
+        scriptService.announceScriptGeneration(request.pendingBookId());
         return ResponseEntity.noContent().build();
     }
 
@@ -34,7 +36,7 @@ public class ScriptTransformationController {
             @Author Long authorId,
             @RequestBody ScriptGetRequest request
     ) {
-        var script = scriptTransformationService.getScript(authorId, request.identificationNumber());
+        var script = scriptService.getScript(authorId, request.identificationNumber());
         return ResponseEntity.ok(script);
     }
 
@@ -42,8 +44,21 @@ public class ScriptTransformationController {
     public ResponseEntity<List<ScriptMetaResponse>> getScriptProgress(
             @Author Long authorId
     ) {
-        var authorScripts = scriptTransformationService.getAuthorScripts(authorId);
+        var authorScripts = scriptService.getAuthorScripts(authorId);
         return ResponseEntity.ok(authorScripts);
+    }
+
+    @PutMapping("/script-fragment")
+    public ResponseEntity<List<ScriptModificationResponse>> modifyScriptFragment(
+            @Author Long authorId,
+            @RequestBody ScriptModificationRequest request
+    ) {
+        var response = scriptService.modifyScriptFragments(
+                authorId,
+                request.identificationNumber(),
+                request.toScriptFragments()
+        );
+        return ResponseEntity.ok(response);
     }
 
 }

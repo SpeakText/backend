@@ -3,23 +3,19 @@ package com.speaktext.backend.book.domain;
 import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "script_fragments")
-@Builder
+@Builder(toBuilder = true)
+@Getter
 public class ScriptFragment {
 
     @Id
-    private String scriptFragmentId;
+    private ObjectId scriptFragmentId;
     private String identificationNumber;
-
-    @Getter
     private String speaker;
-
-    @Getter
     private String utterance;
-
-    @Getter
     private Long index;
 
     public void confirmIdentificationNumber(String identificationNumber) {
@@ -28,6 +24,11 @@ public class ScriptFragment {
 
     public void setIndex(long index) {
         this.index = index;
+    }
+
+    public void modify(String speaker, String utterance) {
+        this.speaker = speaker;
+        this.utterance = utterance;
     }
 
 }

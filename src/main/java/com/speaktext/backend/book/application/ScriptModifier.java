@@ -10,41 +10,29 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
-import static com.speaktext.backend.book.exception.BookExceptionType.*;
+import static com.speaktext.backend.book.exception.BookExceptionType.NOT_SCRIPT_AUTHOR;
+import static com.speaktext.backend.book.exception.BookExceptionType.SCRIPT_NOT_FOUND;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ScriptSearcher {
+public class ScriptModifier {
 
     private final ScriptFragmentRepository scriptFragmentRepository;
     private final ScriptRepository scriptRepository;
 
-    public Optional<Script> findByIdentificationNumber(String identificationNumber) {
-        return scriptRepository.findByIdentificationNumber(identificationNumber);
-    }
-
-    Optional<ScriptFragment> findLastScriptFragment(String identificationNumber) {
-        return scriptFragmentRepository.findLastScriptFragment(identificationNumber);
-    }
-
-    public List<ScriptFragment> findScriptFragmentsByIdentificationNumber(Long authorId, String identificationNumber) {
+    public List<ScriptFragment> modify(Long authorId, String identificationNumber, List<ScriptFragment> scriptFragments) {
         Script script = scriptRepository.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new BookException(SCRIPT_NOT_FOUND));
         if (isNotScriptAuthor(script, authorId)) {
             throw new BookException(NOT_SCRIPT_AUTHOR);
         }
-        return scriptFragmentRepository.findByIdentificationNumberOrderByIndex(identificationNumber);
+        return scriptFragmentRepository.updateAll(scriptFragments);
     }
 
     private boolean isNotScriptAuthor(Script script, Long authorId) {
         return !script.getAuthorId().equals(authorId);
-    }
-
-    public List<Script> findAllScriptOfAuthor(Long authorId) {
-        return scriptRepository.findByAuthorId(authorId);
     }
 
 }
