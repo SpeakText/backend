@@ -46,7 +46,6 @@ public class ScriptTransformationController {
             @RequestParam(defaultValue = "8") int size
     ) {
         var authorInProgressScripts = scriptTransformationService.getAuthorScripts(authorId, false, page, size);
-        System.out.println(authorInProgressScripts);
         return ResponseEntity.ok(authorInProgressScripts);
     }
 
