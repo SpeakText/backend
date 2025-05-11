@@ -2,10 +2,12 @@ package com.speaktext.backend.book.presentation;
 
 import com.speaktext.backend.auth.presentation.anotation.Admin;
 import com.speaktext.backend.auth.presentation.anotation.Author;
-import com.speaktext.backend.book.application.ScriptTransformationService;
+import com.speaktext.backend.book.application.ScriptService;
 import com.speaktext.backend.book.application.dto.ScriptMetaResponse;
+import com.speaktext.backend.book.application.dto.ScriptModificationResponse;
 import com.speaktext.backend.book.application.dto.ScriptResponse;
 import com.speaktext.backend.book.presentation.dto.ScriptGetRequest;
+import com.speaktext.backend.book.presentation.dto.ScriptModificationRequest;
 import com.speaktext.backend.book.presentation.dto.ScriptRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,16 +19,16 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/script/")
-public class ScriptTransformationController {
+public class ScriptController {
 
-    private final ScriptTransformationService scriptTransformationService;
+    private final ScriptService scriptService;
 
     @PostMapping("/generation")
     public ResponseEntity<Void> generateScript(
             @Admin Long adminId,
             @RequestBody ScriptRequest request
     ) {
-        scriptTransformationService.announceScriptGeneration(request.pendingBookId());
+        scriptService.announceScriptGeneration(request.pendingBookId());
         return ResponseEntity.noContent().build();
     }
 
@@ -35,7 +37,7 @@ public class ScriptTransformationController {
             @Author Long authorId,
             @RequestBody ScriptGetRequest request
     ) {
-        var script = scriptTransformationService.getScript(authorId, request.identificationNumber());
+        var script = scriptService.getScript(authorId, request.identificationNumber());
         return ResponseEntity.ok(script);
     }
 
@@ -45,7 +47,7 @@ public class ScriptTransformationController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size
     ) {
-        var authorInProgressScripts = scriptTransformationService.getAuthorScripts(authorId, false, page, size);
+        var authorInProgressScripts = scriptService.getAuthorScripts(authorId, false, page, size);
         return ResponseEntity.ok(authorInProgressScripts);
     }
 
@@ -55,8 +57,21 @@ public class ScriptTransformationController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size
     ) {
-        var authorCompletedScripts = scriptTransformationService.getAuthorScripts(authorId, true, page, size);
+        var authorCompletedScripts = scriptService.getAuthorScripts(authorId, true, page, size);
         return ResponseEntity.ok(authorCompletedScripts);
+    }
+
+    @PutMapping("/script-fragment")
+    public ResponseEntity<List<ScriptModificationResponse>> modifyScriptFragment(
+            @Author Long authorId,
+            @RequestBody ScriptModificationRequest request
+    ) {
+        var response = scriptService.modifyScriptFragments(
+                authorId,
+                request.identificationNumber(),
+                request.toScriptFragments()
+        );
+        return ResponseEntity.ok(response);
     }
 
 }

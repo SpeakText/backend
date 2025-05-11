@@ -15,6 +15,7 @@ public enum BookExceptionType implements BaseExceptionType {
     NO_APPROVED_PENDING_BOOK(FORBIDDEN, "스크립트를 변환할 권한이 있는 Pending Book이 아닙니다."),
     ALREADY_SCRIPTED_BOOK(FORBIDDEN, "이미 스크립트화된 작품입니다."),
     SCRIPT_NOT_FOUND(NOT_FOUND, "해당되는 스크립트가 없습니다."),
+    SCRIPT_FRAGMENT_NOT_FOUND(NOT_FOUND, "해당 스크립트 요소가 없습니다."),
     NOT_SCRIPT_AUTHOR(FORBIDDEN, "해당 스크립트를 작성한 작가가 아닙니다."),
     ;
 

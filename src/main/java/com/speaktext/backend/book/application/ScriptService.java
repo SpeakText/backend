@@ -1,9 +1,10 @@
 package com.speaktext.backend.book.application;
 
 import com.speaktext.backend.book.application.dto.ScriptMetaResponse;
+import com.speaktext.backend.book.application.dto.ScriptModificationResponse;
 import com.speaktext.backend.book.application.dto.ScriptResponse;
-import com.speaktext.backend.book.domain.PendingBookChunks;
 import com.speaktext.backend.book.domain.Script;
+import com.speaktext.backend.book.domain.ScriptFragment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,22 +15,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ScriptTransformationService {
+public class ScriptService {
 
     private final ScriptInvoker scriptInvoker;
-    private final ScriptPartitioner scriptPartitioner;
-    private final ChunkDispatcher chunkDispatcher;
-    private final ScriptBuilder scriptBuilder;
     private final ScriptSearcher scriptSearcher;
+    private final ScriptModifier scriptModifier;
 
     public void announceScriptGeneration(Long pendingBookId) {
         scriptInvoker.announce(pendingBookId);
-    }
-
-    public void prepareScriptGeneration(Long pendingBookId) {
-        PendingBookChunks chunks = scriptPartitioner.split(pendingBookId);
-        scriptBuilder.build(chunks, pendingBookId);
-        chunkDispatcher.dispatch(chunks);
     }
 
     public List<ScriptResponse> getScript(Long authorId, String identificationNumber) {
@@ -43,6 +36,14 @@ public class ScriptTransformationService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Script> scripts = scriptSearcher.findByAuthorIdAndIsCompleted(authorId, isCompleted, pageable);
         return scripts.map(ScriptMetaResponse::from);
+    }
+
+
+    public List<ScriptModificationResponse> modifyScriptFragments(Long authorId, String identificationNumber, List<ScriptFragment> scriptFragments) {
+        List<ScriptFragment> modify = scriptModifier.modify(authorId, identificationNumber, scriptFragments);
+        return modify.stream()
+                .map(scriptFragment -> new ScriptModificationResponse(scriptFragment.getSpeaker(), scriptFragment.getUtterance()))
+                .toList();
     }
 
 }
