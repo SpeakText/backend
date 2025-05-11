@@ -6,6 +6,8 @@ import com.speaktext.backend.book.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.exception.BookException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -42,8 +44,8 @@ public class ScriptSearcher {
         return script.getAuthorId().equals(authorId);
     }
 
-    public List<Script> findAllScriptOfAuthor(Long authorId) {
-        return scriptRepository.findByAuthorId(authorId);
+    public Page<Script> findByAuthorIdAndIsCompleted(Long authorId, boolean isCompleted, Pageable pageable) {
+        return scriptRepository.findByAuthorIdAndIsCompleted(authorId, isCompleted, pageable);
     }
 
 }

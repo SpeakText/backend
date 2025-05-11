@@ -8,6 +8,7 @@ import com.speaktext.backend.book.application.dto.ScriptResponse;
 import com.speaktext.backend.book.presentation.dto.ScriptGetRequest;
 import com.speaktext.backend.book.presentation.dto.ScriptRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,12 +39,25 @@ public class ScriptTransformationController {
         return ResponseEntity.ok(script);
     }
 
-    @GetMapping("/progress")
-    public ResponseEntity<List<ScriptMetaResponse>> getScriptProgress(
-            @Author Long authorId
+    @GetMapping("/progress/in-progress")
+    public ResponseEntity<Page<ScriptMetaResponse>> getInProgressScripts(
+            @Author Long authorId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size
     ) {
-        var authorScripts = scriptTransformationService.getAuthorScripts(authorId);
-        return ResponseEntity.ok(authorScripts);
+        var authorInProgressScripts = scriptTransformationService.getAuthorScripts(authorId, false, page, size);
+        System.out.println(authorInProgressScripts);
+        return ResponseEntity.ok(authorInProgressScripts);
+    }
+
+    @GetMapping("/progress/completed")
+    public ResponseEntity<Page<ScriptMetaResponse>> getCompletedScrips(
+            @Author Long authorId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size
+    ) {
+        var authorCompletedScripts = scriptTransformationService.getAuthorScripts(authorId, true, page, size);
+        return ResponseEntity.ok(authorCompletedScripts);
     }
 
 }

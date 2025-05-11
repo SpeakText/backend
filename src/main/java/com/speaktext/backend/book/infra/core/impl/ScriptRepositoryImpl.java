@@ -3,9 +3,10 @@ package com.speaktext.backend.book.infra.core.impl;
 import com.speaktext.backend.book.domain.Script;
 import com.speaktext.backend.book.domain.repository.ScriptRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -25,8 +26,8 @@ public class ScriptRepositoryImpl implements ScriptRepository {
     }
 
     @Override
-    public List<Script> findByAuthorId(Long authorId) {
-        return scriptJpaRepository.findByAuthorId(authorId);
+    public Page<Script> findByAuthorIdAndIsCompleted(Long authorId, boolean isCompleted, Pageable pageable) {
+        return scriptJpaRepository.findByAuthorIdAndIsCompleted(authorId, isCompleted, pageable);
     }
 
 }
