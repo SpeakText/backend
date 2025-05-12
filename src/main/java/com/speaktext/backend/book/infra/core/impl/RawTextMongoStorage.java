@@ -1,7 +1,7 @@
 package com.speaktext.backend.book.infra.core.impl;
 
-import com.speaktext.backend.book.domain.RawText;
-import com.speaktext.backend.book.domain.repository.RawTextStorage;
+import com.speaktext.backend.book.inspection.domain.RawText;
+import com.speaktext.backend.book.inspection.domain.repository.RawTextStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,8 +1,8 @@
 package com.speaktext.backend.client.gpt;
 
-import com.speaktext.backend.book.application.LLMProvider;
-import com.speaktext.backend.book.application.ScriptPromptBuilder;
-import com.speaktext.backend.book.application.dto.CharacterDto;
+import com.speaktext.backend.book.script.application.implement.LLMProvider;
+import com.speaktext.backend.book.script.application.implement.ScriptPromptBuilder;
+import com.speaktext.backend.book.script.application.dto.CharacterDto;
 import com.speaktext.backend.client.gpt.dto.ScriptGenerationRequest;
 import com.speaktext.backend.client.gpt.dto.ScriptGenerationResponse;
 import lombok.RequiredArgsConstructor;

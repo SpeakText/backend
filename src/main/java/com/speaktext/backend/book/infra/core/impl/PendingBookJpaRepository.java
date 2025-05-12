@@ -1,6 +1,6 @@
 package com.speaktext.backend.book.infra.core.impl;
 
-import com.speaktext.backend.book.domain.PendingBook;
+import com.speaktext.backend.book.inspection.domain.PendingBook;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

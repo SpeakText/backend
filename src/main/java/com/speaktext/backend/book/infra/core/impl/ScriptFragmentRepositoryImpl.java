@@ -1,7 +1,7 @@
 package com.speaktext.backend.book.infra.core.impl;
 
-import com.speaktext.backend.book.domain.ScriptFragment;
-import com.speaktext.backend.book.domain.repository.ScriptFragmentRepository;
+import com.speaktext.backend.book.script.domain.ScriptFragment;
+import com.speaktext.backend.book.script.domain.repository.ScriptFragmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
