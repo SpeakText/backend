@@ -1,7 +1,7 @@
 package com.speaktext.backend.book.infra.core.impl;
 
-import com.speaktext.backend.book.domain.Script;
-import com.speaktext.backend.book.domain.repository.ScriptRepository;
+import com.speaktext.backend.book.script.domain.Script;
+import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

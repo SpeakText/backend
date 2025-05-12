@@ -1,8 +1,8 @@
 package com.speaktext.backend.book.infra.core.impl;
 
-import com.speaktext.backend.book.domain.ScriptCharacter;
-import com.speaktext.backend.book.domain.Script;
-import com.speaktext.backend.book.domain.repository.CharacterRepository;
+import com.speaktext.backend.book.script.domain.ScriptCharacter;
+import com.speaktext.backend.book.script.domain.Script;
+import com.speaktext.backend.book.script.domain.repository.CharacterRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

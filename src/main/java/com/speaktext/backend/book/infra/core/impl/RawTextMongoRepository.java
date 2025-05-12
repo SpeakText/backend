@@ -1,6 +1,6 @@
 package com.speaktext.backend.book.infra.core.impl;
 
-import com.speaktext.backend.book.domain.RawText;
+import com.speaktext.backend.book.inspection.domain.RawText;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

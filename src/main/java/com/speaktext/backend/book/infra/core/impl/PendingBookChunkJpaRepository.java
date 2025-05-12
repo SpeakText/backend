@@ -1,6 +1,6 @@
 package com.speaktext.backend.book.infra.core.impl;
 
-import com.speaktext.backend.book.domain.PendingBookChunk;
+import com.speaktext.backend.book.script.domain.PendingBookChunk;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

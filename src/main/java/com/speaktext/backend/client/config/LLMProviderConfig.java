@@ -1,6 +1,6 @@
 package com.speaktext.backend.client.config;
 
-import com.speaktext.backend.book.application.LLMProvider;
+import com.speaktext.backend.book.script.application.implement.LLMProvider;
 import com.speaktext.backend.client.gpt.GptAdapter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,13 +1,13 @@
 package com.speaktext.backend.book.infra.core.impl;
 
-import com.speaktext.backend.book.domain.PendingBookChunk;
-import com.speaktext.backend.book.domain.repository.PendingBookChunkRepository;
-import com.speaktext.backend.book.exception.BookException;
+import com.speaktext.backend.book.script.domain.PendingBookChunk;
+import com.speaktext.backend.book.script.domain.repository.PendingBookChunkRepository;
+import com.speaktext.backend.book.script.exception.BookException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.speaktext.backend.book.exception.BookExceptionType.NO_PENDING_BOOK_CHUNK;
+import static com.speaktext.backend.book.script.exception.BookExceptionType.NO_PENDING_BOOK_CHUNK;
 
 @Repository
 public class PendingBookChunkRepositoryImpl implements PendingBookChunkRepository {
