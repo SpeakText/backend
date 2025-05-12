@@ -17,10 +17,11 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ScriptParser {
 
-    private final ObjectMapper objectMapper;
-
     private static final Pattern SCRIPT_PATTERN = Pattern.compile("\\[스크립트 시작\\](.*?)\\[스크립트 끝\\]", Pattern.DOTALL);
     private static final Pattern CHARACTER_PATTERN = Pattern.compile("\\[등장인물 업데이트 시작\\](.*?)\\[등장인물 업데이트 끝\\]", Pattern.DOTALL);
+    private static final String NARRATION_SPEAKER_KEY = "나레이션 - narration";
+
+    private final ObjectMapper objectMapper;
 
     public ScriptGenerationResult parse(String content) {
         String scriptText = extractSection(content, SCRIPT_PATTERN);
@@ -47,10 +48,12 @@ public class ScriptParser {
                     int sepIndex = line.indexOf(":");
                     String speaker = line.substring(0, sepIndex).trim();
                     String utterance = line.substring(sepIndex + 1).trim().replaceAll("^\"|\"$", "");
+                    boolean isNarration = speaker.equalsIgnoreCase(NARRATION_SPEAKER_KEY);
 
                     fragments.add(ScriptFragment.builder()
                             .speaker(speaker)
                             .utterance(utterance)
+                            .narration(isNarration)
                             .build());
                 });
 
