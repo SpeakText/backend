@@ -17,6 +17,7 @@ public class ScriptFragment {
     private String speaker;
     private String utterance;
     private Long index;
+    private boolean narration;
 
     public void confirmIdentificationNumber(String identificationNumber) {
         this.identificationNumber = identificationNumber;

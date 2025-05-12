@@ -1,5 +1,6 @@
 package com.speaktext.backend.book.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,8 @@ import lombok.NoArgsConstructor;
 public class CharacterInfo {
 
     private String name;
+
+    @Column(length = 2000)
     private String description;
     private String characterId;
 
