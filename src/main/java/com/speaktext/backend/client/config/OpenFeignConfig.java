@@ -1,4 +1,4 @@
-package com.speaktext.backend.client;
+package com.speaktext.backend.client.config;
 
 import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Value;

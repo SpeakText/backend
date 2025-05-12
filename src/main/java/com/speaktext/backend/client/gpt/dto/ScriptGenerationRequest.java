@@ -1,4 +1,4 @@
-package com.speaktext.backend.client.dto;
+package com.speaktext.backend.client.gpt.dto;
 
 import lombok.Builder;
 import lombok.Data;
