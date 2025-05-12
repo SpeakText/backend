@@ -16,6 +16,11 @@ public class ScriptRepositoryImpl implements ScriptRepository {
     private final ScriptJpaRepository scriptJpaRepository;
 
     @Override
+    public Optional<Script> findById(Long scriptId) {
+        return scriptJpaRepository.findById(scriptId);
+    }
+
+    @Override
     public Script save(Script script) {
         return scriptJpaRepository.save(script);
     }

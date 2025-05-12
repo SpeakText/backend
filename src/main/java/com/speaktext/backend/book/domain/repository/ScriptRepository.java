@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface ScriptRepository {
 
+    Optional<Script> findById(Long aLong);
     Script save(Script script);
     Optional<Script> findByIdentificationNumber(String identificationNumber);
     Page<Script> findByAuthorIdAndIsCompleted(Long authorId, boolean isCompleted, Pageable pageable);
