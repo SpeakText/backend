@@ -1,7 +1,7 @@
-package com.speaktext.backend.client;
+package com.speaktext.backend.client.gpt;
 
-import com.speaktext.backend.client.dto.ScriptGenerationRequest;
-import com.speaktext.backend.client.dto.ScriptGenerationResponse;
+import com.speaktext.backend.client.gpt.dto.ScriptGenerationRequest;
+import com.speaktext.backend.client.gpt.dto.ScriptGenerationResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

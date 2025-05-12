@@ -27,7 +27,7 @@ public class ScriptGenerator {
     private final ScriptSearcher scriptSearcher;
     private final PendingBookChunkRepository pendingBookChunkRepository;
     private final ScriptRepository scriptRepository;
-    private final LLMGenerator llmGenerator;
+    private final ScriptInterpreter scriptInterpreter;
     private final ScriptFragmentRepository scriptFragmentRepository;
 
     public void generate(Long pendingBookChunkId) {
@@ -36,7 +36,7 @@ public class ScriptGenerator {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new BookException(SCRIPT_NOT_FOUND));
         Map<String, CharacterInfoDto> mainCharacters = script.getMainCharacters();
-        ScriptGenerationResult generated = llmGenerator.generate(chunk.getChunk(), mainCharacters);
+        ScriptGenerationResult generated = scriptInterpreter.generate(chunk.getChunk(), mainCharacters);
         updateScriptStatus(script, generated);
     }
 
