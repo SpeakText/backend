@@ -1,8 +1,8 @@
 package com.speaktext.backend.book.application;
 
-import com.speaktext.backend.book.application.dto.CharacterInfoDto;
+import com.speaktext.backend.book.application.dto.CharacterDto;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * 새로운 LLM 추가 시, client 디렉토리에 새로운 LLM 디렉토리 추가 후 어댑터를 구현합니다.
@@ -12,6 +12,6 @@ import java.util.Map;
  */
 public interface LLMProvider {
 
-    String generateScript(String chunkText, Map<String, CharacterInfoDto> mainCharacters);
+    String generateScript(String chunkText, List<CharacterDto> mainCharacters);
 
 }

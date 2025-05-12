@@ -2,14 +2,13 @@ package com.speaktext.backend.client.gpt;
 
 import com.speaktext.backend.book.application.LLMProvider;
 import com.speaktext.backend.book.application.ScriptPromptBuilder;
-import com.speaktext.backend.book.application.dto.CharacterInfoDto;
+import com.speaktext.backend.book.application.dto.CharacterDto;
 import com.speaktext.backend.client.gpt.dto.ScriptGenerationRequest;
 import com.speaktext.backend.client.gpt.dto.ScriptGenerationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -23,7 +22,7 @@ public class GptAdapter implements LLMProvider {
     private final ScriptPromptBuilder promptBuilder;
 
     @Override
-    public String generateScript(String chunkText, Map<String, CharacterInfoDto> mainCharacters) {
+    public String generateScript(String chunkText, List<CharacterDto> mainCharacters) {
         String userPrompt = promptBuilder.build(chunkText, mainCharacters);
 
         ScriptGenerationRequest request = ScriptGenerationRequest.builder()

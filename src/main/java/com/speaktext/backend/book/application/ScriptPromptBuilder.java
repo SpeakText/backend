@@ -1,10 +1,11 @@
 package com.speaktext.backend.book.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.speaktext.backend.book.application.dto.CharacterInfoDto;
+import com.speaktext.backend.book.application.dto.CharacterDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -14,12 +15,12 @@ public class ScriptPromptBuilder {
 
     private final ObjectMapper objectMapper;
 
-    public String build(String chunkText, Map<String, CharacterInfoDto> characterDescriptions) {
+    public String build(String chunkText, List<CharacterDto> characterDescriptions) {
         try {
-            Map<String, String> promptCharacterMap = characterDescriptions.values().stream()
+            Map<String, String> promptCharacterMap = characterDescriptions.stream()
                     .collect(Collectors.toMap(
-                            c -> c.name() + " - " + c.characterId(),
-                            CharacterInfoDto::description
+                            c -> c.name() + " - " + c.characterKey(),
+                            CharacterDto::description
                     ));
 
             String jsonCharacters = objectMapper.writerWithDefaultPrettyPrinter()

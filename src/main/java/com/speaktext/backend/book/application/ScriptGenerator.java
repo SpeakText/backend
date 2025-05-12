@@ -1,6 +1,6 @@
 package com.speaktext.backend.book.application;
 
-import com.speaktext.backend.book.application.dto.CharacterInfoDto;
+import com.speaktext.backend.book.application.dto.CharacterDto;
 import com.speaktext.backend.book.application.dto.ScriptGenerationResult;
 import com.speaktext.backend.book.domain.PendingBookChunk;
 import com.speaktext.backend.book.domain.Script;
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.speaktext.backend.book.exception.BookExceptionType.SCRIPT_NOT_FOUND;
@@ -28,13 +28,16 @@ public class ScriptGenerator {
     private final ScriptRepository scriptRepository;
     private final ScriptInterpreter scriptInterpreter;
     private final ScriptFragmentRepository scriptFragmentRepository;
+    private final CharacterManager characterManager;
+    private final CharacterSearcher characterSearcher;
 
     public void generate(Long pendingBookChunkId) {
         PendingBookChunk chunk = pendingBookChunkRepository.findById(pendingBookChunkId);
         String identificationNumber = chunk.getIdentificationNumber();
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new BookException(SCRIPT_NOT_FOUND));
-        Map<String, CharacterInfoDto> mainCharacters = script.getMainCharacters();
+
+        List<CharacterDto> mainCharacters = characterSearcher.findCharactersByScript(script);
         ScriptGenerationResult generated = scriptInterpreter.generate(chunk.getChunk(), mainCharacters);
         updateScriptStatus(script, generated);
     }
@@ -45,8 +48,7 @@ public class ScriptGenerator {
                 .orElse(0L);
 
         AtomicLong orderCounter = new AtomicLong(startIndex);
-
-        script.updateCharacterInfo(generated.updatedCharacters());
+        characterManager.inferCharacters(script, generated.updatedCharacters());
         script.increaseProgress();
 
         generated.fragments().forEach(fragment -> {
