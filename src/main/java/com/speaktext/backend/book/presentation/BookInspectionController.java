@@ -53,7 +53,7 @@ public class BookInspectionController {
     @PutMapping("/approve/{pendingBookId}")
     public ResponseEntity<Void> approvePendingBook(
             @Admin Long adminId,
-            @PathVariable @NotBlank final Long pendingBookId
+            @PathVariable final Long pendingBookId
     ) {
         bookInspectionService.approvePendingBook(pendingBookId);
         return ResponseEntity.ok().build();
