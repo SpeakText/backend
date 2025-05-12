@@ -28,32 +28,23 @@ public class CharacterUpdater {
     ) {
         List<CharacterDto> newCharacters = parseCharacterList(characterJson);
 
-        // 기존 캐릭터: appeared 여부 업데이트
-        List<CharacterDto> updatedExisting = existingCharacters.stream()
+        // 기존 캐릭터 map으로 구성 (key: characterKey)
+        Map<String, CharacterDto> characterMap = new LinkedHashMap<>();
+        existingCharacters.forEach(dto -> characterMap.put(dto.characterKey(), dto));
+
+        // 새로 파싱된 캐릭터 추가 (없으면 넣고, 있으면 무시/유지)
+        newCharacters.forEach(dto -> characterMap.putIfAbsent(dto.characterKey(), dto));
+
+        // 등장여부 업데이트 (발화문 기준으로만 true)
+        // 이전 true 유지
+        return characterMap.values().stream()
                 .map(dto -> new CharacterDto(
                         dto.name(),
                         dto.description(),
                         dto.characterKey(),
-                        appearedCharacterKeys.contains(dto.characterKey())
+                        appearedCharacterKeys.contains(dto.characterKey()) || dto.appearedInScript()
                 ))
                 .toList();
-
-        // 새 캐릭터: appeared 여부 적용
-        List<CharacterDto> updatedNew = newCharacters.stream()
-                .map(dto -> new CharacterDto(
-                        dto.name(),
-                        dto.description(),
-                        dto.characterKey(),
-                        appearedCharacterKeys.contains(dto.characterKey())
-                ))
-                .toList();
-
-        // 합치기
-        return new LinkedHashMap<String, CharacterDto>() {{
-            updatedExisting.forEach(dto -> put(dto.characterKey(), dto));
-            updatedNew.forEach(dto -> put(dto.characterKey(), dto));
-        }}.values().stream()
-        .toList();
     }
 
     private List<CharacterDto> parseCharacterList(String characterJson) {

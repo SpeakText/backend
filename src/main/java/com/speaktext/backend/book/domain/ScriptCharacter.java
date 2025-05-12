@@ -37,8 +37,8 @@ public class ScriptCharacter {
         this.appearedInScript = appearedInScript;
     }
 
-    public static ScriptCharacter init(String name, String description, String characterKey, Script script) {
-        return new ScriptCharacter(name, description, characterKey, VoiceType.NO_VOICE, script, false);
+    public static ScriptCharacter init(String name, String description, String characterKey, Script script, boolean appearedInScript) {
+        return new ScriptCharacter(name, description, characterKey, VoiceType.NO_VOICE, script, appearedInScript);
     }
 
     public void updateName(String newName) {

@@ -29,7 +29,7 @@ public class CharacterManager {
         characterRepository.deleteByScript(script);
 
         List<ScriptCharacter> scriptCharacters = updatedCharacters.stream()
-                .map(characterDto -> characterDto.toDomain(script))
+                .map(characterDto -> characterDto.toDomain(script, characterDto.appearedInScript()))
                 .toList();
 
         characterRepository.saveAll(scriptCharacters);

@@ -7,8 +7,8 @@ public record CharacterDto(
         String name, String description, String characterKey, boolean appearedInScript
 ) {
 
-    public ScriptCharacter toDomain(Script script) {
-        return ScriptCharacter.init(name, description, characterKey, script);
+    public ScriptCharacter toDomain(Script script, boolean appearedInScript) {
+        return ScriptCharacter.init(name, description, characterKey, script, appearedInScript);
     }
 
     public static CharacterDto fromDomain(ScriptCharacter scriptCharacter) {

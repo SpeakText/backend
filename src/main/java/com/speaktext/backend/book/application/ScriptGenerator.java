@@ -5,6 +5,7 @@ import com.speaktext.backend.book.application.dto.ScriptGenerationResult;
 import com.speaktext.backend.book.domain.PendingBookChunk;
 import com.speaktext.backend.book.domain.Script;
 import com.speaktext.backend.book.domain.ScriptFragment;
+import com.speaktext.backend.book.domain.repository.CharacterRepository;
 import com.speaktext.backend.book.domain.repository.PendingBookChunkRepository;
 import com.speaktext.backend.book.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.domain.repository.ScriptRepository;
