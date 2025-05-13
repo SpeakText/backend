@@ -3,6 +3,8 @@ package com.speaktext.backend.book.infra.core.impl;
 import com.speaktext.backend.book.script.domain.ScriptFragment;
 import com.speaktext.backend.book.script.domain.repository.ScriptFragmentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -24,8 +26,8 @@ public class ScriptFragmentRepositoryImpl implements ScriptFragmentRepository {
     }
 
     @Override
-    public List<ScriptFragment> findByIdentificationNumberOrderByIndex(String identificationNumber) {
-        return scriptFragmentMongoRepository.findAllByIdentificationNumberOrderByIndexAsc(identificationNumber);
+    public Page<ScriptFragment> findByIdentificationNumberOrderByIndex(String identificationNumber, Pageable pageable) {
+        return scriptFragmentMongoRepository.findAllByIdentificationNumberOrderByIndexAsc(identificationNumber, pageable);
     }
 
     @Override
