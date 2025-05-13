@@ -32,11 +32,13 @@ public class ScriptController {
     }
 
     @PostMapping("/generated")
-    public ResponseEntity<List<ScriptResponse>> getScript(
+    public ResponseEntity<Page<ScriptResponse>> getScript(
             @Author Long authorId,
-            @RequestBody ScriptGetRequest request
+            @RequestBody ScriptGetRequest request,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size
     ) {
-        var script = scriptService.getScript(authorId, request.identificationNumber());
+        var script = scriptService.getScript(authorId, request.identificationNumber(), page, size);
         return ResponseEntity.ok(script);
     }
 
