@@ -20,6 +20,9 @@ public class Script {
     private Long authorId;
     private String identificationNumber;
     private String title;
+
+    @Enumerated(EnumType.STRING)
+    private VoiceType narrationVoice;
     private int totalFragments;
     private int fragmentsCount;
     private boolean isCompleted;
@@ -29,6 +32,7 @@ public class Script {
                 .identificationNumber(identificationNumber)
                 .title(title)
                 .isCompleted(false)
+                .narrationVoice(VoiceType.NO_VOICE)
                 .totalFragments(fragmentsCount)
                 .fragmentsCount(0)
                 .authorId(authorId)
@@ -40,6 +44,10 @@ public class Script {
         if (this.fragmentsCount == this.totalFragments) {
             this.isCompleted = true;
         }
+    }
+
+    public void updateNarrationVoice(VoiceType voiceType) {
+        this.narrationVoice = voiceType;
     }
 
 }

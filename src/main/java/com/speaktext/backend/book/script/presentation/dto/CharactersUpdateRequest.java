@@ -16,7 +16,7 @@ public record CharactersUpdateRequest(
                 .map(c -> new CharacterUpdateCommand(
                         c.characterKey(),
                         c.name(),
-                        VoiceType.valueOf(c.voiceType().toUpperCase())
+                        VoiceType.from(c.voiceType())
                 ))
                 .toList();
 
