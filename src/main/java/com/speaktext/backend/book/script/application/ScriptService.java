@@ -6,6 +6,8 @@ import com.speaktext.backend.book.script.application.implement.ScriptModifier;
 import com.speaktext.backend.book.script.application.implement.ScriptSearcher;
 import com.speaktext.backend.book.script.domain.Script;
 import com.speaktext.backend.book.script.domain.ScriptFragment;
+import com.speaktext.backend.book.script.exception.ScriptException;
+import com.speaktext.backend.book.script.presentation.dto.NarrationResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +57,13 @@ public class ScriptService {
         Script script = scriptSearcher.findByScriptId(scriptId);
         script.updateNarrationVoice(command.voiceType());
         return new NarrationUpdateResponse(scriptId, script.getNarrationVoice().toString());
+    }
+
+    public NarrationResponse getNarration(String identificationNumber) {
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+
+        return new NarrationResponse(script.getNarrationVoice().toString());
     }
 
 }
