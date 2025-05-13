@@ -53,10 +53,11 @@ public class ScriptService {
     }
 
     @Transactional
-    public NarrationUpdateResponse updateNarration(Long scriptId, NarrationUpdateCommand command) {
-        Script script = scriptSearcher.findByScriptId(scriptId);
+    public NarrationUpdateResponse updateNarration(String identificationNumber, NarrationUpdateCommand command) {
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
         script.updateNarrationVoice(command.voiceType());
-        return new NarrationUpdateResponse(scriptId, script.getNarrationVoice().toString());
+        return new NarrationUpdateResponse(identificationNumber, script.getNarrationVoice().toString());
     }
 
     public NarrationResponse getNarration(String identificationNumber) {

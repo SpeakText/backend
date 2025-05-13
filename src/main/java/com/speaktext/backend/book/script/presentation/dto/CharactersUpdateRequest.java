@@ -7,7 +7,7 @@ import com.speaktext.backend.book.script.domain.VoiceType;
 import java.util.List;
 
 public record CharactersUpdateRequest(
-        Long scriptId,
+        String identificationNumber,
         List<CharacterUpdateRequest> characters
 ) {
 
@@ -20,7 +20,7 @@ public record CharactersUpdateRequest(
                 ))
                 .toList();
 
-        return new CharactersUpdateCommand(scriptId, commands);
+        return new CharactersUpdateCommand(identificationNumber, commands);
     }
 
     public record CharacterUpdateRequest(

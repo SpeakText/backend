@@ -4,13 +4,13 @@ import com.speaktext.backend.book.script.application.dto.NarrationUpdateCommand;
 import com.speaktext.backend.book.script.domain.VoiceType;
 
 public record ScriptUpdateRequest(
-        Long scriptId,
+        String identificationNumber,
         String voiceType
 ) {
 
     public NarrationUpdateCommand toUpdateCommand() {
         VoiceType type = VoiceType.from(voiceType);
-        return new NarrationUpdateCommand(scriptId, type);
+        return new NarrationUpdateCommand(identificationNumber, type);
     }
 
 }

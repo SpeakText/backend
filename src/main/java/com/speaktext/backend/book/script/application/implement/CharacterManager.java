@@ -37,7 +37,7 @@ public class CharacterManager {
 
     @Transactional
     public List<ScriptCharacter> updateCharacters(CharactersUpdateCommand command) {
-        Script script = scriptRepository.findById(command.scriptId())
+        Script script = scriptRepository.findByIdentificationNumber(command.identificationNumber())
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
 
         return command.updatedContent().stream().

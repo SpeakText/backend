@@ -87,7 +87,7 @@ public class ScriptController {
             @Author Long authorId,
             @RequestBody ScriptUpdateRequest request
     ) {
-        var narrationUpdateResponse = scriptService.updateNarration(request.scriptId(), request.toUpdateCommand());
+        var narrationUpdateResponse = scriptService.updateNarration(request.identificationNumber(), request.toUpdateCommand());
         return ResponseEntity.ok(narrationUpdateResponse);
     }
 
