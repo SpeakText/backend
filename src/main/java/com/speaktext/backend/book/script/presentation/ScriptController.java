@@ -7,10 +7,7 @@ import com.speaktext.backend.book.script.application.dto.NarrationUpdateResponse
 import com.speaktext.backend.book.script.application.dto.ScriptMetaResponse;
 import com.speaktext.backend.book.script.application.dto.ScriptModificationResponse;
 import com.speaktext.backend.book.script.application.dto.ScriptResponse;
-import com.speaktext.backend.book.script.presentation.dto.ScriptGetRequest;
-import com.speaktext.backend.book.script.presentation.dto.ScriptModificationRequest;
-import com.speaktext.backend.book.script.presentation.dto.ScriptRequest;
-import com.speaktext.backend.book.script.presentation.dto.ScriptUpdateRequest;
+import com.speaktext.backend.book.script.presentation.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -74,6 +71,15 @@ public class ScriptController {
                 request.toScriptFragments()
         );
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/narration/{identificationNumber}")
+    public ResponseEntity<NarrationResponse> getNarration(
+            @Author Long authorId,
+            @PathVariable String identificationNumber
+    ) {
+        NarrationResponse narration = scriptService.getNarration(identificationNumber);
+        return ResponseEntity.ok(narration);
     }
 
     @PutMapping("/narration")

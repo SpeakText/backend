@@ -2,9 +2,10 @@ package com.speaktext.backend.book.script.application.dto;
 
 import com.speaktext.backend.book.script.domain.ScriptCharacter;
 import com.speaktext.backend.book.script.domain.Script;
+import com.speaktext.backend.book.script.domain.VoiceType;
 
 public record CharacterDto(
-        String name, String description, String characterKey, boolean appearedInScript
+        String name, String description, String characterKey, boolean appearedInScript, VoiceType voiceType
 ) {
 
     public ScriptCharacter toDomain(Script script, boolean appearedInScript) {
@@ -12,7 +13,7 @@ public record CharacterDto(
     }
 
     public static CharacterDto fromDomain(ScriptCharacter scriptCharacter) {
-        return new CharacterDto(scriptCharacter.getName(), scriptCharacter.getDescription(), scriptCharacter.getCharacterKey(), scriptCharacter.isAppearedInScript());
+        return new CharacterDto(scriptCharacter.getName(), scriptCharacter.getDescription(), scriptCharacter.getCharacterKey(), scriptCharacter.isAppearedInScript(), scriptCharacter.getVoiceType());
     }
 
 }
