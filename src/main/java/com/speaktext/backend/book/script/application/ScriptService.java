@@ -31,11 +31,10 @@ public class ScriptService {
         scriptInvoker.announce(pendingBookId);
     }
 
-    public List<ScriptResponse> getScript(Long authorId, String identificationNumber) {
-        var scripts = scriptSearcher.findScriptFragmentsByIdentificationNumber(authorId, identificationNumber);
-        return scripts.stream()
-                .map(ScriptResponse::from)
-                .toList();
+    public Page<ScriptResponse> getScript(Long authorId, String identificationNumber, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        var scripts = scriptSearcher.findScriptFragmentsByIdentificationNumber(authorId, identificationNumber, pageable);
+        return scripts.map(ScriptResponse::from);
     }
 
     public Page<ScriptMetaResponse> getAuthorScripts(Long authorId, boolean isCompleted, int page, int size) {
