@@ -5,6 +5,7 @@ import com.speaktext.backend.book.script.domain.ScriptFragment;
 import com.speaktext.backend.book.script.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.BookException;
+import com.speaktext.backend.book.script.exception.ScriptException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static com.speaktext.backend.book.script.exception.BookExceptionType.NOT_SCRIPT_AUTHOR;
-import static com.speaktext.backend.book.script.exception.BookExceptionType.SCRIPT_NOT_FOUND;
+import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
 
 @Slf4j
 @Component
@@ -24,7 +25,7 @@ public class ScriptModifier {
 
     public List<ScriptFragment> modify(Long authorId, String identificationNumber, List<ScriptFragment> scriptFragments) {
         Script script = scriptRepository.findByIdentificationNumber(identificationNumber)
-                .orElseThrow(() -> new BookException(SCRIPT_NOT_FOUND));
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
         if (isNotScriptAuthor(script, authorId)) {
             throw new BookException(NOT_SCRIPT_AUTHOR);
         }

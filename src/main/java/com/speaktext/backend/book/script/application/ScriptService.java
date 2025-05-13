@@ -1,13 +1,12 @@
 package com.speaktext.backend.book.script.application;
 
+import com.speaktext.backend.book.script.application.dto.*;
 import com.speaktext.backend.book.script.application.implement.ScriptInvoker;
 import com.speaktext.backend.book.script.application.implement.ScriptModifier;
 import com.speaktext.backend.book.script.application.implement.ScriptSearcher;
-import com.speaktext.backend.book.script.application.dto.ScriptMetaResponse;
-import com.speaktext.backend.book.script.application.dto.ScriptModificationResponse;
-import com.speaktext.backend.book.script.application.dto.ScriptResponse;
 import com.speaktext.backend.book.script.domain.Script;
 import com.speaktext.backend.book.script.domain.ScriptFragment;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +46,13 @@ public class ScriptService {
         return modify.stream()
                 .map(scriptFragment -> new ScriptModificationResponse(scriptFragment.getSpeaker(), scriptFragment.getUtterance()))
                 .toList();
+    }
+
+    @Transactional
+    public NarrationUpdateResponse updateNarration(Long scriptId, NarrationUpdateCommand command) {
+        Script script = scriptSearcher.findByScriptId(scriptId);
+        script.updateNarrationVoice(command.voiceType());
+        return new NarrationUpdateResponse(scriptId, script.getNarrationVoice().toString());
     }
 
 }

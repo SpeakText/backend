@@ -9,6 +9,7 @@ import com.speaktext.backend.book.script.domain.repository.PendingBookChunkRepos
 import com.speaktext.backend.book.script.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.BookException;
+import com.speaktext.backend.book.script.exception.ScriptException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.speaktext.backend.book.script.exception.BookExceptionType.SCRIPT_NOT_FOUND;
+import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
 
 @Slf4j
 @Component
@@ -35,7 +36,7 @@ public class ScriptGenerator {
         PendingBookChunk chunk = pendingBookChunkRepository.findById(pendingBookChunkId);
         String identificationNumber = chunk.getIdentificationNumber();
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
-                .orElseThrow(() -> new BookException(SCRIPT_NOT_FOUND));
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
 
         List<CharacterDto> mainCharacters = characterSearcher.findCharactersByScript(script);
         ScriptGenerationResult generated = scriptInterpreter.generate(chunk.getChunk(), mainCharacters);

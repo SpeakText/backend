@@ -5,6 +5,7 @@ import com.speaktext.backend.book.script.domain.ScriptFragment;
 import com.speaktext.backend.book.script.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.BookException;
+import com.speaktext.backend.book.script.exception.ScriptException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.speaktext.backend.book.script.exception.BookExceptionType.NOT_SCRIPT_AUTHOR;
-import static com.speaktext.backend.book.script.exception.BookExceptionType.SCRIPT_NOT_FOUND;
+import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class ScriptSearcher {
 
     public List<ScriptFragment> findScriptFragmentsByIdentificationNumber(Long authorId, String identificationNumber) {
         Script script = scriptRepository.findByIdentificationNumber(identificationNumber)
-                .orElseThrow(() -> new BookException(SCRIPT_NOT_FOUND));
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
         if (isNotScriptAuthor(script, authorId)) {
             throw new BookException(NOT_SCRIPT_AUTHOR);
         }
@@ -46,6 +47,11 @@ public class ScriptSearcher {
 
     public Page<Script> findByAuthorIdAndIsCompleted(Long authorId, boolean isCompleted, Pageable pageable) {
         return scriptRepository.findByAuthorIdAndIsCompleted(authorId, isCompleted, pageable);
+    }
+
+    public Script findByScriptId(Long scriptId) {
+        return scriptRepository.findById(scriptId)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
     }
 
 }

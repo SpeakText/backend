@@ -11,5 +11,15 @@ public enum VoiceType {
     NOVA,
     ONYX,
     SAGE,
-    SHIMMER
+    SHIMMER,
+    ;
+
+    public static VoiceType from(String value) {
+        try {
+            return VoiceType.valueOf(value.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid voice type: " + value);
+        }
+    }
+
 }
