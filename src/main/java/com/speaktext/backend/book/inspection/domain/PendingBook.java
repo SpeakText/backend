@@ -63,4 +63,8 @@ public class PendingBook {
         this.inspectionStatus = InspectionStatus.APPROVED;
     }
 
+    public void reject() {
+        this.inspectionStatus = InspectionStatus.REJECTED;
+    }
+
 }

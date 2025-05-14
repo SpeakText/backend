@@ -85,4 +85,9 @@ public class BookInspectionService {
         pendingBook.approve();
     }
 
+    @Transactional
+    public void rejectPendingBook(Long pendingBookId) {
+        PendingBook pendingBook = pendingBookRepository.find(pendingBookId);
+        pendingBook.reject();
+    }
 }
