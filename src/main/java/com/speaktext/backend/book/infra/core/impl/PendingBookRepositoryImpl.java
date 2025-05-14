@@ -44,4 +44,9 @@ public class PendingBookRepositoryImpl implements PendingBookRepository {
         pendingBookJpaRepository.deleteByIdentificationNumber(identificationNumber);
     }
 
+    @Override
+    public boolean existsByIdentificationNumber(String identificationNumber) {
+        return pendingBookJpaRepository.existsByIdentificationNumber(identificationNumber);
+    }
+
 }

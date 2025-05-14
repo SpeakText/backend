@@ -10,4 +10,6 @@ public interface PendingBookJpaRepository extends JpaRepository<PendingBook, Lon
     List<PendingBook> findByInspectionStatus(PendingBook.InspectionStatus inspectionStatus);
     PendingBook findByIdentificationNumber(String identificationNumber);
     void deleteByIdentificationNumber(String identificationNumber);
+
+    boolean existsByIdentificationNumber(String identificationNumber);
 }
