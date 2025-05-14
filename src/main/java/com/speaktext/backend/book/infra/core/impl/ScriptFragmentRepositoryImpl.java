@@ -26,8 +26,13 @@ public class ScriptFragmentRepositoryImpl implements ScriptFragmentRepository {
     }
 
     @Override
-    public Page<ScriptFragment> findByIdentificationNumberOrderByIndex(String identificationNumber, Pageable pageable) {
+    public Page<ScriptFragment> findByIdentificationNumberOrderByIndexPage(String identificationNumber, Pageable pageable) {
         return scriptFragmentMongoRepository.findAllByIdentificationNumberOrderByIndexAsc(identificationNumber, pageable);
+    }
+
+    @Override
+    public List<ScriptFragment> findByIdentificationNumberOrderByIndex(String identificationNumber) {
+        return scriptFragmentMongoRepository.findAllByIdentificationNumberOrderByIndex(identificationNumber);
     }
 
     @Override

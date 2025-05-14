@@ -50,4 +50,8 @@ public class Script {
         this.narrationVoice = voiceType;
     }
 
+    public boolean hasVoice() {
+        return this.narrationVoice != VoiceType.NO_VOICE;
+    }
+
 }

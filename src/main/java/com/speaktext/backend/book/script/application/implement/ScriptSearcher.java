@@ -37,7 +37,7 @@ public class ScriptSearcher {
         if (isNotScriptAuthor(script, authorId)) {
             throw new BookException(NOT_SCRIPT_AUTHOR);
         }
-        return scriptFragmentRepository.findByIdentificationNumberOrderByIndex(identificationNumber, pageable);
+        return scriptFragmentRepository.findByIdentificationNumberOrderByIndexPage(identificationNumber, pageable);
     }
 
     private boolean isNotScriptAuthor(Script script, Long authorId) {

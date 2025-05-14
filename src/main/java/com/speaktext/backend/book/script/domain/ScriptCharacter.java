@@ -50,4 +50,8 @@ public class ScriptCharacter {
         this.voiceType = newVoice;
     }
 
+    public boolean hasVoice() {
+        return voiceType != VoiceType.NO_VOICE;
+    }
+
 }

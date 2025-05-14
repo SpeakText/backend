@@ -9,28 +9,73 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-    public static final String EXCHANGE_NAME = "script.chunk.exchange";
-    public static final String ROUTING_KEY = "script.chunk.routingKey";
-    public static final String QUEUE_NAME = "script.chunk.queue";
+    // ===== 스크립트 청크 =====
+    public static final String SCRIPT_EXCHANGE = "script.chunk.exchange";
+    public static final String SCRIPT_ROUTING_KEY = "script.chunk.routingKey";
+    public static final String SCRIPT_QUEUE = "script.chunk.queue";
 
-    @Bean
-    public DirectExchange directExchange() {
-        return new DirectExchange(EXCHANGE_NAME);
-    }
+    // ===== 등장인물 음성 =====
+    public static final String CHARACTER_EXCHANGE = "character.voice.exchange";
+    public static final String CHARACTER_ROUTING_KEY = "character.voice.routingKey";
+    public static final String CHARACTER_QUEUE = "character.voice.queue";
 
-    @Bean
-    public Queue queue() {
-        return QueueBuilder.durable(QUEUE_NAME).build();
-    }
+    // ===== 나레이션 음성 =====
+    public static final String NARRATION_EXCHANGE = "narration.voice.exchange";
+    public static final String NARRATION_ROUTING_KEY = "narration.voice.routingKey";
+    public static final String NARRATION_QUEUE = "narration.voice.queue";
 
-    @Bean
-    public Binding binding(Queue queue, DirectExchange directExchange) {
-        return BindingBuilder.bind(queue).to(directExchange).with(ROUTING_KEY);
-    }
-
+    // === RabbitTemplate ===
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         return new RabbitTemplate(connectionFactory);
+    }
+
+    // === 스크립트 청크 바인딩 ===
+    @Bean
+    public DirectExchange scriptExchange() {
+        return new DirectExchange(SCRIPT_EXCHANGE);
+    }
+
+    @Bean
+    public Queue scriptQueue() {
+        return QueueBuilder.durable(SCRIPT_QUEUE).build();
+    }
+
+    @Bean
+    public Binding scriptBinding(Queue scriptQueue, DirectExchange scriptExchange) {
+        return BindingBuilder.bind(scriptQueue).to(scriptExchange).with(SCRIPT_ROUTING_KEY);
+    }
+
+    // === 등장인물 음성 바인딩 ===
+    @Bean
+    public DirectExchange characterExchange() {
+        return new DirectExchange(CHARACTER_EXCHANGE);
+    }
+
+    @Bean
+    public Queue characterQueue() {
+        return QueueBuilder.durable(CHARACTER_QUEUE).build();
+    }
+
+    @Bean
+    public Binding characterBinding(Queue characterQueue, DirectExchange characterExchange) {
+        return BindingBuilder.bind(characterQueue).to(characterExchange).with(CHARACTER_ROUTING_KEY);
+    }
+
+    // === 나레이션 음성 바인딩 ===
+    @Bean
+    public DirectExchange narrationExchange() {
+        return new DirectExchange(NARRATION_EXCHANGE);
+    }
+
+    @Bean
+    public Queue narrationQueue() {
+        return QueueBuilder.durable(NARRATION_QUEUE).build();
+    }
+
+    @Bean
+    public Binding narrationBinding(Queue narrationQueue, DirectExchange narrationExchange) {
+        return BindingBuilder.bind(narrationQueue).to(narrationExchange).with(NARRATION_ROUTING_KEY);
     }
 
 }
