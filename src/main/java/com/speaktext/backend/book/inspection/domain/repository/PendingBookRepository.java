@@ -13,4 +13,5 @@ public interface PendingBookRepository {
     PendingBook findByIdentificationNumber(String identificationNumber);
     void deleteByIdentificationNumber(@NotBlank String identificationNumber);
 
+    boolean existsByIdentificationNumber(String identificationNumber);
 }

@@ -5,12 +5,14 @@ import com.speaktext.backend.book.inspection.application.dto.BookInspectionMetaR
 import com.speaktext.backend.book.inspection.domain.PendingBook;
 import com.speaktext.backend.book.inspection.domain.repository.PendingBookRepository;
 import com.speaktext.backend.book.inspection.domain.repository.RawTextStorage;
+import com.speaktext.backend.book.inspection.exception.PendingBookException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.speaktext.backend.book.inspection.exception.PendingBookExceptionType.PENDING_BOOK_ALREADY_EXISTS;
 import static com.speaktext.backend.common.util.FileReader.readTxtFile;
 
 @Service
@@ -21,8 +23,15 @@ public class BookInspectionService {
     private final PendingBookRepository pendingBookRepository;
 
     public void requestInspection(BookInspectionCommand command, Long authorId) {
+        validateDuplicate(command.identificationNumber());
         String rawText = readTxtFile(command.txtFile());
         saveWithCompensation(rawText, command, authorId);
+    }
+
+    private void validateDuplicate(String identificationNumber) {
+        if (pendingBookRepository.existsByIdentificationNumber(identificationNumber)) {
+            throw new PendingBookException(PENDING_BOOK_ALREADY_EXISTS);
+        }
     }
 
     private void saveWithCompensation(String rawText, BookInspectionCommand command, Long authorId) {

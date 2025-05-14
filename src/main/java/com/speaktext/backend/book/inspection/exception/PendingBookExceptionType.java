@@ -9,6 +9,7 @@ public enum PendingBookExceptionType implements BaseExceptionType {
 
     PENDING_BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "대기 도서를 찾을 수 없습니다."),
     PENDING_BOOK_NOT_IN_PENDING_STATUS(HttpStatus.BAD_REQUEST,  "대기 도서가 Pending 상태가 아닙니다."),
+    PENDING_BOOK_ALREADY_EXISTS(HttpStatus.CONFLICT, "대기 도서가 이미 존재합니다."),
     ;
 
     private final HttpStatus httpStatus;
