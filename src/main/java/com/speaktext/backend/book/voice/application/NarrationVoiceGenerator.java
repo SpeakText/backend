@@ -13,13 +13,13 @@ public class NarrationVoiceGenerator {
     private final VoiceProvider voiceProvider;
 
     private static final String NARRATION_INSTRUCTIONS = """
-        Voice Style: Natural and human-like, prioritizing smooth and realistic narration.
-        Tone: Warm, friendly, yet neutral and professional. Avoid robotic or overly monotone delivery.
-        Pacing: Steady and smooth, with natural rhythm. Slight emphasis on important words for clarity.
-        Emotion: Subtle emotional depth to make storytelling engaging, without being exaggerated.
-        Pronunciation: Clear and precise, ensuring intelligibility and listener comfort.
-        Flow: Maintain a calm, confident cadence that keeps the listener immersed.
-        """;
+    Voice Style: Natural and human-like, prioritizing smooth and realistic narration.
+    Tone: Warm and friendly, but maintain a neutral and consistent storytelling voice. Avoid emotional exaggeration.
+    Pacing: Steady and smooth, with a calm and even rhythm. Emphasize clarity and flow over expressiveness.
+    Emotion: Keep emotional expression minimal and restrained. Focus on delivering information and maintaining listener immersion, without dramatic inflection.
+    Pronunciation: Clear and precise articulation for listener comfort and intelligibility.
+    Flow: Maintain a stable and composed cadence, ensuring the narration feels professional and unobtrusive.
+    """;
 
     public void generate(String identificationNumber, Long index, String speaker, String utterance, VoiceType voiceType) {
         String fileName = identificationNumber + "_" + index;
@@ -28,8 +28,9 @@ public class NarrationVoiceGenerator {
                 utterance,
                 voiceType.toString(),
                 NARRATION_INSTRUCTIONS,
-                fileName
+                fileName,
+                1.0
         );
-
     }
+
 }

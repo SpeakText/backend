@@ -10,6 +10,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public enum ScriptExceptionType implements BaseExceptionType {
 
     SCRIPT_NOT_FOUND(NOT_FOUND, "스크립트를 찾을 수 없습니다."),
+    SCRIPT_FRAGMENT_NOT_FOUND(NOT_FOUND, "해당 스크립트 요소가 없습니다."),
     CHARACTER_NOT_FOUND(NOT_FOUND, "등장인물을 찾을 수 없습니다."),
     ;
 

@@ -1,7 +1,9 @@
 package com.speaktext.backend.book.voice.application;
 
 import com.speaktext.backend.book.script.domain.Script;
+import com.speaktext.backend.book.script.domain.ScriptCharacter;
 import com.speaktext.backend.book.script.domain.ScriptFragment;
+import com.speaktext.backend.book.script.domain.repository.CharacterRepository;
 import com.speaktext.backend.book.script.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.voice.application.event.CharacterVoiceGenerationEvent;
 import com.speaktext.backend.book.voice.application.event.NarrationVoiceGenerationEvent;
@@ -17,15 +19,21 @@ public class VoiceDispatcher {
 
     private final ScriptFragmentRepository scriptFragmentRepository;
     private final VoiceGenerationEventPublisher voiceGenerationEventPublisher;
+    private final CharacterRepository characterRepository;
 
     public void dispatch(String identificationNumber, Script script) {
         List<ScriptFragment> scriptFragments = scriptFragmentRepository.findByIdentificationNumberOrderByIndex(identificationNumber);
         scriptFragments.forEach(fragment -> {
-            Runnable dispatchTask = fragment.isNarration()
-                    ? () -> voiceGenerationEventPublisher.publishNarrationEvent(NarrationVoiceGenerationEvent.from(fragment, script.getNarrationVoice()))
-                    : () -> voiceGenerationEventPublisher.publishCharacterEvent(CharacterVoiceGenerationEvent.from(fragment));
+            if (fragment.isNarration()) {
+                NarrationVoiceGenerationEvent narrationEvent = NarrationVoiceGenerationEvent.from(fragment, script.getNarrationVoice());
+                voiceGenerationEventPublisher.publishNarrationEvent(narrationEvent);
+            } else {
+                ScriptCharacter character = characterRepository.findByScriptAndCharacterKey(script, fragment.getSpeaker())
+                        .orElseThrow(() -> new IllegalArgumentException("Character not found for speaker: " + fragment.getSpeaker()));
 
-            dispatchTask.run();
+                CharacterVoiceGenerationEvent characterEvent = CharacterVoiceGenerationEvent.from(fragment, character.getVoiceType());
+                voiceGenerationEventPublisher.publishCharacterEvent(characterEvent);
+            }
         });
     }
 

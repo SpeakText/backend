@@ -16,12 +16,12 @@ public record ScriptModificationRequest(
 
     public List<ScriptFragment> toScriptFragments() {
         return updates.stream()
-                .map(update -> ScriptFragment.builder()
-                        .identificationNumber(identificationNumber)
-                        .index(update.index())
-                        .speaker(update.speaker())
-                        .utterance(update.utterance())
-                        .build())
+                .map(update -> ScriptFragment.of(
+                        identificationNumber,
+                        update.index,
+                        update.speaker,
+                        update.utterance
+                ))
                 .toList();
     }
 

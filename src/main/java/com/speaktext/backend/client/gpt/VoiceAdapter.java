@@ -16,19 +16,18 @@ public class VoiceAdapter implements VoiceProvider {
 
     private static final String MODEL_NAME = "gpt-4o-mini-tts";
     private static final String RESPONSE_FORMAT = "mp3";
-    private static final double SPEED = 1.0;
 
     private final VoiceGenerationClient speechClient;
     private final VoiceStorage voiceStorage;
 
     @Override
-    public Path generateVoice(String text, String voice, String instructions, String filename) {
+    public Path generateVoice(String text, String voice, String instructions, String filename, double speed) {
         Map<String, Object> request = Map.of(
                 "model", MODEL_NAME,
                 "input", text,
                 "voice", voice.toLowerCase(),
                 "response_format", RESPONSE_FORMAT,
-                "speed", SPEED,
+                "speed", speed,
                 "instructions", instructions
         );
 

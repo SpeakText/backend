@@ -45,6 +45,7 @@ public class ScriptFragmentRepositoryImpl implements ScriptFragmentRepository {
 
             Update update = new Update()
                     .set("speaker", fragment.getSpeaker())
+                    .set("narration", fragment.isNarration())
                     .set("utterance", fragment.getUtterance());
 
             mongoTemplate.updateFirst(query, update, ScriptFragment.class);
