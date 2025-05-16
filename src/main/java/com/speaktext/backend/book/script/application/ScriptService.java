@@ -43,7 +43,6 @@ public class ScriptService {
         return scripts.map(ScriptMetaResponse::from);
     }
 
-
     public List<ScriptModificationResponse> modifyScriptFragments(Long authorId, String identificationNumber, List<ScriptFragment> scriptFragments) {
         List<ScriptFragment> modify = scriptModifier.modify(authorId, identificationNumber, scriptFragments);
         return modify.stream()

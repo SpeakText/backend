@@ -9,7 +9,6 @@ import com.speaktext.backend.book.script.application.implement.ScriptSearcher;
 import com.speaktext.backend.book.script.domain.Script;
 import com.speaktext.backend.book.script.domain.ScriptCharacter;
 import com.speaktext.backend.book.script.exception.ScriptException;
-import com.speaktext.backend.book.script.exception.ScriptExceptionType;
 import com.speaktext.backend.book.script.presentation.dto.CharacterResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,7 @@ public class CharacterService {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
 
-        List<CharacterDto> characters = characterSearcher.findCharactersByScript(script);
+        List<CharacterDto> characters = characterSearcher.findCharactersDtoByScript(script);
         return characters.stream()
                 .filter(CharacterDto::appearedInScript)
                 .map(characterDto ->

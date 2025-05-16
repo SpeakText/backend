@@ -8,7 +8,6 @@ import com.speaktext.backend.book.script.domain.ScriptFragment;
 import com.speaktext.backend.book.script.domain.repository.PendingBookChunkRepository;
 import com.speaktext.backend.book.script.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
-import com.speaktext.backend.book.script.exception.BookException;
 import com.speaktext.backend.book.script.exception.ScriptException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +37,7 @@ public class ScriptGenerator {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
 
-        List<CharacterDto> mainCharacters = characterSearcher.findCharactersByScript(script);
+        List<CharacterDto> mainCharacters = characterSearcher.findCharactersDtoByScript(script);
         ScriptGenerationResult generated = scriptInterpreter.generate(chunk.getChunk(), mainCharacters);
         updateScriptStatus(script, generated);
     }

@@ -50,4 +50,11 @@ public class ScriptCharacter {
         this.voiceType = newVoice;
     }
 
+    public boolean hasVoiceOrNotAppeared() {
+        if (!appearedInScript) {
+            return true;
+        }
+        return voiceType != VoiceType.NO_VOICE;
+    }
+
 }

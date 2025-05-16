@@ -15,11 +15,15 @@ public class CharacterSearcher {
 
     private final CharacterRepository characterRepository;
 
-    public List<CharacterDto> findCharactersByScript(Script script) {
+    public List<CharacterDto> findCharactersDtoByScript(Script script) {
         List<ScriptCharacter> scriptCharacters = characterRepository.findByScript(script);
         return scriptCharacters.stream().
                 map(CharacterDto::fromDomain)
                 .toList();
+    }
+
+    public List<ScriptCharacter> findScriptCharactersByScript(Script script) {
+        return characterRepository.findByScript(script);
     }
 
 }

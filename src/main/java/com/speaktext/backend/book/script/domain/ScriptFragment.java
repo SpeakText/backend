@@ -19,6 +19,18 @@ public class ScriptFragment {
     private Long index;
     private boolean narration;
 
+    public static ScriptFragment of(String identificationNumber, Long index, String speaker, String utterance) {
+        boolean isNarration = speaker != null && speaker.startsWith("나레이션");
+
+        return ScriptFragment.builder()
+                .identificationNumber(identificationNumber)
+                .index(index)
+                .speaker(speaker)
+                .utterance(utterance)
+                .narration(isNarration)
+                .build();
+    }
+
     public void confirmIdentificationNumber(String identificationNumber) {
         this.identificationNumber = identificationNumber;
     }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 import static com.speaktext.backend.book.script.exception.BookExceptionType.NOT_SCRIPT_AUTHOR;
+import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_FRAGMENT_NOT_FOUND;
 import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
 
 @Component
@@ -37,7 +38,7 @@ public class ScriptSearcher {
         if (isNotScriptAuthor(script, authorId)) {
             throw new BookException(NOT_SCRIPT_AUTHOR);
         }
-        return scriptFragmentRepository.findByIdentificationNumberOrderByIndex(identificationNumber, pageable);
+        return scriptFragmentRepository.findByIdentificationNumberOrderByIndexPage(identificationNumber, pageable);
     }
 
     private boolean isNotScriptAuthor(Script script, Long authorId) {
@@ -51,6 +52,11 @@ public class ScriptSearcher {
     public Script findByScriptId(Long scriptId) {
         return scriptRepository.findById(scriptId)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+    }
+
+    public ScriptFragment findScriptFragmentsByIdentificationNumberAndIndex(String identificationNumber, Long index) {
+        return scriptFragmentRepository.findByIdentificationNumberAndIndex(identificationNumber, index)
+                .orElseThrow(() -> new ScriptException(SCRIPT_FRAGMENT_NOT_FOUND));
     }
 
 }

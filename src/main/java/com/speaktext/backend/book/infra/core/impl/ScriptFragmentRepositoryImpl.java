@@ -26,8 +26,13 @@ public class ScriptFragmentRepositoryImpl implements ScriptFragmentRepository {
     }
 
     @Override
-    public Page<ScriptFragment> findByIdentificationNumberOrderByIndex(String identificationNumber, Pageable pageable) {
+    public Page<ScriptFragment> findByIdentificationNumberOrderByIndexPage(String identificationNumber, Pageable pageable) {
         return scriptFragmentMongoRepository.findAllByIdentificationNumberOrderByIndexAsc(identificationNumber, pageable);
+    }
+
+    @Override
+    public List<ScriptFragment> findByIdentificationNumberOrderByIndex(String identificationNumber) {
+        return scriptFragmentMongoRepository.findAllByIdentificationNumberOrderByIndex(identificationNumber);
     }
 
     @Override
@@ -40,6 +45,7 @@ public class ScriptFragmentRepositoryImpl implements ScriptFragmentRepository {
 
             Update update = new Update()
                     .set("speaker", fragment.getSpeaker())
+                    .set("narration", fragment.isNarration())
                     .set("utterance", fragment.getUtterance());
 
             mongoTemplate.updateFirst(query, update, ScriptFragment.class);

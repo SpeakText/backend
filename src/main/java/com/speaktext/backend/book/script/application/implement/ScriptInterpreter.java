@@ -15,13 +15,13 @@ import java.util.Set;
 @Slf4j
 public class ScriptInterpreter {
 
-    private final LLMProvider llmProvider;
+    private final ScriptProvider scriptProvider;
     private final ScriptParser parser;
     private final ScriptFragmentParser fragmentParser;
     private final CharacterUpdater characterUpdater;
 
     public ScriptGenerationResult generate(String chunkText, List<CharacterDto> existingCharacters) {
-        String content = llmProvider.generateScript(chunkText, existingCharacters);
+        String content = scriptProvider.generateScript(chunkText, existingCharacters);
         String scriptText = parser.extractScriptText(content);
         String characterJson = parser.extractCharacterJson(content);
         List<ScriptFragment> fragments = fragmentParser.parseFragments(scriptText);

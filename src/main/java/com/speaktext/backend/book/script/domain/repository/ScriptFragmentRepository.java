@@ -12,7 +12,8 @@ public interface ScriptFragmentRepository {
     List<ScriptFragment> updateAll(List<ScriptFragment> scriptFragments);
     void saveAll(List<ScriptFragment> scriptFragments);
     Optional<ScriptFragment> findLastScriptFragment(String identificationNumber);
-    Page<ScriptFragment> findByIdentificationNumberOrderByIndex(String identificationNumber, Pageable pageable);
+    Page<ScriptFragment> findByIdentificationNumberOrderByIndexPage(String identificationNumber, Pageable pageable);
+    List<ScriptFragment> findByIdentificationNumberOrderByIndex(String identificationNumber);
     Optional<ScriptFragment> findByIdentificationNumberAndIndex(String identificationNumber, Long index);
 
 }
