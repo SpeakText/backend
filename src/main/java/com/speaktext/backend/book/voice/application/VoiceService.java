@@ -36,7 +36,7 @@ public class VoiceService {
             throw new VoiceException(NO_VOICE);
         }
         scriptCharacters.forEach(character -> {
-            if (!character.hasVoice()) {
+            if (!character.hasVoiceOrNotAppeared()) {
                 throw new VoiceException(NO_VOICE);
             }
         });

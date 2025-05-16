@@ -1,6 +1,6 @@
 package com.speaktext.backend.client.gpt;
 
-import com.speaktext.backend.book.script.application.implement.LLMProvider;
+import com.speaktext.backend.book.script.application.implement.ScriptProvider;
 import com.speaktext.backend.book.script.application.implement.ScriptPromptBuilder;
 import com.speaktext.backend.book.script.application.dto.CharacterDto;
 import com.speaktext.backend.client.gpt.dto.ScriptGenerationRequest;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class GptAdapter implements LLMProvider {
+public class ScriptAdapter implements ScriptProvider {
 
     private static final String SYSTEM_PROMPT = "당신은 소설을 스크립트 형태로 재구성하는 언어 분석가입니다.";
     private static final String MODEL_NAME = "gpt-4o"; // 실제로 구성 시에는 gpt-4o

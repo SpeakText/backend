@@ -10,7 +10,7 @@ import java.util.List;
  * 프롬프트는 주어진 태스크에 적합한 프롬프트를 사용합니다.(ScriptPromptBuilder)
  * 설정 파일에는 새로운 LLM의 종류(llm.provider)를 추가해주고 client/config/LLMProviderConfig에 추가해줍니다.
  */
-public interface LLMProvider {
+public interface ScriptProvider {
 
     String generateScript(String chunkText, List<CharacterDto> mainCharacters);
 

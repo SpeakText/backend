@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class VoiceGenerationEventPublisherImpl implements VoiceGenerationEventPublisher {
 
-    private final RabbitTemplate rabbitTemplate;
+    private final RabbitTemplate jsonRabbitTemplate;
 
     @Override
     public void publishCharacterEvent(CharacterVoiceGenerationEvent event) {
-        rabbitTemplate.convertAndSend(
+        jsonRabbitTemplate.convertAndSend(
                 "character.voice.exchange",
                 "character.voice.routingKey",
                 event
@@ -24,7 +24,7 @@ public class VoiceGenerationEventPublisherImpl implements VoiceGenerationEventPu
 
     @Override
     public void publishNarrationEvent(NarrationVoiceGenerationEvent event) {
-        rabbitTemplate.convertAndSend(
+        jsonRabbitTemplate.convertAndSend(
                 "narration.voice.exchange",
                 "narration.voice.routingKey",
                 event
