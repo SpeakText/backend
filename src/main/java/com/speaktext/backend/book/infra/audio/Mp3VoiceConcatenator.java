@@ -13,6 +13,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class Mp3VoiceConcatenator implements VoiceConcatenator {
+
     private static final String OUTPUT_DIR = "mergedVoices";
 
     @Override
