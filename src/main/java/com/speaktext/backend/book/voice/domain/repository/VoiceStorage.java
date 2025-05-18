@@ -6,5 +6,5 @@ import java.nio.file.Path;
 public interface VoiceStorage {
 
     Path save(String filename, InputStream content);
-
+    Long getVoiceLength(String filename);
 }

@@ -48,6 +48,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
+    implementation 'com.googlecode.soundlibs:tritonus-share:0.3.7.4'
+    implementation 'javazoom:jlayer:1.0.1'
 }
 
 tasks.named('test') {
