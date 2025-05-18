@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class NarrationVoiceGenerator {
 
     private final VoiceProvider voiceProvider;
-    private final VoiceRegisterService voiceRegisterService;
+    private final VoiceRegisterHandler voiceRegisterHandler;
 
     private static final String NARRATION_INSTRUCTIONS = """
     Voice Style: Natural and human-like, prioritizing smooth and realistic narration.
@@ -32,7 +32,7 @@ public class NarrationVoiceGenerator {
                 1.0
         );
 
-        voiceRegisterService.registerVoice(identificationNumber, index, response, fileName);
+        voiceRegisterHandler.registerVoice(identificationNumber, index, response, fileName);
     }
 
 }

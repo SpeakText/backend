@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class CharacterVoiceGenerator {
 
     private final VoiceProvider voiceProvider;
-    private final VoiceRegisterService voiceRegisterService;
+    private final VoiceRegisterHandler voiceRegisterHandler;
 
     public void generateVoice(String identificationNumber, Long index, String speaker, String utterance, VoiceType voiceType, String vibe) {
         String fileName = identificationNumber + "_" + index;
@@ -23,7 +23,7 @@ public class CharacterVoiceGenerator {
                 1.0
         );
 
-        voiceRegisterService.registerVoice(identificationNumber, index, response, fileName);
+        voiceRegisterHandler.registerVoice(identificationNumber, index, response, fileName);
     }
 
 }
