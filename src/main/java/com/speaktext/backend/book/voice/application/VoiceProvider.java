@@ -1,9 +1,10 @@
 package com.speaktext.backend.book.voice.application;
 
-import java.nio.file.Path;
+import feign.Response;
+
 
 public interface VoiceProvider {
 
-    Path generateVoice(String text, String voice, String instruction, String fileName, double speed);
+    Response generateVoice(String text, String voice, String instruction, String fileName, double speed);
 
 }

@@ -1,6 +1,5 @@
 package com.speaktext.backend.book.infra.core.impl;
 
-import com.speaktext.backend.book.voice.application.VoiceLengthAnalyzer;
 import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,6 @@ import java.nio.file.Path;
 public class LocalVoiceStorage implements VoiceStorage {
 
     private static final String OUTPUT_DIR = "outputs";
-    private final VoiceLengthAnalyzer voiceLengthAnalyzer;
 
     @Override
     public Path save(String filename, InputStream content) {
@@ -39,8 +37,7 @@ public class LocalVoiceStorage implements VoiceStorage {
     }
 
     @Override
-    public Long getVoiceLength(String filename) {
-        File file = Path.of(OUTPUT_DIR, filename + ".mp3").toFile();
-        return voiceLengthAnalyzer.getVoiceLength(file);
+    public File getVoiceFile(String filename) {
+        return Path.of(OUTPUT_DIR, filename + ".mp3").toFile();
     }
 }
