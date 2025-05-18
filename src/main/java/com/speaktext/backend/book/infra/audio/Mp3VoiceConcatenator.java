@@ -47,6 +47,11 @@ public class Mp3VoiceConcatenator implements VoiceConcatenator {
                 throw new RuntimeException("FFmpeg 실행 실패, exitCode=" + exitCode);
             }
 
+            boolean deleted = listFile.delete();
+            if (!deleted) {
+                System.err.println("listFile 삭제 실패: " + listFile.getAbsolutePath());
+            }
+
             return outputFile.toPath();
 
         } catch (Exception e) {
