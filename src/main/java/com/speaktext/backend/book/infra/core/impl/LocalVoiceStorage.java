@@ -40,4 +40,9 @@ public class LocalVoiceStorage implements VoiceStorage {
     public File getVoiceFile(String filename) {
         return Path.of(OUTPUT_DIR, filename + ".mp3").toFile();
     }
+
+    @Override
+    public File getVoiceFileWithFilePath(String filePath) {
+        return Path.of(filePath).toFile();
+    }
 }

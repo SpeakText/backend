@@ -1,17 +1,28 @@
 package com.speaktext.backend.book.voice.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.speaktext.backend.book.infra.audio.VoiceConcatenator;
 import com.speaktext.backend.book.script.application.implement.CharacterSearcher;
 import com.speaktext.backend.book.script.application.implement.ScriptSearcher;
 import com.speaktext.backend.book.script.domain.Script;
 import com.speaktext.backend.book.script.domain.ScriptCharacter;
+import com.speaktext.backend.book.script.domain.ScriptFragment;
+import com.speaktext.backend.book.script.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.script.exception.ScriptException;
+import com.speaktext.backend.book.script.exception.ScriptFragmentException;
+import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
 import com.speaktext.backend.book.voice.exception.VoiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
+import static com.speaktext.backend.book.script.exception.ScriptFragmentExceptionType.SCRIPT_FRAGMENT_NOT_FOUND;
 import static com.speaktext.backend.book.voice.exception.VoiceExceptionType.NO_VOICE;
 
 @Service
@@ -21,6 +32,10 @@ public class VoiceService {
     private final ScriptSearcher scriptSearcher;
     private final CharacterSearcher characterSearcher;
     private final VoiceDispatcher voiceDispatcher;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final ScriptFragmentRepository scriptFragmentRepository;
+    private final VoiceConcatenator voiceConcatenator;
+    private final VoiceStorage voiceStorage;
 
     public void generateVoice(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
@@ -42,4 +57,36 @@ public class VoiceService {
         });
     }
 
+    public void mergeVoice(String identificationNumber) {
+        List<ScriptFragment> scriptFragments = scriptFragmentRepository.findByIdentificationNumberOrderByIndex(identificationNumber);
+        validateScriptFragment(scriptFragments);
+        List<File> voiceFiles = scriptFragments.stream()
+                .map(ScriptFragment::getVoicePath)
+                .map(voiceStorage::getVoiceFileWithFilePath)
+                .toList();
+
+        Path outputPath = voiceConcatenator.concatenate(voiceFiles, identificationNumber);
+        String voiceLengthInfo = getVoiceLengthInfo(scriptFragments);
+        scriptSearcher.saveMergedVoicePathAndVoiceLengthInfo(identificationNumber, outputPath.toString(), voiceLengthInfo);
+    }
+
+    private String getVoiceLengthInfo(List<ScriptFragment> scriptFragments) {
+        List<Integer> cumulative = new ArrayList<>();
+        int sum = 0;
+        for (ScriptFragment fragment : scriptFragments) {
+            sum += fragment.getVoiceLength();
+            cumulative.add(sum);
+        }
+        try {
+            return objectMapper.writeValueAsString(cumulative);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("voiceLengthInfo JSON 변환 실패", e);
+        }
+    }
+
+    private void validateScriptFragment(List<ScriptFragment> scriptFragments) {
+        if(scriptFragments.isEmpty()) {
+            throw new ScriptFragmentException(SCRIPT_FRAGMENT_NOT_FOUND);
+        }
+    }
 }

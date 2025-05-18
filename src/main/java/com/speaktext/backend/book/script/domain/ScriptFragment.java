@@ -18,8 +18,10 @@ public class ScriptFragment {
     private String utterance;
     private Long index;
     private boolean narration;
+    private String voicePath;
+    private Long voiceLength;
 
-    public static ScriptFragment of(String identificationNumber, Long index, String speaker, String utterance) {
+    public static ScriptFragment of(String identificationNumber, Long index, String speaker, String utterance, String voicePath, Long voiceLength) {
         boolean isNarration = speaker != null && speaker.startsWith("나레이션");
 
         return ScriptFragment.builder()
@@ -28,6 +30,8 @@ public class ScriptFragment {
                 .speaker(speaker)
                 .utterance(utterance)
                 .narration(isNarration)
+                .voicePath(voicePath)
+                .voiceLength(voiceLength)
                 .build();
     }
 

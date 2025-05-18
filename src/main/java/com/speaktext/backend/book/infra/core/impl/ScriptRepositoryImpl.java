@@ -35,4 +35,10 @@ public class ScriptRepositoryImpl implements ScriptRepository {
         return scriptJpaRepository.findByAuthorIdAndIsCompleted(authorId, isCompleted, pageable);
     }
 
+    @Override
+    public void saveMergedVoicePathAndVoiceLengthInfo(Script script, String mergedVoicePath, String voiceLengthInfo) {
+        script.updateMergedVoicePathAndVoiceLengthInfo(mergedVoicePath, voiceLengthInfo);
+        scriptJpaRepository.save(script);
+    }
+
 }

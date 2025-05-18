@@ -11,7 +11,9 @@ public record ScriptModificationRequest(
     public record FragmentUpdate(
             Long index,
             String speaker,
-            String utterance
+            String utterance,
+            String voicePath,
+            Long voiceLength
     ) {}
 
     public List<ScriptFragment> toScriptFragments() {
@@ -20,7 +22,9 @@ public record ScriptModificationRequest(
                         identificationNumber,
                         update.index,
                         update.speaker,
-                        update.utterance
+                        update.utterance,
+                        update.voicePath,
+                        update.voiceLength
                 ))
                 .toList();
     }
