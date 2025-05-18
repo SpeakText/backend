@@ -1,21 +1,22 @@
 package com.speaktext.backend.book.infra.core.impl;
 
+import com.speaktext.backend.book.voice.application.VoiceLengthAnalyzer;
 import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
-import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.sound.sampled.AudioFileFormat;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class LocalVoiceStorage implements VoiceStorage {
 
     private static final String OUTPUT_DIR = "outputs";
+    private final VoiceLengthAnalyzer voiceLengthAnalyzer;
 
     @Override
     public Path save(String filename, InputStream content) {
@@ -39,16 +40,7 @@ public class LocalVoiceStorage implements VoiceStorage {
 
     @Override
     public Long getVoiceLength(String filename) {
-        try {
-            File mp3File = Path.of(OUTPUT_DIR, filename + ".mp3").toFile();
-            AudioFileFormat fileFormat = new MpegAudioFileReader().getAudioFileFormat(mp3File);
-            Map<String, Object> properties = fileFormat.properties();
-
-            Long durationMicros = (Long) properties.get("duration");
-            return durationMicros != null ? durationMicros / 1_000 : 0L;
-        } catch (Exception e) {
-            throw new RuntimeException("MP3 재생 시간 읽기 실패", e);
-        }
+        File file = Path.of(OUTPUT_DIR, filename + ".mp3").toFile();
+        return voiceLengthAnalyzer.getVoiceLength(file);
     }
-
 }
