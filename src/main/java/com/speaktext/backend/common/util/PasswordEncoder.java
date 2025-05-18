@@ -12,8 +12,8 @@ public class PasswordEncoder {
         return BCrypt.hashpw(rawPassword, BCrypt.gensalt());
     }
 
-    public void matches(String rawPassword, String encodedPassword) {
-        BCrypt.checkpw(rawPassword, encodedPassword);
+    public Boolean matches(String rawPassword, String encodedPassword) {
+        return BCrypt.checkpw(rawPassword, encodedPassword);
     }
 
 }

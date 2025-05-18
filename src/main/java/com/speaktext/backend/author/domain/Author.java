@@ -41,9 +41,7 @@ public class Author {
     }
 
     public void isPasswordMatch(String rawPassword, PasswordEncoder passwordEncoder) {
-        try {
-            passwordEncoder.matches(rawPassword, this.password);
-        } catch (Exception e) {
+        if (!passwordEncoder.matches(rawPassword, this.password)) {
             throw new AuthException(PASSWORD_NOT_MATCH);
         }
     }

@@ -1,14 +1,17 @@
 package com.speaktext.backend.book.infra.core.impl;
 
 import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Component
+@RequiredArgsConstructor
 public class LocalVoiceStorage implements VoiceStorage {
 
     private static final String OUTPUT_DIR = "outputs";
@@ -33,4 +36,8 @@ public class LocalVoiceStorage implements VoiceStorage {
         }
     }
 
+    @Override
+    public File getVoiceFile(String filename) {
+        return Path.of(OUTPUT_DIR, filename + ".mp3").toFile();
+    }
 }

@@ -63,4 +63,18 @@ public class ScriptFragmentRepositoryImpl implements ScriptFragmentRepository {
         return scriptFragmentMongoRepository.findByIdentificationNumberAndIndex(identificationNumber, index);
     }
 
+    @Override
+    public void saveVoicePathAndLength(String identificationNumber, Long index, Long voiceLength, String voicePath) {
+        Query query = Query.query(
+                Criteria.where("identificationNumber").is(identificationNumber)
+                        .and("index").is(index)
+        );
+
+        Update update = new Update()
+                .set("voicePath", voicePath)
+                .set("voiceLength", voiceLength);
+
+        mongoTemplate.updateFirst(query, update, ScriptFragment.class);
+    }
+
 }
