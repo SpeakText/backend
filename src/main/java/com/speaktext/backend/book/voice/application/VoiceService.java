@@ -1,6 +1,5 @@
 package com.speaktext.backend.book.voice.application;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.speaktext.backend.book.infra.audio.VoiceConcatenator;
 import com.speaktext.backend.book.script.application.implement.CharacterSearcher;
 import com.speaktext.backend.book.script.application.implement.ScriptSearcher;
@@ -11,7 +10,8 @@ import com.speaktext.backend.book.script.domain.repository.ScriptFragmentReposit
 import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.ScriptException;
 import com.speaktext.backend.book.script.exception.ScriptFragmentException;
-import com.speaktext.backend.book.voice.domain.CumulativeVoiceDuration;
+import com.speaktext.backend.book.voice.application.factory.CumulativeVoiceDurationFactory;
+import com.speaktext.backend.book.voice.vo.CumulativeVoiceDuration;
 import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
 import com.speaktext.backend.book.voice.exception.VoiceException;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +32,11 @@ public class VoiceService {
     private final ScriptSearcher scriptSearcher;
     private final CharacterSearcher characterSearcher;
     private final VoiceDispatcher voiceDispatcher;
-    private final ObjectMapper objectMapper;
     private final ScriptFragmentRepository scriptFragmentRepository;
     private final VoiceConcatenator voiceConcatenator;
     private final VoiceStorage voiceStorage;
     private final ScriptRepository scriptRepository;
+    private final CumulativeVoiceDurationFactory cumulativeVoiceDurationFactory;
 
     public void generateVoice(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
@@ -67,7 +67,8 @@ public class VoiceService {
                 .toList();
 
         Path outputPath = voiceConcatenator.concatenate(voiceFiles, identificationNumber);
-        String voiceLengthInfo = CumulativeVoiceDuration.fromFragments(scriptFragments, objectMapper).getJson();
+        CumulativeVoiceDuration cumulativeVoiceDuration = cumulativeVoiceDurationFactory.fromFragments(scriptFragments);
+        String voiceLengthInfo = cumulativeVoiceDuration.getJson();
         scriptRepository.saveMergedVoicePathAndVoiceLengthInfo(identificationNumber, outputPath.toString(), voiceLengthInfo);
     }
 
