@@ -10,6 +10,7 @@ import java.util.Map;
 
 @Component
 public class Mp3VoiceLengthAnalyzer implements VoiceLengthAnalyzer {
+
     private static final Long MICROSECONDS_PER_MILLISECOND = 1000L;
 
     @Override

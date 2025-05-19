@@ -26,6 +26,9 @@ public class Script {
     private int totalFragments;
     private int fragmentsCount;
     private boolean isCompleted;
+    private String mergedVoicePath;
+    @Lob
+    private String voiceLengthInfo;
 
     public static Script createInitial(String identificationNumber, String title, int fragmentsCount, Long authorId) {
         return Script.builder()
@@ -36,6 +39,8 @@ public class Script {
                 .totalFragments(fragmentsCount)
                 .fragmentsCount(0)
                 .authorId(authorId)
+                .mergedVoicePath("")
+                .voiceLengthInfo("")
                 .build();
     }
 
@@ -48,6 +53,11 @@ public class Script {
 
     public void updateNarrationVoice(VoiceType voiceType) {
         this.narrationVoice = voiceType;
+    }
+
+    public void updateMergedVoicePathAndVoiceLengthInfo(String mergedVoicePath, String voiceLengthInfo) {
+        this.mergedVoicePath = mergedVoicePath;
+        this.voiceLengthInfo = voiceLengthInfo;
     }
 
     public boolean hasVoice() {

@@ -39,3 +39,4 @@ application.yml
 templates/
 static/
 outputs
+mergedVoices
