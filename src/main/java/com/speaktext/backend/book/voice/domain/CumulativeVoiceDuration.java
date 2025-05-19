@@ -9,29 +9,29 @@ import java.util.List;
 
 public class CumulativeVoiceDuration {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final String cumulativeDurationsJson;
 
-    private final List<Integer> cumulativeDurations;
-
-    private CumulativeVoiceDuration(List<Integer> cumulativeDurations) {
-        this.cumulativeDurations = List.copyOf(cumulativeDurations);
+    private CumulativeVoiceDuration(String cumulativeDurationsJson) {
+        this.cumulativeDurationsJson = cumulativeDurationsJson;
     }
 
-    public static CumulativeVoiceDuration fromFragments(List<ScriptFragment> fragments) {
+    public static CumulativeVoiceDuration fromFragments(List<ScriptFragment> fragments, ObjectMapper objectMapper) {
         List<Integer> cumulative = new ArrayList<>();
         int sum = 0;
         for (ScriptFragment fragment : fragments) {
             sum += fragment.getVoiceLength();
             cumulative.add(sum);
         }
-        return new CumulativeVoiceDuration(cumulative);
+
+        try {
+            String json = objectMapper.writeValueAsString(cumulative);
+            return new CumulativeVoiceDuration(json);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("CumulativeVoiceDuration JSON 직렬화 실패", e);
+        }
     }
 
-    public String toJson() {
-        try {
-            return objectMapper.writeValueAsString(cumulativeDurations);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("CumulativeVoiceDuration JSON 변환 실패", e);
-        }
+    public String getJson() {
+        return cumulativeDurationsJson;
     }
 }

@@ -59,9 +59,4 @@ public class ScriptSearcher {
                 .orElseThrow(() -> new ScriptException(SCRIPT_FRAGMENT_NOT_FOUND));
     }
 
-    public void saveMergedVoicePathAndVoiceLengthInfo(String identificationNumber, String mergedVoicePath, String voiceInfo) {
-        scriptRepository.saveMergedVoicePathAndVoiceLengthInfo(findByIdentificationNumber(identificationNumber)
-                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND)), mergedVoicePath, voiceInfo);
-    }
-
 }

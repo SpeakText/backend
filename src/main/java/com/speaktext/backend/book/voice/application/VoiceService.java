@@ -1,5 +1,6 @@
 package com.speaktext.backend.book.voice.application;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.speaktext.backend.book.infra.audio.VoiceConcatenator;
 import com.speaktext.backend.book.script.application.implement.CharacterSearcher;
 import com.speaktext.backend.book.script.application.implement.ScriptSearcher;
@@ -7,6 +8,7 @@ import com.speaktext.backend.book.script.domain.Script;
 import com.speaktext.backend.book.script.domain.ScriptCharacter;
 import com.speaktext.backend.book.script.domain.ScriptFragment;
 import com.speaktext.backend.book.script.domain.repository.ScriptFragmentRepository;
+import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.ScriptException;
 import com.speaktext.backend.book.script.exception.ScriptFragmentException;
 import com.speaktext.backend.book.voice.domain.CumulativeVoiceDuration;
@@ -30,9 +32,11 @@ public class VoiceService {
     private final ScriptSearcher scriptSearcher;
     private final CharacterSearcher characterSearcher;
     private final VoiceDispatcher voiceDispatcher;
+    private final ObjectMapper objectMapper;
     private final ScriptFragmentRepository scriptFragmentRepository;
     private final VoiceConcatenator voiceConcatenator;
     private final VoiceStorage voiceStorage;
+    private final ScriptRepository scriptRepository;
 
     public void generateVoice(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
@@ -63,8 +67,8 @@ public class VoiceService {
                 .toList();
 
         Path outputPath = voiceConcatenator.concatenate(voiceFiles, identificationNumber);
-        String voiceLengthInfo = CumulativeVoiceDuration.fromFragments(scriptFragments).toJson();
-        scriptSearcher.saveMergedVoicePathAndVoiceLengthInfo(identificationNumber, outputPath.toString(), voiceLengthInfo);
+        String voiceLengthInfo = CumulativeVoiceDuration.fromFragments(scriptFragments, objectMapper).getJson();
+        scriptRepository.saveMergedVoicePathAndVoiceLengthInfo(identificationNumber, outputPath.toString(), voiceLengthInfo);
     }
 
     private void validateScriptFragment(List<ScriptFragment> scriptFragments) {

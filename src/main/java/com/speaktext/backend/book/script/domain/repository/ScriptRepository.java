@@ -13,5 +13,5 @@ public interface ScriptRepository {
     Optional<Script> findByIdentificationNumber(String identificationNumber);
     Page<Script> findByAuthorIdAndIsCompleted(Long authorId, boolean isCompleted, Pageable pageable);
 
-    void saveMergedVoicePathAndVoiceLengthInfo(Script script, String mergedVoicePath, String voiceLengthInfo);
+    void saveMergedVoicePathAndVoiceLengthInfo(String identificationNumber, String mergedVoicePath, String voiceLengthInfo);
 }

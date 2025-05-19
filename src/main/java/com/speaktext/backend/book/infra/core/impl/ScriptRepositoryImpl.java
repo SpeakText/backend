@@ -2,12 +2,15 @@ package com.speaktext.backend.book.infra.core.impl;
 
 import com.speaktext.backend.book.script.domain.Script;
 import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
+import com.speaktext.backend.book.script.exception.ScriptException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+
+import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
 
 @Component
 @RequiredArgsConstructor
@@ -36,7 +39,9 @@ public class ScriptRepositoryImpl implements ScriptRepository {
     }
 
     @Override
-    public void saveMergedVoicePathAndVoiceLengthInfo(Script script, String mergedVoicePath, String voiceLengthInfo) {
+    public void saveMergedVoicePathAndVoiceLengthInfo(String identificationNumber, String mergedVoicePath, String voiceLengthInfo) {
+        Script script = scriptJpaRepository.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
         script.updateMergedVoicePathAndVoiceLengthInfo(mergedVoicePath, voiceLengthInfo);
         scriptJpaRepository.save(script);
     }
