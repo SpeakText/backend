@@ -13,12 +13,14 @@ public class CharacterVoiceGenerator {
     private final VoiceProvider voiceProvider;
     private final VoiceRegisterHandler voiceRegisterHandler;
 
-    public void generateVoice(String identificationNumber, Long index, String speaker, String utterance, VoiceType voiceType, String vibe) {
+    public void generateVoice(String identificationNumber, Long index, String speaker, String utterance, VoiceType voiceType) {
         String fileName = identificationNumber + "_" + index;
-        Response response = voiceProvider.generateVoice(
+        Response response = voiceProvider.generateCharacterVoice(
+                identificationNumber,
+                index,
+                speaker,
                 utterance,
-                voiceType.toString(),
-                vibe,
+                voiceType,
                 fileName,
                 1.0
         );

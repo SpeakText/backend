@@ -13,26 +13,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CharacterVoiceGenerationWorker {
 
-    private final CharacterVibeGenerator characterVibeGenerator;
     private final CharacterVoiceGenerator characterVoiceGenerator;
 
     @RabbitListener(queues = "character.voice.queue", containerFactory = "voiceListenerContainerFactory")
     public void handleCharacterVoiceGeneration(CharacterVoiceGenerationEvent event) {
-        String vibe = characterVibeGenerator.generateVibe(
-                event.identificationNumber(),
-                event.index(),
-                event.speaker()
-        );
-
-        log.info("Vibe: {}", vibe);
-
         characterVoiceGenerator.generateVoice(
                 event.identificationNumber(),
                 event.index(),
                 event.speaker(),
                 event.utterance(),
-                event.voiceType(),
-                vibe
+                event.voiceType()
         );
     }
 

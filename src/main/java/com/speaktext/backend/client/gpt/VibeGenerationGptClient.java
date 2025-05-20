@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "VibeGenerationClient", url = "${llm.api.base-url}/v1/chat/completions")
-public interface VibeGenerationClient {
+public interface VibeGenerationGptClient {
 
     @PostMapping
     VibeGenerationResponse generateVibe(
