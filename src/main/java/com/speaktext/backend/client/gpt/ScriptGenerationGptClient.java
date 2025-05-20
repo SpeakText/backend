@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "ExchangeRateOpenFeign", url = "${llm.api.base-url}/v1/chat/completions")
-public interface ScriptGenerationClient {
+public interface ScriptGenerationGptClient {
 
     @PostMapping
     ScriptGenerationResponse generate(

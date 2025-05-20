@@ -9,9 +9,9 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class CharacterVibeAdapter {
+public class CharacterVibeGptAdapter {
 
-    private final VibeGenerationClient vibeGenerationClient;
+    private final VibeGenerationGptClient vibeGenerationGptClient;
 
     private static final String SYSTEM_PROMPT = """
         You are a professional voice director for audiobook characters, specialized in Korean language narration.
@@ -49,7 +49,7 @@ public class CharacterVibeAdapter {
                 ))
                 .build();
 
-        VibeGenerationResponse response = vibeGenerationClient.generateVibe(request);
+        VibeGenerationResponse response = vibeGenerationGptClient.generateVibe(request);
 
         return response.getChoices()[0].getMessage().getContent();
     }

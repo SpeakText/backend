@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.Map;
 
 @FeignClient(name = "VoiceGenerationClient", url = "${llm.api.base-url}/v1/audio/speech")
-public interface VoiceGenerationClient {
+public interface VoiceGenerationGptClient {
 
     @PostMapping
     Response generateSpeech(
