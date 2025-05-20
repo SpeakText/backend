@@ -72,7 +72,7 @@ public class AdminArgumentResolver implements HandlerMethodArgumentResolver {
 
     private void validateAuthorRole(SessionUser sessionUser) {
         if (sessionUser.userType() != UserType.ADMIN) {
-            throw new AuthException(UNAUTHORIZED_AUTHOR);
+            throw new AuthException(NO_SUCH_ADMIN);
         }
     }
 

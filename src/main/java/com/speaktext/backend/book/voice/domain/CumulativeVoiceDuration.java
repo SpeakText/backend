@@ -1,4 +1,4 @@
-package com.speaktext.backend.book.voice.vo;
+package com.speaktext.backend.book.voice.domain;
 
 public class CumulativeVoiceDuration {
 

@@ -1,7 +1,7 @@
 package com.speaktext.backend.book.voice.application.factory;
 
 import com.speaktext.backend.book.script.domain.ScriptFragment;
-import com.speaktext.backend.book.voice.vo.CumulativeVoiceDuration;
+import com.speaktext.backend.book.voice.domain.CumulativeVoiceDuration;
 import com.speaktext.backend.common.util.mapper.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
