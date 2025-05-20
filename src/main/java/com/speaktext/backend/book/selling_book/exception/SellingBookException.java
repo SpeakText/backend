@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class SellingBookException implements BaseException {
+public class SellingBookException extends BaseException {
 
     private final SellingBookExceptionType exceptionType;
 

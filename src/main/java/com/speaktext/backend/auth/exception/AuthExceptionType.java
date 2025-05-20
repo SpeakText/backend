@@ -11,6 +11,7 @@ public enum AuthExceptionType implements BaseExceptionType {
 
     NO_SUCH_MEMBER(NOT_FOUND, "해당 유저를 찾을 수가 없습니다."),
     NO_SUCH_AUTHOR(NOT_FOUND, "해당 작가를 찾을 수가 없습니다."),
+    NO_SUCH_ADMIN(NOT_FOUND, "해당 관리자를 찾을 수가 없습니다."),
     PASSWORD_NOT_MATCH(FORBIDDEN, "비밀번호가 일치하지 않습니다."),
     UNAUTHORIZED_MEMBER(FORBIDDEN, "멤버 권한이 아닙니다."),
     UNAUTHORIZED_AUTHOR(FORBIDDEN, "작가 권한이 아닙니다."),

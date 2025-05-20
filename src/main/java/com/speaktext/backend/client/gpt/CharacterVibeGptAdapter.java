@@ -1,5 +1,6 @@
 package com.speaktext.backend.client.gpt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.speaktext.backend.client.gpt.dto.VibeGenerationRequest;
 import com.speaktext.backend.client.gpt.dto.VibeGenerationResponse;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class CharacterVibeGptAdapter {
         Pronunciation: Clear and precise, suitable for Korean listening habits.
         Pauses: Natural pauses between clauses, especially before important phrases.
         """;
+    private final ObjectMapper objectMapper;
 
     public String generateVibe(String userPrompt) {
         VibeGenerationRequest request = VibeGenerationRequest.builder()
@@ -49,9 +51,16 @@ public class CharacterVibeGptAdapter {
                 ))
                 .build();
 
-        VibeGenerationResponse response = vibeGenerationGptClient.generateVibe(request);
+        String rawResponse = vibeGenerationGptClient.generateVibeRaw(request);
+        System.out.println("🔥 Raw GPT Response:\n" + rawResponse);
 
-        return response.getChoices()[0].getMessage().getContent();
+        try {
+            VibeGenerationResponse response= objectMapper.readValue(rawResponse, VibeGenerationResponse.class);
+            return response.getChoices()[0].getMessage().getContent();
+        } catch (Exception e) {
+            throw new RuntimeException("JSON 파싱 실패: " + e.getMessage(), e);
+        }
+        
     }
 
 }

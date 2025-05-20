@@ -31,6 +31,7 @@ public class SellingBookService {
         }
         PendingBook pendingBook = pendingBookSearcher.findByIdentificationNumber(identificationNumber);
         SellingBook sellingBook = SellingBook.from(pendingBook);
+        pendingBook.markAsDone();
         return new PublishBookResponse(
             sellingBookRepository.save(sellingBook).getSellingBookId()
         );

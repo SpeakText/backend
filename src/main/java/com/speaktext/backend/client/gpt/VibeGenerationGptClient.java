@@ -1,7 +1,6 @@
 package com.speaktext.backend.client.gpt;
 
 import com.speaktext.backend.client.gpt.dto.VibeGenerationRequest;
-import com.speaktext.backend.client.gpt.dto.VibeGenerationResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface VibeGenerationGptClient {
 
     @PostMapping
-    VibeGenerationResponse generateVibe(
+    String generateVibeRaw(
             @RequestBody VibeGenerationRequest request
     );
 
