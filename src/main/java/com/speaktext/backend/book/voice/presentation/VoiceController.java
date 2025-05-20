@@ -8,10 +8,7 @@ import com.speaktext.backend.book.voice.presentation.dto.VoiceDownloadRequest;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceGenerateRequest;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceMergeRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/voice")
@@ -48,6 +45,15 @@ public class VoiceController {
     ) {
         String voiceFilePath = voiceService.downloadVoice(request.identificationNumber());
         return ResponseEntity.ok(voiceFilePath);
+    }
+
+    @GetMapping("/voice-length-info/{identificationNumber}")
+    public ResponseEntity<String> updateVoiceLengthInfo(
+            @Member Long memberId,
+            @PathVariable String identificationNumber
+    ) {
+        String voiceLengthInfo = voiceService.getVoiceLengthInfo(identificationNumber);
+        return ResponseEntity.ok(voiceLengthInfo);
     }
 
 }

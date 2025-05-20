@@ -84,4 +84,14 @@ public class VoiceService {
 
         return script.getMergedVoicePath();
     }
+
+    public String getVoiceLengthInfo(String identificationNumber) {
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+
+        if (script.getVoiceLengthInfo() == null) {
+            throw new VoiceException(NO_VOICE);
+        }
+        return script.getVoiceLengthInfo();
+    }
 }
