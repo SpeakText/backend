@@ -11,7 +11,7 @@ import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.ScriptException;
 import com.speaktext.backend.book.script.exception.ScriptFragmentException;
 import com.speaktext.backend.book.voice.application.factory.CumulativeVoiceDurationFactory;
-import com.speaktext.backend.book.voice.vo.CumulativeVoiceDuration;
+import com.speaktext.backend.book.voice.domain.CumulativeVoiceDuration;
 import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
 import com.speaktext.backend.book.voice.exception.VoiceException;
 import lombok.RequiredArgsConstructor;

@@ -27,6 +27,7 @@ public class Script {
     private int fragmentsCount;
     private boolean isCompleted;
     private String mergedVoicePath;
+
     @Lob
     private String voiceLengthInfo;
 
@@ -62,6 +63,10 @@ public class Script {
 
     public boolean hasVoice() {
         return this.narrationVoice != VoiceType.NO_VOICE;
+    }
+
+    public boolean hasMergedVoice() {
+        return this.mergedVoicePath != null;
     }
 
 }

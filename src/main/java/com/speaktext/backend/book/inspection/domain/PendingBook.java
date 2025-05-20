@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class PendingBook {
 
     public enum InspectionStatus {
-        REJECTED, PENDING, APPROVED
+        REJECTED, PENDING, APPROVED, DONE
     }
 
     @Id
@@ -65,6 +65,10 @@ public class PendingBook {
 
     public void reject() {
         this.inspectionStatus = InspectionStatus.REJECTED;
+    }
+
+    public void markAsDone() {
+        this.inspectionStatus = InspectionStatus.DONE;
     }
 
 }
