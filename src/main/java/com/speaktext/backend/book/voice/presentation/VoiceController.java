@@ -2,7 +2,9 @@ package com.speaktext.backend.book.voice.presentation;
 
 import com.speaktext.backend.auth.presentation.anotation.Admin;
 import com.speaktext.backend.auth.presentation.anotation.Author;
+import com.speaktext.backend.auth.presentation.anotation.Member;
 import com.speaktext.backend.book.voice.application.VoiceService;
+import com.speaktext.backend.book.voice.presentation.dto.VoiceDownloadRequest;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceGenerateRequest;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceMergeRequest;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +39,15 @@ public class VoiceController {
     ) {
         voiceService.mergeVoice(request.identificationNumber());
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/download")
+    public ResponseEntity<String> downloadVoice(
+            @Member Long memberId,
+            @RequestBody VoiceDownloadRequest request
+    ) {
+        String voiceFilePath = voiceService.downloadVoice(request.identificationNumber());
+        return ResponseEntity.ok(voiceFilePath);
     }
 
 }
