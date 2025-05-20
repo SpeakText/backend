@@ -77,4 +77,21 @@ public class VoiceService {
             throw new ScriptFragmentException(SCRIPT_FRAGMENT_NOT_FOUND);
         }
     }
+
+    public String downloadVoice(String identificationNumber) {
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+
+        return script.getMergedVoicePath();
+    }
+
+    public String getVoiceLengthInfo(String identificationNumber) {
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+
+        if (script.getVoiceLengthInfo() == null) {
+            throw new VoiceException(NO_VOICE);
+        }
+        return script.getVoiceLengthInfo();
+    }
 }

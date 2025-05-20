@@ -2,14 +2,13 @@ package com.speaktext.backend.book.voice.presentation;
 
 import com.speaktext.backend.auth.presentation.anotation.Admin;
 import com.speaktext.backend.auth.presentation.anotation.Author;
+import com.speaktext.backend.auth.presentation.anotation.Member;
 import com.speaktext.backend.book.voice.application.VoiceService;
+import com.speaktext.backend.book.voice.presentation.dto.VoiceDownloadRequest;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceGenerateRequest;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceMergeRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/voice")
@@ -37,6 +36,24 @@ public class VoiceController {
     ) {
         voiceService.mergeVoice(request.identificationNumber());
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/download")
+    public ResponseEntity<String> downloadVoice(
+            @Member Long memberId,
+            @RequestBody VoiceDownloadRequest request
+    ) {
+        String voiceFilePath = voiceService.downloadVoice(request.identificationNumber());
+        return ResponseEntity.ok(voiceFilePath);
+    }
+
+    @GetMapping("/voice-length-info/{identificationNumber}")
+    public ResponseEntity<String> updateVoiceLengthInfo(
+            @Member Long memberId,
+            @PathVariable String identificationNumber
+    ) {
+        String voiceLengthInfo = voiceService.getVoiceLengthInfo(identificationNumber);
+        return ResponseEntity.ok(voiceLengthInfo);
     }
 
 }
