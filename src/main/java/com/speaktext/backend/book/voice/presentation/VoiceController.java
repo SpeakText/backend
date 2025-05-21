@@ -4,7 +4,7 @@ import com.speaktext.backend.auth.presentation.anotation.Admin;
 import com.speaktext.backend.auth.presentation.anotation.Author;
 import com.speaktext.backend.auth.presentation.anotation.Member;
 import com.speaktext.backend.book.voice.application.VoiceService;
-import com.speaktext.backend.book.voice.application.dto.VoiceGeneratedResponse;
+import com.speaktext.backend.book.voice.application.dto.MergedVoiceGeneratedResponse;
 import com.speaktext.backend.book.voice.application.dto.VoiceLengthInfoResponse;
 import com.speaktext.backend.book.voice.application.dto.VoicePathResponse;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceDownloadRequest;
@@ -59,12 +59,12 @@ public class VoiceController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{identificationNumber}/generated")
-    public ResponseEntity<VoiceGeneratedResponse> isVoiceGenerated(
+    @GetMapping("/{identificationNumber}/merged-voice/generated")
+    public ResponseEntity<MergedVoiceGeneratedResponse> isVoiceGenerated(
             @Author Long authorId,
             @PathVariable String identificationNumber
     ) {
-        VoiceGeneratedResponse response = voiceService.isGenerated(identificationNumber);
+        MergedVoiceGeneratedResponse response = voiceService.isGenerated(identificationNumber);
         return ResponseEntity.ok(response);
     }
 

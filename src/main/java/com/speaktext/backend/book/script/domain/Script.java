@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 public class Script {
 
     public enum VoiceStatus {
-        NO_VOICE, GENERATED
+        NOT_GENERATED,
+        FRAGMENTS_VOICE_GENERATED,
+        MERGED_VOICE_GENERATED
     }
 
     @Id
@@ -49,7 +51,7 @@ public class Script {
                 .authorId(authorId)
                 .mergedVoicePath("")
                 .voiceLengthInfo("")
-                .voiceStatus(VoiceStatus.NO_VOICE)
+                .voiceStatus(VoiceStatus.NOT_GENERATED)
                 .build();
     }
 
@@ -77,7 +79,15 @@ public class Script {
         return this.mergedVoicePath != null;
     }
 
-    public boolean isGenerated() {
-        return this.voiceStatus == VoiceStatus.GENERATED;
+    public boolean isMergedVoiceGenerated() {
+        return this.voiceStatus == VoiceStatus.MERGED_VOICE_GENERATED;
+    }
+
+    public void markVoiceStatusAsFragmentsGenerated() {
+        this.voiceStatus = VoiceStatus.FRAGMENTS_VOICE_GENERATED;
+    }
+
+    public void markVoiceStatusAsMergedVoiceGenerated() {
+        this.voiceStatus = VoiceStatus.MERGED_VOICE_GENERATED;
     }
 }

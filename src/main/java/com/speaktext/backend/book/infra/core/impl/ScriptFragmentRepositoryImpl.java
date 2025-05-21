@@ -77,4 +77,9 @@ public class ScriptFragmentRepositoryImpl implements ScriptFragmentRepository {
         mongoTemplate.updateFirst(query, update, ScriptFragment.class);
     }
 
+    @Override
+    public List<ScriptFragment> findByIdentificationNumber(String identificationNumber) {
+        return scriptFragmentMongoRepository.findAllByIdentificationNumber(identificationNumber);
+    }
+
 }

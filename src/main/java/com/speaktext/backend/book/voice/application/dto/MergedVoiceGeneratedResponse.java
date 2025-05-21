@@ -1,6 +1,6 @@
 package com.speaktext.backend.book.voice.application.dto;
 
-public record VoiceGeneratedResponse(
+public record MergedVoiceGeneratedResponse(
         boolean isGenerated
 ) {
 }

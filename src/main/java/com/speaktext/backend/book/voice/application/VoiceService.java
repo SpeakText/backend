@@ -10,7 +10,7 @@ import com.speaktext.backend.book.script.domain.repository.ScriptFragmentReposit
 import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.ScriptException;
 import com.speaktext.backend.book.script.exception.ScriptFragmentException;
-import com.speaktext.backend.book.voice.application.dto.VoiceGeneratedResponse;
+import com.speaktext.backend.book.voice.application.dto.MergedVoiceGeneratedResponse;
 import com.speaktext.backend.book.voice.application.dto.VoiceLengthInfoResponse;
 import com.speaktext.backend.book.voice.application.dto.VoicePathResponse;
 import com.speaktext.backend.book.voice.application.factory.CumulativeVoiceDurationFactory;
@@ -19,11 +19,14 @@ import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
 import com.speaktext.backend.book.voice.exception.VoiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
+import static com.speaktext.backend.book.script.domain.Script.VoiceStatus.NOT_GENERATED;
 import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
 import static com.speaktext.backend.book.script.exception.ScriptFragmentExceptionType.SCRIPT_FRAGMENT_NOT_FOUND;
 import static com.speaktext.backend.book.voice.exception.VoiceExceptionType.NO_VOICE;
@@ -73,6 +76,14 @@ public class VoiceService {
         CumulativeVoiceDuration cumulativeVoiceDuration = cumulativeVoiceDurationFactory.fromFragments(scriptFragments);
         String voiceLengthInfo = cumulativeVoiceDuration.getJson();
         scriptRepository.saveMergedVoicePathAndVoiceLengthInfo(identificationNumber, outputPath.toString(), voiceLengthInfo);
+        updateScriptVoiceStatus(identificationNumber);
+    }
+
+    private void updateScriptVoiceStatus(String identificationNumber) {
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+        script.markVoiceStatusAsMergedVoiceGenerated();
+        scriptRepository.save(script);
     }
 
     private void validateScriptFragment(List<ScriptFragment> scriptFragments) {
@@ -88,6 +99,7 @@ public class VoiceService {
         return new VoicePathResponse(script.getMergedVoicePath());
     }
 
+    @Transactional
     public VoiceLengthInfoResponse getVoiceLengthInfo(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
@@ -95,13 +107,32 @@ public class VoiceService {
         if (script.getVoiceLengthInfo() == null) {
             throw new VoiceException(NO_VOICE);
         }
+
         return new VoiceLengthInfoResponse(script.getVoiceLengthInfo());
     }
 
-    public VoiceGeneratedResponse isGenerated(String identificationNumber) {
+    public MergedVoiceGeneratedResponse isGenerated(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
 
-        return new VoiceGeneratedResponse(script.isGenerated());
+        proceedWithVoiceGeneration(script);
+
+        return new MergedVoiceGeneratedResponse(script.isMergedVoiceGenerated());
     }
+
+    private void proceedWithVoiceGeneration(Script script) {
+        if (script.getVoiceStatus() == NOT_GENERATED) {
+            Optional<ScriptFragment> nullVoicePathFragment =
+                    scriptSearcher.findScriptFragmentsByIdentificationNumber(script.getIdentificationNumber())
+                    .stream()
+                    .filter(scriptFragment -> scriptFragment.getVoicePath() == null)
+                    .findFirst();
+
+            if (nullVoicePathFragment.isEmpty()) {
+                script.markVoiceStatusAsFragmentsGenerated();
+                scriptRepository.save(script);
+            }
+        }
+    }
+
 }
