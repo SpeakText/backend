@@ -10,6 +10,9 @@ import com.speaktext.backend.book.script.domain.repository.ScriptFragmentReposit
 import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.ScriptException;
 import com.speaktext.backend.book.script.exception.ScriptFragmentException;
+import com.speaktext.backend.book.voice.application.dto.VoiceGeneratedResponse;
+import com.speaktext.backend.book.voice.application.dto.VoiceLengthInfoResponse;
+import com.speaktext.backend.book.voice.application.dto.VoicePathResponse;
 import com.speaktext.backend.book.voice.application.factory.CumulativeVoiceDurationFactory;
 import com.speaktext.backend.book.voice.domain.CumulativeVoiceDuration;
 import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
@@ -78,20 +81,27 @@ public class VoiceService {
         }
     }
 
-    public String downloadVoice(String identificationNumber) {
+    public VoicePathResponse downloadVoice(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
 
-        return script.getMergedVoicePath();
+        return new VoicePathResponse(script.getMergedVoicePath());
     }
 
-    public String getVoiceLengthInfo(String identificationNumber) {
+    public VoiceLengthInfoResponse getVoiceLengthInfo(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
 
         if (script.getVoiceLengthInfo() == null) {
             throw new VoiceException(NO_VOICE);
         }
-        return script.getVoiceLengthInfo();
+        return new VoiceLengthInfoResponse(script.getVoiceLengthInfo());
+    }
+
+    public VoiceGeneratedResponse isGenerated(String identificationNumber) {
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+
+        return new VoiceGeneratedResponse(script.isGenerated());
     }
 }

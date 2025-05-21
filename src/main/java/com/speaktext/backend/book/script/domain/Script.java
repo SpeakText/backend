@@ -13,6 +13,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Script {
 
+    public enum VoiceStatus {
+        NO_VOICE, GENERATED
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long scriptId;
@@ -31,6 +35,9 @@ public class Script {
     @Lob
     private String voiceLengthInfo;
 
+    @Enumerated(EnumType.STRING)
+    private VoiceStatus voiceStatus;
+
     public static Script createInitial(String identificationNumber, String title, int fragmentsCount, Long authorId) {
         return Script.builder()
                 .identificationNumber(identificationNumber)
@@ -42,6 +49,7 @@ public class Script {
                 .authorId(authorId)
                 .mergedVoicePath("")
                 .voiceLengthInfo("")
+                .voiceStatus(VoiceStatus.NO_VOICE)
                 .build();
     }
 
@@ -69,4 +77,7 @@ public class Script {
         return this.mergedVoicePath != null;
     }
 
+    public boolean isGenerated() {
+        return this.voiceStatus == VoiceStatus.GENERATED;
+    }
 }
