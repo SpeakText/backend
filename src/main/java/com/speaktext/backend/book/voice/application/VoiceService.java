@@ -67,7 +67,9 @@ public class VoiceService {
     }
 
     public void mergeVoice(String identificationNumber) {
-        validateVoiceStatus(identificationNumber);
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+        validateVoiceStatus(script);
         List<ScriptFragment> scriptFragments = scriptFragmentRepository.findByIdentificationNumberOrderByIndex(identificationNumber);
         validateScriptFragment(scriptFragments);
         List<File> voiceFiles = scriptFragments.stream()
@@ -79,21 +81,16 @@ public class VoiceService {
         CumulativeVoiceDuration cumulativeVoiceDuration = cumulativeVoiceDurationFactory.fromFragments(scriptFragments);
         String voiceLengthInfo = cumulativeVoiceDuration.getJson();
         scriptRepository.saveMergedVoicePathAndVoiceLengthInfo(identificationNumber, outputPath.toString(), voiceLengthInfo);
-        updateScriptVoiceStatus(identificationNumber);
+        updateScriptVoiceStatus(script);
     }
 
-    private void validateVoiceStatus(String identificationNumber) {
-        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
-                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
-
+    private void validateVoiceStatus(Script script) {
         if (script.getVoiceStatus() != MERGE_REQUESTED) {
             throw new ScriptException(VOICE_STATUS_NOT_MERGE_REQUESTED);
         }
     }
 
-    private void updateScriptVoiceStatus(String identificationNumber) {
-        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
-                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+    private void updateScriptVoiceStatus(Script script) {
         script.markVoiceStatusAsMergedVoiceGenerated();
         scriptRepository.save(script);
     }
@@ -111,7 +108,6 @@ public class VoiceService {
         return new VoicePathResponse(script.getMergedVoicePath());
     }
 
-    @Transactional
     public VoiceLengthInfoResponse getVoiceLengthInfo(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
@@ -123,6 +119,7 @@ public class VoiceService {
         return new VoiceLengthInfoResponse(script.getVoiceLengthInfo());
     }
 
+    @Transactional
     public MergedVoiceGeneratedResponse isGenerated(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
