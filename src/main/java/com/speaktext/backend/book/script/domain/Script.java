@@ -1,10 +1,13 @@
 package com.speaktext.backend.book.script.domain;
 
+import com.speaktext.backend.book.script.exception.ScriptException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.speaktext.backend.book.script.exception.ScriptExceptionType.*;
 
 @Entity
 @Builder
@@ -14,7 +17,10 @@ import lombok.NoArgsConstructor;
 public class Script {
 
     public enum VoiceStatus {
-        NO_VOICE, GENERATED
+        NOT_GENERATED,
+        FRAGMENTS_VOICE_GENERATED,
+        MERGE_REQUESTED,
+        MERGED_VOICE_GENERATED
     }
 
     @Id
@@ -49,7 +55,7 @@ public class Script {
                 .authorId(authorId)
                 .mergedVoicePath("")
                 .voiceLengthInfo("")
-                .voiceStatus(VoiceStatus.NO_VOICE)
+                .voiceStatus(VoiceStatus.NOT_GENERATED)
                 .build();
     }
 
@@ -77,7 +83,28 @@ public class Script {
         return this.mergedVoicePath != null;
     }
 
-    public boolean isGenerated() {
-        return this.voiceStatus == VoiceStatus.GENERATED;
+    public boolean isMergedVoiceGenerated() {
+        return this.voiceStatus == VoiceStatus.MERGED_VOICE_GENERATED;
+    }
+
+    public void markVoiceStatusAsFragmentsGenerated() {
+        if (this.voiceStatus != VoiceStatus.NOT_GENERATED) {
+            throw new ScriptException(VOICE_STATUS_NOT_NOT_GENERATED);
+        }
+        this.voiceStatus = VoiceStatus.FRAGMENTS_VOICE_GENERATED;
+    }
+
+    public void markVoiceStatusAsMergedVoiceGenerated() {
+        if (this.voiceStatus != VoiceStatus.MERGE_REQUESTED) {
+            throw new ScriptException(VOICE_STATUS_NOT_MERGE_REQUESTED);
+        }
+        this.voiceStatus = VoiceStatus.MERGED_VOICE_GENERATED;
+    }
+
+    public void markVoiceStatusAsMergeRequested() {
+        if (this.voiceStatus != VoiceStatus.FRAGMENTS_VOICE_GENERATED) {
+            throw new ScriptException(VOICE_STATUS_NOT_FRAGMENTS_VOICE_GENERATED);
+        }
+        this.voiceStatus = VoiceStatus.MERGE_REQUESTED;
     }
 }

@@ -10,7 +10,7 @@ import com.speaktext.backend.book.script.domain.repository.ScriptFragmentReposit
 import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.ScriptException;
 import com.speaktext.backend.book.script.exception.ScriptFragmentException;
-import com.speaktext.backend.book.voice.application.dto.VoiceGeneratedResponse;
+import com.speaktext.backend.book.voice.application.dto.MergedVoiceGeneratedResponse;
 import com.speaktext.backend.book.voice.application.dto.VoiceLengthInfoResponse;
 import com.speaktext.backend.book.voice.application.dto.VoicePathResponse;
 import com.speaktext.backend.book.voice.application.factory.CumulativeVoiceDurationFactory;
@@ -19,12 +19,17 @@ import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
 import com.speaktext.backend.book.voice.exception.VoiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
+import static com.speaktext.backend.book.script.domain.Script.VoiceStatus.MERGE_REQUESTED;
+import static com.speaktext.backend.book.script.domain.Script.VoiceStatus.NOT_GENERATED;
 import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
+import static com.speaktext.backend.book.script.exception.ScriptExceptionType.VOICE_STATUS_NOT_MERGE_REQUESTED;
 import static com.speaktext.backend.book.script.exception.ScriptFragmentExceptionType.SCRIPT_FRAGMENT_NOT_FOUND;
 import static com.speaktext.backend.book.voice.exception.VoiceExceptionType.NO_VOICE;
 
@@ -62,6 +67,9 @@ public class VoiceService {
     }
 
     public void mergeVoice(String identificationNumber) {
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+        validateVoiceStatus(script);
         List<ScriptFragment> scriptFragments = scriptFragmentRepository.findByIdentificationNumberOrderByIndex(identificationNumber);
         validateScriptFragment(scriptFragments);
         List<File> voiceFiles = scriptFragments.stream()
@@ -73,6 +81,18 @@ public class VoiceService {
         CumulativeVoiceDuration cumulativeVoiceDuration = cumulativeVoiceDurationFactory.fromFragments(scriptFragments);
         String voiceLengthInfo = cumulativeVoiceDuration.getJson();
         scriptRepository.saveMergedVoicePathAndVoiceLengthInfo(identificationNumber, outputPath.toString(), voiceLengthInfo);
+        updateScriptVoiceStatus(script);
+    }
+
+    private void validateVoiceStatus(Script script) {
+        if (script.getVoiceStatus() != MERGE_REQUESTED) {
+            throw new ScriptException(VOICE_STATUS_NOT_MERGE_REQUESTED);
+        }
+    }
+
+    private void updateScriptVoiceStatus(Script script) {
+        script.markVoiceStatusAsMergedVoiceGenerated();
+        scriptRepository.save(script);
     }
 
     private void validateScriptFragment(List<ScriptFragment> scriptFragments) {
@@ -95,13 +115,41 @@ public class VoiceService {
         if (script.getVoiceLengthInfo() == null) {
             throw new VoiceException(NO_VOICE);
         }
+
         return new VoiceLengthInfoResponse(script.getVoiceLengthInfo());
     }
 
-    public VoiceGeneratedResponse isGenerated(String identificationNumber) {
+    @Transactional
+    public MergedVoiceGeneratedResponse isGenerated(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
 
-        return new VoiceGeneratedResponse(script.isGenerated());
+        proceedWithVoiceGeneration(script);
+
+        return new MergedVoiceGeneratedResponse(script.isMergedVoiceGenerated());
+    }
+
+    private void proceedWithVoiceGeneration(Script script) {
+        if (script.getVoiceStatus() == NOT_GENERATED) {
+            Optional<ScriptFragment> nullVoicePathFragment =
+                    scriptSearcher.findScriptFragmentsByIdentificationNumber(script.getIdentificationNumber())
+                    .stream()
+                    .filter(scriptFragment -> scriptFragment.getVoicePath() == null)
+                    .findFirst();
+
+            if (nullVoicePathFragment.isEmpty()) {
+                script.markVoiceStatusAsFragmentsGenerated();
+                scriptRepository.save(script);
+            }
+        }
+    }
+
+    @Transactional
+    public void requestMergeVoiceGeneration(String identificationNumber) {
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+
+        script.markVoiceStatusAsMergeRequested();
+        scriptRepository.save(script);
     }
 }

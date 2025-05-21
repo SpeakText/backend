@@ -17,4 +17,6 @@ public interface ScriptFragmentRepository {
     Optional<ScriptFragment> findByIdentificationNumberAndIndex(String identificationNumber, Long index);
 
     void saveVoicePathAndLength(String identificationNumber, Long index, Long voiceLength, String string);
+
+    List<ScriptFragment> findByIdentificationNumber(String identificationNumber);
 }

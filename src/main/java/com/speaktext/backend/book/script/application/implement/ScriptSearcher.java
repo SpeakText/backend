@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.speaktext.backend.book.script.exception.BookExceptionType.NOT_SCRIPT_AUTHOR;
@@ -57,6 +58,10 @@ public class ScriptSearcher {
     public ScriptFragment findScriptFragmentsByIdentificationNumberAndIndex(String identificationNumber, Long index) {
         return scriptFragmentRepository.findByIdentificationNumberAndIndex(identificationNumber, index)
                 .orElseThrow(() -> new ScriptException(SCRIPT_FRAGMENT_NOT_FOUND));
+    }
+
+    public List<ScriptFragment> findScriptFragmentsByIdentificationNumber(String identificationNumber) {
+        return scriptFragmentRepository.findByIdentificationNumber(identificationNumber);
     }
 
 }
