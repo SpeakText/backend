@@ -32,7 +32,7 @@ public class VoiceController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/merge")
+    @PostMapping("/merge/approve")
     public ResponseEntity<Void> mergeVoice(
             @Admin Long adminId,
             @RequestBody VoiceMergeRequest request
@@ -66,6 +66,15 @@ public class VoiceController {
     ) {
         MergedVoiceGeneratedResponse response = voiceService.isGenerated(identificationNumber);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/merge")
+    public ResponseEntity<Void> requestMergeVoiceGeneration(
+            @Author Long authorId,
+            @RequestBody VoiceMergeRequest request
+    ) {
+        voiceService.requestMergeVoiceGeneration(request.identificationNumber());
+        return ResponseEntity.ok().build();
     }
 
 }

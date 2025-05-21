@@ -26,8 +26,10 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
+import static com.speaktext.backend.book.script.domain.Script.VoiceStatus.MERGE_REQUESTED;
 import static com.speaktext.backend.book.script.domain.Script.VoiceStatus.NOT_GENERATED;
 import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
+import static com.speaktext.backend.book.script.exception.ScriptExceptionType.VOICE_STATUS_NOT_MERGE_REQUESTED;
 import static com.speaktext.backend.book.script.exception.ScriptFragmentExceptionType.SCRIPT_FRAGMENT_NOT_FOUND;
 import static com.speaktext.backend.book.voice.exception.VoiceExceptionType.NO_VOICE;
 
@@ -65,6 +67,7 @@ public class VoiceService {
     }
 
     public void mergeVoice(String identificationNumber) {
+        validateVoiceStatus(identificationNumber);
         List<ScriptFragment> scriptFragments = scriptFragmentRepository.findByIdentificationNumberOrderByIndex(identificationNumber);
         validateScriptFragment(scriptFragments);
         List<File> voiceFiles = scriptFragments.stream()
@@ -77,6 +80,15 @@ public class VoiceService {
         String voiceLengthInfo = cumulativeVoiceDuration.getJson();
         scriptRepository.saveMergedVoicePathAndVoiceLengthInfo(identificationNumber, outputPath.toString(), voiceLengthInfo);
         updateScriptVoiceStatus(identificationNumber);
+    }
+
+    private void validateVoiceStatus(String identificationNumber) {
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+
+        if (script.getVoiceStatus() != MERGE_REQUESTED) {
+            throw new ScriptException(VOICE_STATUS_NOT_MERGE_REQUESTED);
+        }
     }
 
     private void updateScriptVoiceStatus(String identificationNumber) {
@@ -135,4 +147,12 @@ public class VoiceService {
         }
     }
 
+    @Transactional
+    public void requestMergeVoiceGeneration(String identificationNumber) {
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+
+        script.markVoiceStatusAsMergeRequested();
+        scriptRepository.save(script);
+    }
 }
