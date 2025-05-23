@@ -1,5 +1,7 @@
 package com.speaktext.backend.book.script.application;
 
+import com.speaktext.backend.book.inspection.domain.PendingBook;
+import com.speaktext.backend.book.inspection.domain.repository.PendingBookRepository;
 import com.speaktext.backend.book.script.application.dto.*;
 import com.speaktext.backend.book.script.application.implement.ScriptInvoker;
 import com.speaktext.backend.book.script.application.implement.ScriptModifier;
@@ -8,8 +10,10 @@ import com.speaktext.backend.book.script.domain.Script;
 import com.speaktext.backend.book.script.domain.ScriptFragment;
 import com.speaktext.backend.book.script.exception.ScriptException;
 import com.speaktext.backend.book.script.presentation.dto.NarrationResponse;
+import com.speaktext.backend.book.script.presentation.dto.ScriptGenerationTargetResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +25,13 @@ import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SC
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ScriptService {
 
     private final ScriptInvoker scriptInvoker;
     private final ScriptSearcher scriptSearcher;
     private final ScriptModifier scriptModifier;
+    private final PendingBookRepository pendingBookRepository;
 
     public void announceScriptGeneration(Long pendingBookId) {
         scriptInvoker.announce(pendingBookId);
@@ -65,4 +71,16 @@ public class ScriptService {
         return new NarrationResponse(script.getNarrationVoice().toString());
     }
 
+    public List<ScriptGenerationTargetResponse> getScriptGenerationTargets() {
+        List<PendingBook> pendingBooks = pendingBookRepository.findByInspectionStatus(PendingBook.InspectionStatus.APPROVED);
+
+        return pendingBooks.stream()
+                .map(pendingBook -> new ScriptGenerationTargetResponse(
+                        pendingBook.getTitle(),
+                        pendingBook.getAuthorId(),
+                        pendingBook.getIdentificationNumber(),
+                        pendingBook.isScripted()
+                ))
+                .toList();
+    }
 }

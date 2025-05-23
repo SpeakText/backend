@@ -93,4 +93,12 @@ public class ScriptController {
         return ResponseEntity.ok(narrationUpdateResponse);
     }
 
+    @GetMapping("/admin/targets")
+    public ResponseEntity<List<ScriptGenerationTargetResponse>> getScriptGenerationTargets(
+            @Admin Long adminId
+    ) {
+        var scriptTargets = scriptService.getScriptGenerationTargets();
+        return ResponseEntity.ok(scriptTargets);
+    }
+
 }

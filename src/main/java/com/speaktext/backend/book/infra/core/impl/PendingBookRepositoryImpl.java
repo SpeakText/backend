@@ -49,4 +49,9 @@ public class PendingBookRepositoryImpl implements PendingBookRepository {
         return pendingBookJpaRepository.existsByIdentificationNumber(identificationNumber);
     }
 
+    @Override
+    public List<PendingBook> findByInspectionStatus(PendingBook.InspectionStatus inspectionStatus) {
+        return pendingBookJpaRepository.findByInspectionStatus(inspectionStatus);
+    }
+
 }
