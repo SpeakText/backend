@@ -14,4 +14,6 @@ public interface PendingBookRepository {
     void deleteByIdentificationNumber(@NotBlank String identificationNumber);
 
     boolean existsByIdentificationNumber(String identificationNumber);
+
+    List<PendingBook> findByInspectionStatus(PendingBook.InspectionStatus inspectionStatus);
 }
