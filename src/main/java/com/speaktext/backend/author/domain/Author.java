@@ -24,6 +24,7 @@ public class Author {
     private String password;
 
     @Column(nullable = false, length = 64)
+    @Getter
     private String name;
 
     @Column(nullable = false, length = 200)

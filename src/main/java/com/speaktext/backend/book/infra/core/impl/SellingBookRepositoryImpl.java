@@ -5,6 +5,8 @@ import com.speaktext.backend.book.selling_book.domain.repository.SellingBookRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Repository
 public class SellingBookRepositoryImpl implements SellingBookRepository {
@@ -14,6 +16,11 @@ public class SellingBookRepositoryImpl implements SellingBookRepository {
     @Override
     public SellingBook save(SellingBook book) {
         return sellingBookJpaRepository.save(book);
+    }
+
+    @Override
+    public List<SellingBook> findAll() {
+        return sellingBookJpaRepository.findAll();
     }
 
 }
