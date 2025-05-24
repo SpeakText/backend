@@ -7,6 +7,7 @@ import java.util.List;
 public interface SellingBookRepository {
 
     SellingBook save(SellingBook book);
-
     List<SellingBook> findAll();
+    SellingBook findById(Long sellingBookId);
+
 }
