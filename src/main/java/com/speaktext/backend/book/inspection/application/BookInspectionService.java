@@ -1,15 +1,20 @@
 package com.speaktext.backend.book.inspection.application;
 
+import com.speaktext.backend.book.infra.cover.ImageStorage;
 import com.speaktext.backend.book.inspection.application.dto.BookInspectionCommand;
 import com.speaktext.backend.book.inspection.application.dto.BookInspectionMetaResponse;
+import com.speaktext.backend.book.inspection.application.mapper.BookInspectionMapper;
 import com.speaktext.backend.book.inspection.domain.PendingBook;
 import com.speaktext.backend.book.inspection.domain.repository.PendingBookRepository;
 import com.speaktext.backend.book.inspection.domain.repository.RawTextStorage;
 import com.speaktext.backend.book.inspection.exception.PendingBookException;
+import com.speaktext.backend.book.inspection.presentation.dto.BookInspectionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import static com.speaktext.backend.book.inspection.exception.PendingBookExceptionType.PENDING_BOOK_ALREADY_EXISTS;
@@ -21,11 +26,23 @@ public class BookInspectionService {
 
     private final RawTextStorage rawTextStorage;
     private final PendingBookRepository pendingBookRepository;
+    private final BookInspectionMapper bookInspectionMapper;
+    private final ImageStorage imageStorage;
 
-    public void requestInspection(BookInspectionCommand command, Long authorId) {
-        validateDuplicate(command.identificationNumber());
-        String rawText = readTxtFile(command.txtFile());
-        saveWithCompensation(rawText, command, authorId);
+    public void requestInspection(BookInspectionRequest request, Long authorId) {
+        validateDuplicate(request.identificationNumber());
+        String rawText = readTxtFile(request.txtFile());
+        Path outputPath = saveCoverImage(request.coverImage());
+
+        saveWithCompensation(rawText, bookInspectionMapper.toCommand(request, outputPath.toString()), authorId);
+    }
+
+    private Path saveCoverImage(MultipartFile coverImage) {
+        try {
+            return imageStorage.saveImage(coverImage);
+        } catch (Exception e) {
+            throw new IllegalStateException("표지 이미지 저장 실패", e);
+        }
     }
 
     private void validateDuplicate(String identificationNumber) {
