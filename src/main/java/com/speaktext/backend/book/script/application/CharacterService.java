@@ -41,7 +41,7 @@ public class CharacterService {
                         new CharacterResponse(
                                 characterDto.characterKey(),
                                 characterDto.name(),
-                                characterDto.voiceType().toString())
+                                characterDto.characterVoiceType().toString())
                 )
                 .toList();
     }

@@ -1,7 +1,8 @@
 package com.speaktext.backend.book.voice.application;
 
 
-import com.speaktext.backend.book.script.domain.VoiceType;
+import com.speaktext.backend.book.script.domain.CharacterVoiceType;
+import com.speaktext.backend.book.voice.domain.VoiceData;
 import feign.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,22 +11,22 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CharacterVoiceGenerator {
 
-    private final VoiceProvider voiceProvider;
+    private final CharacterVoiceProvider characterVoiceProvider;
     private final VoiceRegisterHandler voiceRegisterHandler;
 
-    public void generateVoice(String identificationNumber, Long index, String speaker, String utterance, VoiceType voiceType) {
+    public void generateVoice(String identificationNumber, Long index, String speaker, String utterance, CharacterVoiceType characterVoiceType) {
         String fileName = identificationNumber + "_" + index;
-        Response response = voiceProvider.generateCharacterVoice(
+        VoiceData response = characterVoiceProvider.generate(
                 identificationNumber,
                 index,
                 speaker,
                 utterance,
-                voiceType,
+                characterVoiceType,
                 fileName,
                 1.0
         );
 
-        voiceRegisterHandler.registerVoice(identificationNumber, index, response, fileName);
+        voiceRegisterHandler.registerVoice(identificationNumber, index, response);
     }
 
 }

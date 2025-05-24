@@ -2,7 +2,7 @@ package com.speaktext.backend.book.script.application.implement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.speaktext.backend.book.script.application.dto.CharacterDto;
-import com.speaktext.backend.book.script.domain.VoiceType;
+import com.speaktext.backend.book.script.domain.CharacterVoiceType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -44,7 +44,7 @@ public class CharacterUpdater {
                         dto.description(),
                         dto.characterKey(),
                         appearedCharacterKeys.contains(dto.characterKey()) || dto.appearedInScript(),
-                        VoiceType.NO_VOICE
+                        CharacterVoiceType.NO_VOICE
                 ))
                 .toList();
     }
@@ -59,7 +59,7 @@ public class CharacterUpdater {
                 if (parts.length == 2) {
                     String name = parts[0].trim();
                     String characterId = parts[1].trim();
-                    characterList.add(new CharacterDto(name, entry.getValue(), characterId, false, VoiceType.NO_VOICE));
+                    characterList.add(new CharacterDto(name, entry.getValue(), characterId, false, CharacterVoiceType.NO_VOICE));
                 }
             }
         } catch (Exception e) {

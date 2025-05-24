@@ -8,6 +8,6 @@ public interface VoiceStorage {
 
     Path save(String filename, InputStream content);
     File getVoiceFile(String filename);
-
     File getVoiceFileWithFilePath(String filePath);
+
 }

@@ -32,7 +32,7 @@ public class Script {
     private String title;
 
     @Enumerated(EnumType.STRING)
-    private VoiceType narrationVoice;
+    private NarrationVoiceType narrationVoice;
     private int totalFragments;
     private int fragmentsCount;
     private boolean isCompleted;
@@ -49,7 +49,7 @@ public class Script {
                 .identificationNumber(identificationNumber)
                 .title(title)
                 .isCompleted(false)
-                .narrationVoice(VoiceType.NO_VOICE)
+                .narrationVoice(NarrationVoiceType.NO_VOICE)
                 .totalFragments(fragmentsCount)
                 .fragmentsCount(0)
                 .authorId(authorId)
@@ -67,8 +67,8 @@ public class Script {
         }
     }
 
-    public void updateNarrationVoice(VoiceType voiceType) {
-        this.narrationVoice = voiceType;
+    public void updateNarrationVoice(NarrationVoiceType characterVoiceType) {
+        this.narrationVoice = characterVoiceType;
     }
 
     public void updateMergedVoicePathAndVoiceLengthInfo(String mergedVoicePath, String voiceLengthInfo) {
@@ -77,7 +77,7 @@ public class Script {
     }
 
     public boolean hasVoice() {
-        return this.narrationVoice != VoiceType.NO_VOICE;
+        return this.narrationVoice != NarrationVoiceType.NO_VOICE;
     }
 
     public boolean hasMergedVoice() {

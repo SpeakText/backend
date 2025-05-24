@@ -2,7 +2,7 @@ package com.speaktext.backend.book.voice.application;
 
 import com.speaktext.backend.book.script.application.implement.ScriptSearcher;
 import com.speaktext.backend.book.script.domain.ScriptFragment;
-import com.speaktext.backend.client.gpt.CharacterVibeGptAdapter;
+import com.speaktext.backend.client.gpt.CharacterVibeGptProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class CharacterVibeGenerator {
 
     private final ScriptSearcher scriptSearcher;
-    private final CharacterVibeGptAdapter characterVibeGptAdapter;
+    private final CharacterVibeGptProvider characterVibeGptProvider;
     private final CharacterVibePromptBuilder characterVibePromptBuilder;
 
     public String generateVibe(String identificationNumber, Long index, String speaker) {
@@ -21,7 +21,7 @@ public class CharacterVibeGenerator {
         ScriptFragment prevSentence = findOptionalSentence(identificationNumber, index - 1);
         ScriptFragment nextSentence = findOptionalSentence(identificationNumber, index + 1);
         String prompt = characterVibePromptBuilder.build(prevSentence, currentSentence, nextSentence, speaker);
-        return characterVibeGptAdapter.generateVibe(prompt);
+        return characterVibeGptProvider.generateVibe(prompt);
     }
 
     private ScriptFragment findCurrentSentence(String identificationNumber, Long index) {

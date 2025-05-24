@@ -16,15 +16,22 @@ public class Mp3VoiceLengthAnalyzer implements VoiceLengthAnalyzer {
     @Override
     public Long getVoiceLength(File file) {
         try {
+            if (!file.exists() || file.length() == 0) {
+                throw new IllegalArgumentException("MP3 파일이 존재하지 않거나 비어 있습니다.");
+            }
+
             AudioFileFormat fileFormat = new MpegAudioFileReader().getAudioFileFormat(file);
             Map<String, Object> properties = fileFormat.properties();
             Long durationMicros = (Long) properties.get("duration");
-            if(durationMicros == null) {
+
+            if (durationMicros == null) {
                 throw new IllegalArgumentException("MP3 파일에서 재생 시간을 읽을 수 없습니다.");
             }
+
             return durationMicros / MICROSECONDS_PER_MILLISECOND;
         } catch (Exception e) {
             throw new RuntimeException("MP3 재생 시간 읽기 실패", e);
         }
     }
+
 }

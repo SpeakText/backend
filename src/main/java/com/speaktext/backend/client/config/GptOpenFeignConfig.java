@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Configuration;
         "com.speaktext.backend.client",
         "com.speaktext.backend.book"
 })
-class OpenFeignConfig {
+public class GptOpenFeignConfig {
 
-    @Value("${llm.api.key}")
+    @Value("${llm.api.gpt.key}")
     private String apiKey;
 
     @Bean

@@ -31,7 +31,7 @@ public class VoiceDispatcher {
                 ScriptCharacter character = characterRepository.findByScriptAndCharacterKey(script, fragment.getSpeaker())
                         .orElseThrow(() -> new IllegalArgumentException("Character not found for speaker: " + fragment.getSpeaker()));
 
-                CharacterVoiceGenerationEvent characterEvent = CharacterVoiceGenerationEvent.from(fragment, character.getVoiceType());
+                CharacterVoiceGenerationEvent characterEvent = CharacterVoiceGenerationEvent.from(fragment, character.getCharacterVoiceType());
                 voiceGenerationEventPublisher.publishCharacterEvent(characterEvent);
             }
         });

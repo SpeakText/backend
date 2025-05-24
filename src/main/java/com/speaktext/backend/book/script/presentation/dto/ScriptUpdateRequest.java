@@ -1,7 +1,8 @@
 package com.speaktext.backend.book.script.presentation.dto;
 
 import com.speaktext.backend.book.script.application.dto.NarrationUpdateCommand;
-import com.speaktext.backend.book.script.domain.VoiceType;
+import com.speaktext.backend.book.script.domain.CharacterVoiceType;
+import com.speaktext.backend.book.script.domain.NarrationVoiceType;
 
 public record ScriptUpdateRequest(
         String identificationNumber,
@@ -9,7 +10,7 @@ public record ScriptUpdateRequest(
 ) {
 
     public NarrationUpdateCommand toUpdateCommand() {
-        VoiceType type = VoiceType.from(voiceType);
+        NarrationVoiceType type = NarrationVoiceType.from(voiceType);
         return new NarrationUpdateCommand(identificationNumber, type);
     }
 

@@ -21,24 +21,24 @@ public class ScriptCharacter {
     private String characterKey;
 
     @Enumerated(EnumType.STRING)
-    private VoiceType voiceType;
+    private CharacterVoiceType characterVoiceType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "script_id")
     private Script script;
     private boolean appearedInScript;
 
-    public ScriptCharacter(String name, String description, String characterKey, VoiceType voiceType, Script script, boolean appearedInScript) {
+    public ScriptCharacter(String name, String description, String characterKey, CharacterVoiceType characterVoiceType, Script script, boolean appearedInScript) {
         this.name = name;
         this.description = description;
         this.characterKey = characterKey;
-        this.voiceType = voiceType;
+        this.characterVoiceType = characterVoiceType;
         this.script = script;
         this.appearedInScript = appearedInScript;
     }
 
     public static ScriptCharacter init(String name, String description, String characterKey, Script script, boolean appearedInScript) {
-        return new ScriptCharacter(name, description, characterKey, VoiceType.NO_VOICE, script, appearedInScript);
+        return new ScriptCharacter(name, description, characterKey, CharacterVoiceType.NO_VOICE, script, appearedInScript);
     }
 
     public void updateName(String newName) {
@@ -46,15 +46,15 @@ public class ScriptCharacter {
     }
 
 
-    public void updateVoice(VoiceType newVoice) {
-        this.voiceType = newVoice;
+    public void updateVoice(CharacterVoiceType newVoice) {
+        this.characterVoiceType = newVoice;
     }
 
     public boolean hasVoiceOrNotAppeared() {
         if (!appearedInScript) {
             return true;
         }
-        return voiceType != VoiceType.NO_VOICE;
+        return characterVoiceType != CharacterVoiceType.NO_VOICE;
     }
 
 }

@@ -10,7 +10,7 @@ public record CharacterUpdatedResponse(
 
     public static CharacterUpdatedResponse of(List<ScriptCharacter> scriptCharacters) {
         List<UpdatedCharacter> updatedList = scriptCharacters.stream()
-                .map(c -> new UpdatedCharacter(c.getCharacterKey(), c.getName(), c.getVoiceType().name()))
+                .map(c -> new UpdatedCharacter(c.getCharacterKey(), c.getName(), c.getCharacterVoiceType().name()))
                 .toList();
 
         return new CharacterUpdatedResponse(updatedList);
