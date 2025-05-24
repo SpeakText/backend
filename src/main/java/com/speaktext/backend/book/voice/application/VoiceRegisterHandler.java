@@ -1,8 +1,8 @@
 package com.speaktext.backend.book.voice.application;
 
-import feign.Response;
+import com.speaktext.backend.book.voice.domain.VoiceData;
 
 public interface VoiceRegisterHandler {
 
-    void registerVoice(String identificationNumber, Long index, Response response, String fileName);
+    void registerVoice(String identificationNumber, Long index, VoiceData response);
 }

@@ -60,7 +60,7 @@ public class ScriptService {
     public NarrationUpdateResponse updateNarration(String identificationNumber, NarrationUpdateCommand command) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
-        script.updateNarrationVoice(command.voiceType());
+        script.updateNarrationVoice(command.characterVoiceType());
         return new NarrationUpdateResponse(identificationNumber, script.getNarrationVoice().toString());
     }
 

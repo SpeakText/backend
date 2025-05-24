@@ -1,9 +1,9 @@
 package com.speaktext.backend.book.script.application.dto;
 
-import com.speaktext.backend.book.script.domain.VoiceType;
+import com.speaktext.backend.book.script.domain.NarrationVoiceType;
 
 public record NarrationUpdateCommand(
         String identificationNumber,
-        VoiceType voiceType
+        NarrationVoiceType characterVoiceType
 ) {
 }

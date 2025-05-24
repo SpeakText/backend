@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class ScriptGptAdapter implements ScriptProvider {
+public class ScriptGptProvider implements ScriptProvider {
 
     private static final String SYSTEM_PROMPT = "당신은 소설을 스크립트 형태로 재구성하는 언어 분석가입니다.";
     private static final String MODEL_NAME = "gpt-4o";

@@ -4,7 +4,7 @@ import com.speaktext.backend.book.script.application.dto.CharacterDto;
 import com.speaktext.backend.book.script.application.dto.CharactersUpdateCommand;
 import com.speaktext.backend.book.script.domain.ScriptCharacter;
 import com.speaktext.backend.book.script.domain.Script;
-import com.speaktext.backend.book.script.domain.VoiceType;
+import com.speaktext.backend.book.script.domain.CharacterVoiceType;
 import com.speaktext.backend.book.script.domain.repository.CharacterRepository;
 import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.ScriptException;
@@ -46,12 +46,12 @@ public class CharacterManager {
                                 script,
                                 each.characterKey(),
                                 each.name(),
-                                each.voiceType()
+                                each.characterVoiceType()
                         )
                 ).toList();
     }
 
-    private ScriptCharacter updateNameAndVoice(Script script, String characterKey, String newName, VoiceType newVoice) {
+    private ScriptCharacter updateNameAndVoice(Script script, String characterKey, String newName, CharacterVoiceType newVoice) {
         ScriptCharacter scriptCharacter = characterRepository.findByScriptAndCharacterKey(script, characterKey)
                 .orElseThrow(() -> new ScriptException(CHARACTER_NOT_FOUND));
         scriptCharacter.updateName(newName);

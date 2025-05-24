@@ -10,6 +10,7 @@ import com.speaktext.backend.book.script.domain.repository.ScriptFragmentReposit
 import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.ScriptException;
 import com.speaktext.backend.book.script.exception.ScriptFragmentException;
+import com.speaktext.backend.book.voice.application.dto.MergeRequestedResponse;
 import com.speaktext.backend.book.voice.application.dto.MergedVoiceGeneratedResponse;
 import com.speaktext.backend.book.voice.application.dto.VoiceLengthInfoResponse;
 import com.speaktext.backend.book.voice.application.dto.VoicePathResponse;
@@ -152,4 +153,12 @@ public class VoiceService {
         script.markVoiceStatusAsMergeRequested();
         scriptRepository.save(script);
     }
+
+    public List<MergeRequestedResponse> getMergeRequested() {
+        List<Script> mergeRequested = scriptSearcher.findMergeRequested();
+        return mergeRequested.stream()
+                .map(script -> new MergeRequestedResponse(script.getIdentificationNumber(), script.getTitle()))
+                .toList();
+    }
+
 }

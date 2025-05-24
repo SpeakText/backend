@@ -2,7 +2,7 @@ package com.speaktext.backend.book.script.presentation.dto;
 
 import com.speaktext.backend.book.script.application.dto.CharactersUpdateCommand;
 import com.speaktext.backend.book.script.application.dto.CharacterUpdateCommand;
-import com.speaktext.backend.book.script.domain.VoiceType;
+import com.speaktext.backend.book.script.domain.CharacterVoiceType;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public record CharactersUpdateRequest(
                 .map(c -> new CharacterUpdateCommand(
                         c.characterKey(),
                         c.name(),
-                        VoiceType.from(c.voiceType())
+                        CharacterVoiceType.from(c.voiceType())
                 ))
                 .toList();
 

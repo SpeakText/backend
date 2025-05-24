@@ -1,17 +1,15 @@
 package com.speaktext.backend.client.gpt;
 
-import com.speaktext.backend.book.script.domain.VoiceType;
-import com.speaktext.backend.book.voice.application.CharacterVibeGenerator;
-import com.speaktext.backend.book.voice.application.VoiceProvider;
+import com.speaktext.backend.book.script.domain.NarrationVoiceType;
+import com.speaktext.backend.book.voice.application.NarrationVoiceProvider;
+import com.speaktext.backend.book.voice.domain.VoiceData;
 import feign.Response;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-@Component
 @RequiredArgsConstructor
-public class VoiceGptAdapter implements VoiceProvider {
+public class NarrationVoiceGptProvider implements NarrationVoiceProvider {
 
     private static final String MODEL_NAME = "gpt-4o-mini-tts";
     private static final String RESPONSE_FORMAT = "mp3";
@@ -25,40 +23,25 @@ public class VoiceGptAdapter implements VoiceProvider {
     """;
 
     private final VoiceGenerationGptClient speechClient;
-    private final CharacterVibeGenerator characterVibeGenerator;
 
     @Override
-    public Response generateCharacterVoice(String identificationNumber, Long index, String speaker, String text, VoiceType voice, String filename, double speed) {
-        String vibe = characterVibeGenerator.generateVibe(
-                identificationNumber,
-                index,
-                speaker
-        );
-
+    public VoiceData generate(String identificationNumber, Long index, String speaker, String text,
+                              NarrationVoiceType voice, String fileName, double speed) {
         Map<String, Object> request = Map.of(
                 "model", MODEL_NAME,
                 "input", text,
-                "voice", voice.toString().toLowerCase(),
-                "response_format", RESPONSE_FORMAT,
-                "speed", speed,
-                "instructions", vibe
-        );
-
-        return speechClient.generateSpeech(request);
-    }
-
-    @Override
-    public Response generateNarrationVoice(String identificationNumber, Long index, String speaker, String text, VoiceType voice, String fileName, double speed) {
-        Map<String, Object> request = Map.of(
-                "model", MODEL_NAME,
-                "input", text,
-                "voice", voice.toString().toLowerCase(),
+                "voice", VoiceTypeGptMapper.mapToEngineVoiceName(voice),
                 "response_format", RESPONSE_FORMAT,
                 "speed", speed,
                 "instructions", NARRATION_INSTRUCTIONS
         );
 
-        return speechClient.generateSpeech(request);
+        try {
+            Response response = speechClient.generateSpeech(request);
+            return new VoiceData(response.body().asInputStream(), fileName);
+        } catch (Exception e) {
+            throw new RuntimeException("GPT TTS 응답 처리 실패", e);
+        }
     }
 
 }

@@ -1,6 +1,5 @@
 package com.speaktext.backend.book.infra.listener;
 
-import com.speaktext.backend.book.voice.application.CharacterVibeGenerator;
 import com.speaktext.backend.book.voice.application.CharacterVoiceGenerator;
 import com.speaktext.backend.book.voice.application.event.CharacterVoiceGenerationEvent;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ public class CharacterVoiceGenerationWorker {
                 event.index(),
                 event.speaker(),
                 event.utterance(),
-                event.voiceType()
+                event.characterVoiceType()
         );
     }
 

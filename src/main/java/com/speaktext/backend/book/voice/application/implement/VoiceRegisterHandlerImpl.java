@@ -3,6 +3,7 @@ package com.speaktext.backend.book.voice.application.implement;
 import com.speaktext.backend.book.script.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.voice.application.VoiceLengthAnalyzer;
 import com.speaktext.backend.book.voice.application.VoiceRegisterHandler;
+import com.speaktext.backend.book.voice.domain.VoiceData;
 import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
 import feign.Response;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +22,14 @@ public class VoiceRegisterHandlerImpl implements VoiceRegisterHandler {
     private final VoiceLengthAnalyzer voiceLengthAnalyzer;
 
     @Override
-    public void registerVoice(String identificationNumber, Long index, Response response, String fileName) {
-        try (InputStream inputStream = response.body().asInputStream()) {
-            Path outputPath = voiceStorage.save(fileName, inputStream);
-            File voiceFile = voiceStorage.getVoiceFile(fileName);
+    public void registerVoice(String identificationNumber, Long index, VoiceData voiceData) {
+        try (InputStream inputStream = voiceData.content()) {
+            Path outputPath = voiceStorage.save(voiceData.fileName(), inputStream);
+            File voiceFile = voiceStorage.getVoiceFile(voiceData.fileName());
             Long voiceLength = voiceLengthAnalyzer.getVoiceLength(voiceFile);
             scriptFragmentRepository.saveVoicePathAndLength(identificationNumber, index, voiceLength, outputPath.toString());
         } catch (Exception e) {
-            throw new RuntimeException("Failed to generate voice", e);
+            throw new RuntimeException("Failed to register voice", e);
         }
     }
 

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
@@ -44,6 +45,11 @@ public class ScriptRepositoryImpl implements ScriptRepository {
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
         script.updateMergedVoicePathAndVoiceLengthInfo(mergedVoicePath, voiceLengthInfo);
         scriptJpaRepository.save(script);
+    }
+
+    @Override
+    public List<Script> findByMergeRequested() {
+        return scriptJpaRepository.findByVoiceStatus(Script.VoiceStatus.MERGE_REQUESTED);
     }
 
 }
