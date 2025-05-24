@@ -16,7 +16,7 @@ public class ChunkMessagePublisherImpl implements ChunkMessagePublisher {
         rabbitTemplate.convertAndSend(
                 "script.chunk.exchange",
                 "script.chunk.routingKey",
-                event.pendingBookChunkId()
+                String.valueOf(event.pendingBookChunkId())
         );
     }
 

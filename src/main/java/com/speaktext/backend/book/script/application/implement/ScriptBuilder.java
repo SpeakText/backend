@@ -17,8 +17,8 @@ public class ScriptBuilder {
     private final PendingBookRepository pendingBookRepository;
 
     @Transactional
-    public void build(PendingBookChunks chunks, Long pendingBookId) {
-        PendingBook pendingBook = pendingBookRepository.find(pendingBookId);
+    public void build(PendingBookChunks chunks, String identificationNumber) {
+        PendingBook pendingBook = pendingBookRepository.findByIdentificationNumber(identificationNumber);
         Script script = scriptRepository.findByIdentificationNumber(pendingBook.getIdentificationNumber())
                 .orElse(
                         Script.createInitial(

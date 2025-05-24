@@ -8,6 +8,7 @@ import com.speaktext.backend.book.inspection.domain.repository.PendingBookReposi
 import com.speaktext.backend.book.inspection.domain.repository.RawTextStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,17 +25,20 @@ public class ScriptPartitioner {
     private final PendingBookChunkRepository pendingBookChunkRepository;
     private final RawTextStorage rawTextStorage;
 
-    public PendingBookChunks split(Long pendingBookId) {
-        PendingBook pendingBook = pendingBookRepository.find(pendingBookId);
+    @Transactional
+    public PendingBookChunks split(String identificationNumber) {
+        PendingBook pendingBook = pendingBookRepository.findByIdentificationNumber(identificationNumber);
         String id = pendingBook.getIdentificationNumber();
         List<PendingBookChunk> existing = pendingBookChunkRepository.findByIdentificationNumberOrderByIndex(id);
-        if (!existing.isEmpty()) {
+        if (!pendingBook.isScripted() & !existing.isEmpty()) {
             return PendingBookChunks.of(existing.stream()
                     .map(PendingBookChunk::getChunk)
                     .toList(), id);
         }
 
-        return splitAndReturnChunks(id);
+        PendingBookChunks pendingBookChunks = splitAndReturnChunks(id);
+        pendingBookChunkRepository.saveAll(pendingBookChunks.getPendingBookChunks());
+        return pendingBookChunks;
     }
 
     private PendingBookChunks splitAndReturnChunks(String identificationNumber) {

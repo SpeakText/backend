@@ -33,8 +33,8 @@ public class ScriptService {
     private final ScriptModifier scriptModifier;
     private final PendingBookRepository pendingBookRepository;
 
-    public void announceScriptGeneration(Long pendingBookId) {
-        scriptInvoker.announce(pendingBookId);
+    public void announceScriptGeneration(String identificationNumber) {
+        scriptInvoker.announce(identificationNumber);
     }
 
     public Page<ScriptResponse> getScript(Long authorId, String identificationNumber, int page, int size) {
