@@ -4,14 +4,14 @@ import com.speaktext.backend.auth.presentation.anotation.Admin;
 import com.speaktext.backend.auth.presentation.anotation.Author;
 import com.speaktext.backend.auth.presentation.anotation.Member;
 import com.speaktext.backend.book.voice.application.VoiceService;
-import com.speaktext.backend.book.voice.application.dto.MergedVoiceGeneratedResponse;
-import com.speaktext.backend.book.voice.application.dto.VoiceLengthInfoResponse;
-import com.speaktext.backend.book.voice.application.dto.VoicePathResponse;
+import com.speaktext.backend.book.voice.application.dto.*;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceDownloadRequest;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceGenerateRequest;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceMergeRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/voice")
@@ -68,9 +68,17 @@ public class VoiceController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/merge/requested")
+    public ResponseEntity<List<MergeRequestedResponse>> getMergeRequested(
+            @Admin Long adminId
+    ) {
+        List<MergeRequestedResponse> mergeRequested = voiceService.getMergeRequested();
+        return ResponseEntity.ok(mergeRequested);
+    }
+
     @PostMapping("/merge")
     public ResponseEntity<Void> requestMergeVoiceGeneration(
-            @Author Long authorId,
+            @Admin Long adminId,
             @RequestBody VoiceMergeRequest request
     ) {
         voiceService.requestMergeVoiceGeneration(request.identificationNumber());

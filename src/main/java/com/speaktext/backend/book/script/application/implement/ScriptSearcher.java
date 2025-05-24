@@ -64,4 +64,8 @@ public class ScriptSearcher {
         return scriptFragmentRepository.findByIdentificationNumber(identificationNumber);
     }
 
+    public List<Script> findMergeRequested() {
+        return scriptRepository.findByMergeRequested();
+    }
+
 }
