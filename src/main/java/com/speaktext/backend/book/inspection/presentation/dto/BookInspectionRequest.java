@@ -10,7 +10,7 @@ public record BookInspectionRequest(
     @NotNull MultipartFile txtFile,
     @NotBlank String title,
     @NotBlank String description,
-    @NotBlank String coverUrl,
+    @NotNull MultipartFile coverImage,
     @NotNull BigDecimal price,
     @NotNull String identificationNumber
 ) {}

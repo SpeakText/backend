@@ -4,7 +4,6 @@ import com.speaktext.backend.auth.presentation.anotation.Admin;
 import com.speaktext.backend.auth.presentation.anotation.Author;
 import com.speaktext.backend.book.inspection.application.BookInspectionService;
 import com.speaktext.backend.book.inspection.application.dto.BookInspectionMetaResponse;
-import com.speaktext.backend.book.inspection.application.mapper.BookInspectionMapper;
 import com.speaktext.backend.book.inspection.presentation.dto.BookInspectionRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -20,17 +19,13 @@ import java.util.List;
 public class BookInspectionController {
 
     private final BookInspectionService bookInspectionService;
-    private final BookInspectionMapper bookInspectionMapper;
 
     @PostMapping("/inspection")
     public ResponseEntity<Void> requestPendingBook(
             @Valid @ModelAttribute BookInspectionRequest request,
             @Author Long authorId
     ) {
-        bookInspectionService.requestInspection(
-            bookInspectionMapper.toCommand(request),
-            authorId
-        );
+        bookInspectionService.requestInspection(request, authorId);
         return ResponseEntity.ok().build();
     }
 
