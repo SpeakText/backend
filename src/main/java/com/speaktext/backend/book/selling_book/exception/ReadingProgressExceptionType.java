@@ -1,17 +1,15 @@
-package com.speaktext.backend.member.exception;
-
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+package com.speaktext.backend.book.selling_book.exception;
 
 import com.speaktext.backend.common.exception.BaseExceptionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-@RequiredArgsConstructor
-public enum MemberExceptionType implements BaseExceptionType {
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-    ALREADY_EXISTS_MEMBER_ID(CONFLICT, "이미 존재하는 멤버 ID입니다."),
-    MEMBER_NOT_FOUND(NOT_FOUND, "멤버를 찾을 수 없습니다."),
+@RequiredArgsConstructor
+public enum ReadingProgressExceptionType implements BaseExceptionType {
+
+    READING_PROGRESS_NOT_FOUND(NOT_FOUND, "읽기 진행 상황을 찾을 수 없습니다."),
     ;
 
     private final HttpStatus httpStatus;
@@ -26,4 +24,5 @@ public enum MemberExceptionType implements BaseExceptionType {
     public String errorMessage() {
         return message;
     }
+
 }
