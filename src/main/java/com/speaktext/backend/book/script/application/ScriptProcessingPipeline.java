@@ -15,10 +15,10 @@ public class ScriptProcessingPipeline {
     private final ChunkDispatcher chunkDispatcher;
     private final ScriptBuilder scriptBuilder;
 
-    public void prepareScriptGeneration(Long pendingBookId) {
-        PendingBookChunks chunks = scriptPartitioner.split(pendingBookId);
-        scriptBuilder.build(chunks, pendingBookId);
-        chunkDispatcher.dispatch(chunks);
+    public void prepareScriptGeneration(String identificationNumber) {
+        PendingBookChunks chunks = scriptPartitioner.split(identificationNumber);
+        scriptBuilder.build(chunks, identificationNumber);
+        chunkDispatcher.dispatch(chunks, identificationNumber);
     }
 
 }

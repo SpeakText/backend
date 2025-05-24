@@ -11,8 +11,15 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class PendingBook {
 
+    /**
+     * REJECTED : 작품 검수 거부
+     * PENDING : 작품 검수 대기
+     * APPROVED : 작품 검수 승인
+     * SCRIPTED : 스크립트 생성된 상태
+     * DONE : 출판된 상태
+     */
     public enum InspectionStatus {
-        REJECTED, PENDING, APPROVED, DONE
+        REJECTED, PENDING, APPROVED, SCRIPTED, DONE
     }
 
     @Id
@@ -69,6 +76,11 @@ public class PendingBook {
 
     public void markAsDone() {
         this.inspectionStatus = InspectionStatus.DONE;
+    }
+
+    public void markAsScripted() {
+        this.isScripted = true;
+        this.inspectionStatus = InspectionStatus.SCRIPTED;
     }
 
 }

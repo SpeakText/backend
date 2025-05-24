@@ -18,13 +18,13 @@ public class ScriptInvoker {
     private final ApplicationEventPublisher applicationEventPublisher;
     private final PendingBookRepository pendingBookRepository;
 
-    public void announce(Long pendingBookId) {
-        validate(pendingBookId);
-        applicationEventPublisher.publishEvent(new ScriptGenerationEvent(pendingBookId));
+    public void announce(String identificationNumber) {
+        validate(identificationNumber);
+        applicationEventPublisher.publishEvent(new ScriptGenerationEvent(identificationNumber));
     }
 
-    private void validate(Long pendingBookId) {
-        PendingBook pendingBook = pendingBookRepository.find(pendingBookId);
+    private void validate(String identificationNumber) {
+        PendingBook pendingBook = pendingBookRepository.findByIdentificationNumber(identificationNumber);
         if (pendingBook.getInspectionStatus() != PendingBook.InspectionStatus.APPROVED) {
             throw new BookException(NO_APPROVED_PENDING_BOOK);
         }

@@ -14,7 +14,7 @@ public class ScriptGenerationAnnounceListener {
 
     @EventListener
     public void handleScriptGenerationEvent(ScriptGenerationEvent event) {
-        pipeline.prepareScriptGeneration(event.pendingBookId());
+        pipeline.prepareScriptGeneration(event.identificationNumber());
     }
 
 }

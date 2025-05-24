@@ -27,7 +27,7 @@ public class ScriptController {
             @Admin Long adminId,
             @RequestBody ScriptRequest request
     ) {
-        scriptService.announceScriptGeneration(request.pendingBookId());
+        scriptService.announceScriptGeneration(request.identificationNumber());
         return ResponseEntity.noContent().build();
     }
 

@@ -61,8 +61,9 @@ public class Script {
 
     public void increaseProgress() {
         this.fragmentsCount++;
-        if (this.fragmentsCount == this.totalFragments) {
+        if (this.fragmentsCount >= this.totalFragments) {
             this.isCompleted = true;
+            this.fragmentsCount = 0;
         }
     }
 
