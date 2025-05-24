@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class BookInspectionMapper {
 
-    public BookInspectionCommand toCommand(BookInspectionRequest request) {
+    public BookInspectionCommand toCommand(BookInspectionRequest request, String coverUrl) {
         return new BookInspectionCommand(
                 request.txtFile(),
                 request.title(),
                 request.description(),
-                request.coverUrl(),
+                coverUrl,
                 request.price(),
                 request.identificationNumber()
         );
