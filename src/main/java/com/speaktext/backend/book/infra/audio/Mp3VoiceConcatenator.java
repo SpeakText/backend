@@ -16,6 +16,7 @@ import java.util.List;
 public class Mp3VoiceConcatenator implements VoiceConcatenator {
 
     private static final String OUTPUT_DIR = "mergedVoices";
+    private static final String SILENCE_FILE = "silenceFile/silence.mp3";
 
     @Override
     public Path concatenate(List<File> voiceFiles, String identificationNumber) {
@@ -46,10 +47,16 @@ public class Mp3VoiceConcatenator implements VoiceConcatenator {
 
     private File createConcatListFile(List<File> voiceFiles) throws IOException {
         File listFile = File.createTempFile("concat_list", ".txt");
+        File silenceFile = new File(SILENCE_FILE);
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(listFile))) {
-            for (File voiceFile : voiceFiles) {
-                writer.write("file '" + voiceFile.getAbsolutePath().replace("'", "'\\''") + "'");
+            for (int i = 0; i < voiceFiles.size(); i++) {
+                writer.write("file '" + voiceFiles.get(i).getAbsolutePath().replace("'", "'\\''") + "'");
                 writer.newLine();
+                if (i != voiceFiles.size() - 1) {
+                    writer.write("file '" + silenceFile.getAbsolutePath().replace("'", "'\\''") + "'");
+                    writer.newLine();
+                }
             }
         }
         return listFile;
@@ -59,7 +66,7 @@ public class Mp3VoiceConcatenator implements VoiceConcatenator {
         ProcessBuilder builder = new ProcessBuilder(
                 "ffmpeg", "-f", "concat", "-safe", "0",
                 "-i", listFile.getAbsolutePath(),
-                "-c", "copy", outputFile.getAbsolutePath()
+                "-acodec", "libmp3lame", "-b:a", "192k", outputFile.getAbsolutePath()
         );
         builder.redirectErrorStream(true);
         Process process = builder.start();

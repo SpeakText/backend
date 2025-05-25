@@ -40,3 +40,4 @@ templates/
 static/
 outputs
 mergedVoices
+silenceFile

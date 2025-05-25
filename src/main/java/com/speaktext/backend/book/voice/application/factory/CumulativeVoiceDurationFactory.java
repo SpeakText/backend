@@ -25,8 +25,8 @@ public class CumulativeVoiceDurationFactory {
         List<Integer> cumulative = new ArrayList<>();
         int sum = 0;
         for (ScriptFragment fragment : fragments) {
-            sum += fragment.getVoiceLength();
             cumulative.add(sum);
+            sum += (int) (fragment.getVoiceLength() + 700);
         }
         return cumulative;
     }
