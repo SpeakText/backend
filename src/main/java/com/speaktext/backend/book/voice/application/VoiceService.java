@@ -19,6 +19,7 @@ import com.speaktext.backend.book.voice.domain.CumulativeVoiceDuration;
 import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
 import com.speaktext.backend.book.voice.exception.VoiceException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +68,7 @@ public class VoiceService {
         });
     }
 
+    @Async
     public void mergeVoice(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
