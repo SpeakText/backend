@@ -29,7 +29,7 @@ public class ScriptSearcher {
         return scriptRepository.findByIdentificationNumber(identificationNumber);
     }
 
-    Optional<ScriptFragment> findLastScriptFragment(String identificationNumber) {
+    public Optional<ScriptFragment> findLastScriptFragment(String identificationNumber) {
         return scriptFragmentRepository.findLastScriptFragment(identificationNumber);
     }
 

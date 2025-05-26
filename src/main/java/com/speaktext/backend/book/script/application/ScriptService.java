@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.speaktext.backend.book.script.exception.BookExceptionType.NO_PUBLISHED_BOOK;
+import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_FRAGMENT_NOT_FOUND;
 import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
 
 @Service
@@ -103,8 +104,10 @@ public class ScriptService {
             throw new BookException(NO_PUBLISHED_BOOK);
         }
         List<ScriptFragment> scriptContents = scriptSearcher.findScriptChunkByReadingIndex(identificationNumber, readingIndex);
+        ScriptFragment lastScriptFragment = scriptSearcher.findLastScriptFragment(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_FRAGMENT_NOT_FOUND));
         List<ScriptCharacter> scriptCharacters = characterSearcher.findScriptCharactersByScript(script);
-        return ScriptContentResponse.fromDomain(readingIndex, scriptContents, scriptCharacters);
+        return ScriptContentResponse.fromDomain(readingIndex, scriptContents, scriptCharacters, lastScriptFragment.getIndex());
     }
 
 }
