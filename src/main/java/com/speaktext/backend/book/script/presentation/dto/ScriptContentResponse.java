@@ -6,7 +6,7 @@ import java.util.List;
 
 public record ScriptContentResponse(
         Long readingIndex,
-        List<String> contents
+        List<ScriptUtterance> contents
 ) {
 
     public static ScriptContentResponse fromDomain(Long readingIndex, List<ScriptFragment> scriptFragments) {
@@ -14,11 +14,16 @@ public record ScriptContentResponse(
             return new ScriptContentResponse(null, List.of());
         }
 
-        List<String> contents = scriptFragments.stream()
-                .map(ScriptFragment::getUtterance)
+        List<ScriptUtterance> contents = scriptFragments.stream()
+                .map(f -> new ScriptUtterance(f.getSpeaker(), f.getUtterance()))
                 .toList();
 
         return new ScriptContentResponse(readingIndex, contents);
     }
+
+    public record ScriptUtterance(
+            String speaker,
+            String utterance
+    ) {}
 
 }
