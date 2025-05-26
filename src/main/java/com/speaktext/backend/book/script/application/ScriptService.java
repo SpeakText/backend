@@ -4,10 +4,12 @@ import com.speaktext.backend.book.inspection.application.PendingBookSearcher;
 import com.speaktext.backend.book.inspection.domain.PendingBook;
 import com.speaktext.backend.book.inspection.domain.repository.PendingBookRepository;
 import com.speaktext.backend.book.script.application.dto.*;
+import com.speaktext.backend.book.script.application.implement.CharacterSearcher;
 import com.speaktext.backend.book.script.application.implement.ScriptInvoker;
 import com.speaktext.backend.book.script.application.implement.ScriptModifier;
 import com.speaktext.backend.book.script.application.implement.ScriptSearcher;
 import com.speaktext.backend.book.script.domain.Script;
+import com.speaktext.backend.book.script.domain.ScriptCharacter;
 import com.speaktext.backend.book.script.domain.ScriptFragment;
 import com.speaktext.backend.book.script.exception.BookException;
 import com.speaktext.backend.book.script.exception.ScriptException;
@@ -37,6 +39,7 @@ public class ScriptService {
     private final ScriptModifier scriptModifier;
     private final PendingBookRepository pendingBookRepository;
     private final PendingBookSearcher pendingBookSearcher;
+    private final CharacterSearcher characterSearcher;
 
     public void announceScriptGeneration(String identificationNumber) {
         scriptInvoker.announce(identificationNumber);
@@ -94,11 +97,14 @@ public class ScriptService {
      */
     public ScriptContentResponse getScriptContent(Long memberId, String identificationNumber, Long readingIndex) {
         PendingBook pendingBook = pendingBookSearcher.findByIdentificationNumber(identificationNumber);
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
         if (pendingBook.getInspectionStatus() != PendingBook.InspectionStatus.DONE) {
             throw new BookException(NO_PUBLISHED_BOOK);
         }
         List<ScriptFragment> scriptContents = scriptSearcher.findScriptChunkByReadingIndex(identificationNumber, readingIndex);
-        return ScriptContentResponse.fromDomain(readingIndex, scriptContents);
+        List<ScriptCharacter> scriptCharacters = characterSearcher.findScriptCharactersByScript(script);
+        return ScriptContentResponse.fromDomain(readingIndex, scriptContents, scriptCharacters);
     }
 
 }
