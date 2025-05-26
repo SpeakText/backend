@@ -15,7 +15,7 @@ public class ScriptFragmentParser {
 
     private static final String NARRATION_SPEAKER_KEY = "나레이션 - narration";
 
-    private static final Pattern SPEAKER_PATTERN = Pattern.compile("^speaker-character-\\d+$");
+    private static final Pattern SPEAKER_PATTERN = Pattern.compile("^script-character-\\d+$");
 
     public List<ScriptFragment> parseFragments(String scriptText) {
         List<ScriptFragment> fragments = new ArrayList<>();
@@ -31,8 +31,6 @@ public class ScriptFragmentParser {
 
                     // speaker가 narration이면 허용, 아니면 패턴 검사
                     if (!isNarration && !SPEAKER_PATTERN.matcher(speaker).matches()) {
-                        // speaker 형식에 맞지 않으면 무시 또는 로그 출력
-                        // 예: return; 또는 continue; (여기선 forEach라서 return은 람다 탈출)
                         return; // 무시하고 다음으로 넘어감
                     }
 
