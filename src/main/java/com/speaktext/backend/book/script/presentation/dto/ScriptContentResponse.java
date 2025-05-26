@@ -8,13 +8,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public record ScriptContentResponse(
+        Long totalIndex,
         Long readingIndex,
         List<ScriptUtterance> contents
 ) {
 
-    public static ScriptContentResponse fromDomain(Long readingIndex, List<ScriptFragment> scriptFragments, List<ScriptCharacter> scriptCharacters) {
+    public static ScriptContentResponse fromDomain(Long readingIndex, List<ScriptFragment> scriptFragments, List<ScriptCharacter> scriptCharacters, Long totalIndex) {
         if (scriptFragments == null || scriptFragments.isEmpty()) {
-            return new ScriptContentResponse(null, List.of());
+            return new ScriptContentResponse(totalIndex, null, List.of());
         }
 
         Map<String, String> characterKeyToName = scriptCharacters.stream()
@@ -27,7 +28,7 @@ public record ScriptContentResponse(
                 })
                 .toList();
 
-        return new ScriptContentResponse(readingIndex, contents);
+        return new ScriptContentResponse(totalIndex, readingIndex, contents);
     }
 
     public record ScriptUtterance(
