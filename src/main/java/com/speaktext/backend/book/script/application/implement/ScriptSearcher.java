@@ -68,4 +68,8 @@ public class ScriptSearcher {
         return scriptRepository.findByMergeRequested();
     }
 
+    public List<ScriptFragment> findScriptChunkByReadingIndex(String identificationNumber, Long readingIndex) {
+        return scriptFragmentRepository.findChunkByIdentificationNumberAndIndex(identificationNumber, readingIndex);
+    }
+
 }

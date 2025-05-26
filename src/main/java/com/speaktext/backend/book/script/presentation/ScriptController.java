@@ -2,12 +2,14 @@ package com.speaktext.backend.book.script.presentation;
 
 import com.speaktext.backend.auth.presentation.anotation.Admin;
 import com.speaktext.backend.auth.presentation.anotation.Author;
+import com.speaktext.backend.auth.presentation.anotation.Member;
 import com.speaktext.backend.book.script.application.ScriptService;
 import com.speaktext.backend.book.script.application.dto.NarrationUpdateResponse;
 import com.speaktext.backend.book.script.application.dto.ScriptMetaResponse;
 import com.speaktext.backend.book.script.application.dto.ScriptModificationResponse;
 import com.speaktext.backend.book.script.application.dto.ScriptResponse;
 import com.speaktext.backend.book.script.presentation.dto.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -99,6 +101,16 @@ public class ScriptController {
     ) {
         var scriptTargets = scriptService.getScriptGenerationTargets();
         return ResponseEntity.ok(scriptTargets);
+    }
+
+    @GetMapping("/{identificationNumber}/{readingIndex}")
+    public ResponseEntity<ScriptContentResponse> getScriptContent(
+            @Member Long memberId,
+            @PathVariable @NotNull String identificationNumber,
+            @PathVariable @NotNull Long readingIndex
+    ) {
+        ScriptContentResponse scriptContent = scriptService.getScriptContent(memberId, identificationNumber, readingIndex);
+        return ResponseEntity.ok(scriptContent);
     }
 
 }

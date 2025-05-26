@@ -5,6 +5,7 @@ import com.speaktext.backend.book.script.domain.repository.ScriptFragmentReposit
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -80,6 +81,16 @@ public class ScriptFragmentRepositoryImpl implements ScriptFragmentRepository {
     @Override
     public List<ScriptFragment> findByIdentificationNumber(String identificationNumber) {
         return scriptFragmentMongoRepository.findAllByIdentificationNumber(identificationNumber);
+    }
+
+    @Override
+    public List<ScriptFragment> findChunkByIdentificationNumberAndIndex(String identificationNumber, Long readingIndex) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("identificationNumber").is(identificationNumber));
+        query.addCriteria(Criteria.where("index").gte(readingIndex));
+        query.with(Sort.by(Sort.Direction.ASC, "index"));
+        query.limit(100);
+        return mongoTemplate.find(query, ScriptFragment.class);
     }
 
 }
