@@ -3,12 +3,10 @@ package com.speaktext.backend.book.infra.audio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -22,14 +20,10 @@ public class Mp3VoiceConcatenator implements VoiceConcatenator {
     public Path concatenate(List<File> voiceFiles, String identificationNumber) {
         try {
             Path outputDir = ensureOutputDirExists();
-            File listFile = createConcatListFile(voiceFiles);
             File outputFile = outputDir.resolve(identificationNumber + "_merged.mp3").toFile();
 
-            mergeWithFFmpeg(listFile, outputFile);
-
-            if (!listFile.delete()) {
-                System.err.println("listFile 삭제 실패: " + listFile.getAbsolutePath());
-            }
+            List<File> mergedWithSilence = insertSilenceBetween(voiceFiles);
+            mergeMp3sWithConcatFilter(mergedWithSilence, outputFile);
 
             return outputFile.toPath();
         } catch (Exception e) {
@@ -45,35 +39,73 @@ public class Mp3VoiceConcatenator implements VoiceConcatenator {
         return outputDir;
     }
 
-    private File createConcatListFile(List<File> voiceFiles) throws IOException {
-        File listFile = File.createTempFile("concat_list", ".txt");
-        File silenceFile = new File(SILENCE_FILE);
+    /**
+     * 각 MP3 사이에 silence.mp3 자동 삽입
+     */
+    private List<File> insertSilenceBetween(List<File> voiceFiles) {
+        File silence = new File(SILENCE_FILE);
+        if (!silence.exists()) {
+            throw new RuntimeException("silence.mp3 파일이 존재하지 않습니다: " + silence.getAbsolutePath());
+        }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(listFile))) {
-            for (int i = 0; i < voiceFiles.size(); i++) {
-                writer.write("file '" + voiceFiles.get(i).getAbsolutePath().replace("'", "'\\''") + "'");
-                writer.newLine();
-                if (i != voiceFiles.size() - 1) {
-                    writer.write("file '" + silenceFile.getAbsolutePath().replace("'", "'\\''") + "'");
-                    writer.newLine();
-                }
+        List<File> result = new ArrayList<>();
+        for (int i = 0; i < voiceFiles.size(); i++) {
+            result.add(voiceFiles.get(i));
+            if (i < voiceFiles.size() - 1) {
+                result.add(silence);  // 중간에만 삽입
             }
         }
-        return listFile;
+        return result;
     }
 
-    private void mergeWithFFmpeg(File listFile, File outputFile) throws Exception {
-        ProcessBuilder builder = new ProcessBuilder(
-                "ffmpeg", "-f", "concat", "-safe", "0",
-                "-i", listFile.getAbsolutePath(),
-                "-acodec", "libmp3lame", "-b:a", "192k", outputFile.getAbsolutePath()
-        );
-        builder.redirectErrorStream(true);
-        Process process = builder.start();
+    /**
+     * ffmpeg concat 필터 방식으로 MP3 병합
+     */
+    private void mergeMp3sWithConcatFilter(List<File> voiceFiles, File outputFile) throws IOException, InterruptedException {
+        List<String> command = new ArrayList<>();
+        command.add("ffmpeg");
+        command.add("-y");
+
+        // 입력 파일 등록
+        for (File file : voiceFiles) {
+            command.add("-i");
+            command.add(file.getAbsolutePath());
+        }
+
+        // 필터 복합 생성
+        StringBuilder filter = new StringBuilder();
+        for (int i = 0; i < voiceFiles.size(); i++) {
+            filter.append("[").append(i).append(":a]");
+        }
+        filter.append("concat=n=").append(voiceFiles.size()).append(":v=0:a=1[out]");
+
+        // 출력 명령 설정
+        command.add("-filter_complex");
+        command.add(filter.toString());
+        command.add("-map");
+        command.add("[out]");
+        command.add("-acodec");
+        command.add("libmp3lame");
+        command.add("-b:a");
+        command.add("192k");
+        command.add(outputFile.getAbsolutePath());
+
+        // 실행
+        ProcessBuilder pb = new ProcessBuilder(command);
+        pb.redirectErrorStream(true);
+        Process process = pb.start();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("[ffmpeg concat-filter] " + line);
+            }
+        }
 
         int exitCode = process.waitFor();
         if (exitCode != 0) {
-            throw new RuntimeException("FFmpeg 실행 실패, exitCode=" + exitCode);
+            throw new RuntimeException("FFmpeg concat 필터 실패, exitCode=" + exitCode);
         }
     }
+
 }
