@@ -22,6 +22,7 @@ import com.speaktext.backend.book.voice.domain.CumulativeVoiceDuration;
 import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
 import com.speaktext.backend.book.voice.exception.VoiceException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +41,7 @@ import static com.speaktext.backend.book.script.exception.ScriptFragmentExceptio
 import static com.speaktext.backend.book.voice.exception.VoiceExceptionType.NO_VOICE;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class VoiceService {
 
@@ -74,6 +76,7 @@ public class VoiceService {
     }
 
     @Async
+    @Transactional
     public void mergeVoice(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
@@ -86,21 +89,19 @@ public class VoiceService {
                 .toList();
 
         Path outputPath = voiceConcatenator.concatenate(voiceFiles, identificationNumber);
+        log.info("Merged voice file created at: {}", outputPath);
         CumulativeVoiceDuration cumulativeVoiceDuration = cumulativeVoiceDurationFactory.fromFragments(scriptFragments);
         String voiceLengthInfo = cumulativeVoiceDuration.getJson();
-        scriptRepository.saveMergedVoicePathAndVoiceLengthInfo(identificationNumber, outputPath.toString(), voiceLengthInfo);
-        updateScriptVoiceStatus(script);
+        log.info("Cumulative voice duration: {}", voiceLengthInfo);
+        script.markVoiceStatusAsMergedVoiceGenerated();
+        script.updateMergedVoicePathAndVoiceLengthInfo(outputPath.toString(), voiceLengthInfo);
+        scriptRepository.save(script);
     }
 
     private void validateVoiceStatus(Script script) {
         if (script.getVoiceStatus() != MERGE_REQUESTED) {
             throw new ScriptException(VOICE_STATUS_NOT_MERGE_REQUESTED);
         }
-    }
-
-    private void updateScriptVoiceStatus(Script script) {
-        script.markVoiceStatusAsMergedVoiceGenerated();
-        scriptRepository.save(script);
     }
 
     private void validateScriptFragment(List<ScriptFragment> scriptFragments) {
