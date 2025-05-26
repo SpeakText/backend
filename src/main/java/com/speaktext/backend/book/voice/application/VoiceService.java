@@ -11,7 +11,7 @@ import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.ScriptException;
 import com.speaktext.backend.book.script.exception.ScriptFragmentException;
 import com.speaktext.backend.book.voice.application.dto.MergeRequestedResponse;
-import com.speaktext.backend.book.voice.application.dto.MergedVoiceGeneratedResponse;
+import com.speaktext.backend.book.voice.application.dto.VoiceStatusResponse;
 import com.speaktext.backend.book.voice.application.dto.VoiceLengthInfoResponse;
 import com.speaktext.backend.book.voice.application.dto.VoicePathResponse;
 import com.speaktext.backend.book.voice.application.factory.CumulativeVoiceDurationFactory;
@@ -123,13 +123,13 @@ public class VoiceService {
     }
 
     @Transactional
-    public MergedVoiceGeneratedResponse isGenerated(String identificationNumber) {
+    public VoiceStatusResponse getVoiceStatus(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
 
         proceedWithVoiceGeneration(script);
 
-        return new MergedVoiceGeneratedResponse(script.isMergedVoiceGenerated());
+        return new VoiceStatusResponse(script.getVoiceStatus().toString());
     }
 
     private void proceedWithVoiceGeneration(Script script) {
