@@ -59,12 +59,12 @@ public class VoiceController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{identificationNumber}/merged-voice/generated")
-    public ResponseEntity<MergedVoiceGeneratedResponse> isVoiceGenerated(
+    @GetMapping("/{identificationNumber}/voice-status")
+    public ResponseEntity<VoiceStatusResponse> getVoiceStatus(
             @Author Long authorId,
             @PathVariable String identificationNumber
     ) {
-        MergedVoiceGeneratedResponse response = voiceService.isGenerated(identificationNumber);
+        VoiceStatusResponse response = voiceService.getVoiceStatus(identificationNumber);
         return ResponseEntity.ok(response);
     }
 

@@ -84,10 +84,6 @@ public class Script {
         return this.mergedVoicePath != null;
     }
 
-    public boolean isMergedVoiceGenerated() {
-        return this.voiceStatus == VoiceStatus.MERGED_VOICE_GENERATED;
-    }
-
     public void markVoiceStatusAsFragmentsGenerated() {
         if (this.voiceStatus != VoiceStatus.NOT_GENERATED) {
             throw new ScriptException(VOICE_STATUS_NOT_NOT_GENERATED);
