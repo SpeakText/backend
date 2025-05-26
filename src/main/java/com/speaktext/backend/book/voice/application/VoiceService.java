@@ -1,6 +1,9 @@
 package com.speaktext.backend.book.voice.application;
 
 import com.speaktext.backend.book.infra.audio.VoiceConcatenator;
+import com.speaktext.backend.book.inspection.domain.PendingBook;
+import com.speaktext.backend.book.inspection.domain.repository.PendingBookRepository;
+import com.speaktext.backend.book.inspection.exception.PendingBookException;
 import com.speaktext.backend.book.script.application.implement.CharacterSearcher;
 import com.speaktext.backend.book.script.application.implement.ScriptSearcher;
 import com.speaktext.backend.book.script.domain.Script;
@@ -28,6 +31,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
+import static com.speaktext.backend.book.inspection.exception.PendingBookExceptionType.PENDING_BOOK_NOT_FOUND;
 import static com.speaktext.backend.book.script.domain.Script.VoiceStatus.MERGE_REQUESTED;
 import static com.speaktext.backend.book.script.domain.Script.VoiceStatus.NOT_GENERATED;
 import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
@@ -47,6 +51,7 @@ public class VoiceService {
     private final VoiceStorage voiceStorage;
     private final ScriptRepository scriptRepository;
     private final CumulativeVoiceDurationFactory cumulativeVoiceDurationFactory;
+    private final PendingBookRepository pendingBookRepository;
 
     public void generateVoice(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
@@ -124,12 +129,22 @@ public class VoiceService {
 
     @Transactional
     public VoiceStatusResponse getVoiceStatus(String identificationNumber) {
+        if(isPendingBookDone(identificationNumber)) return new VoiceStatusResponse("DONE");
+
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
 
         proceedWithVoiceGeneration(script);
 
         return new VoiceStatusResponse(script.getVoiceStatus().toString());
+    }
+
+    private boolean isPendingBookDone(String identificationNumber) {
+        PendingBook pendingBook = pendingBookRepository.findByIdentificationNumber(identificationNumber);
+        if (pendingBook == null) {
+            throw new PendingBookException(PENDING_BOOK_NOT_FOUND);
+        }
+        return pendingBook.isDone();
     }
 
     private void proceedWithVoiceGeneration(Script script) {
