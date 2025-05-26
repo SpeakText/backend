@@ -30,7 +30,7 @@ public class ScriptPartitioner {
         PendingBook pendingBook = pendingBookRepository.findByIdentificationNumber(identificationNumber);
         String id = pendingBook.getIdentificationNumber();
         List<PendingBookChunk> existing = pendingBookChunkRepository.findByIdentificationNumberOrderByIndex(id);
-        if (!pendingBook.isScripted() & !existing.isEmpty()) {
+        if (pendingBook.isScripted() & !existing.isEmpty()) {
             return PendingBookChunks.of(existing.stream()
                     .map(PendingBookChunk::getChunk)
                     .toList(), id);
