@@ -83,4 +83,8 @@ public class PendingBook {
         this.inspectionStatus = InspectionStatus.SCRIPTED;
     }
 
+    public boolean isDone() {
+        return this.inspectionStatus == InspectionStatus.DONE;
+    }
+
 }
