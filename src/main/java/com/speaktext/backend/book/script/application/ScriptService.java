@@ -1,5 +1,6 @@
 package com.speaktext.backend.book.script.application;
 
+import com.speaktext.backend.book.inspection.application.PendingBookSearcher;
 import com.speaktext.backend.book.inspection.domain.PendingBook;
 import com.speaktext.backend.book.inspection.domain.repository.PendingBookRepository;
 import com.speaktext.backend.book.script.application.dto.*;
@@ -8,8 +9,10 @@ import com.speaktext.backend.book.script.application.implement.ScriptModifier;
 import com.speaktext.backend.book.script.application.implement.ScriptSearcher;
 import com.speaktext.backend.book.script.domain.Script;
 import com.speaktext.backend.book.script.domain.ScriptFragment;
+import com.speaktext.backend.book.script.exception.BookException;
 import com.speaktext.backend.book.script.exception.ScriptException;
 import com.speaktext.backend.book.script.presentation.dto.NarrationResponse;
+import com.speaktext.backend.book.script.presentation.dto.ScriptContentResponse;
 import com.speaktext.backend.book.script.presentation.dto.ScriptGenerationTargetResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.speaktext.backend.book.script.exception.BookExceptionType.NO_PUBLISHED_BOOK;
 import static com.speaktext.backend.book.script.exception.ScriptExceptionType.SCRIPT_NOT_FOUND;
 
 @Service
@@ -32,6 +36,7 @@ public class ScriptService {
     private final ScriptSearcher scriptSearcher;
     private final ScriptModifier scriptModifier;
     private final PendingBookRepository pendingBookRepository;
+    private final PendingBookSearcher pendingBookSearcher;
 
     public void announceScriptGeneration(String identificationNumber) {
         scriptInvoker.announce(identificationNumber);
@@ -83,4 +88,17 @@ public class ScriptService {
                 ))
                 .toList();
     }
+
+    /*
+     * 추후, memberId에 대해서 결제한 책인지에 대한 검증 필요.
+     */
+    public ScriptContentResponse getScriptContent(Long memberId, String identificationNumber, Long readingIndex) {
+        PendingBook pendingBook = pendingBookSearcher.findByIdentificationNumber(identificationNumber);
+        if (pendingBook.getInspectionStatus() != PendingBook.InspectionStatus.DONE) {
+            throw new BookException(NO_PUBLISHED_BOOK);
+        }
+        List<ScriptFragment> scriptContents = scriptSearcher.findScriptChunkByReadingIndex(identificationNumber, readingIndex);
+        return ScriptContentResponse.fromDomain(readingIndex, scriptContents);
+    }
+
 }

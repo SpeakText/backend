@@ -19,4 +19,6 @@ public interface ScriptFragmentRepository {
     void saveVoicePathAndLength(String identificationNumber, Long index, Long voiceLength, String string);
 
     List<ScriptFragment> findByIdentificationNumber(String identificationNumber);
+    List<ScriptFragment> findChunkByIdentificationNumberAndIndex(String identificationNumber, Long readingIndex);
+
 }

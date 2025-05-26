@@ -15,6 +15,6 @@ public interface ScriptFragmentMongoRepository extends MongoRepository<ScriptFra
     Page<ScriptFragment> findAllByIdentificationNumberOrderByIndexAsc(String identificationNumber, Pageable pageable);
     Optional<ScriptFragment> findByIdentificationNumberAndIndex(String identificationNumber, Long index);
     List<ScriptFragment> findAllByIdentificationNumberOrderByIndex(String identificationNumber);
-
     List<ScriptFragment> findAllByIdentificationNumber(String identificationNumber);
+
 }

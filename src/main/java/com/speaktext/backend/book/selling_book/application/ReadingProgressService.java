@@ -57,6 +57,6 @@ public class ReadingProgressService {
                 .orElseThrow(() -> new ReadingProgressException(READING_PROGRESS_NOT_FOUND));
 
         return ReadingProgressResponse.from(progress.getCurrentIndex());
-
     }
+
 }
