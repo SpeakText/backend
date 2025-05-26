@@ -7,12 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Component
 public class ScriptFragmentParser {
 
     private static final String NARRATION_SPEAKER_KEY = "나레이션 - narration";
+
+    private static final Pattern SPEAKER_PATTERN = Pattern.compile("^speaker-character-\\d+$");
 
     public List<ScriptFragment> parseFragments(String scriptText) {
         List<ScriptFragment> fragments = new ArrayList<>();
@@ -25,6 +28,13 @@ public class ScriptFragmentParser {
                     String speaker = line.substring(0, sepIndex).trim();
                     String utterance = line.substring(sepIndex + 1).trim().replaceAll("^\"|\"$", "");
                     boolean isNarration = speaker.equalsIgnoreCase(NARRATION_SPEAKER_KEY);
+
+                    // speaker가 narration이면 허용, 아니면 패턴 검사
+                    if (!isNarration && !SPEAKER_PATTERN.matcher(speaker).matches()) {
+                        // speaker 형식에 맞지 않으면 무시 또는 로그 출력
+                        // 예: return; 또는 continue; (여기선 forEach라서 return은 람다 탈출)
+                        return; // 무시하고 다음으로 넘어감
+                    }
 
                     fragments.add(ScriptFragment.builder()
                             .speaker(speaker)
