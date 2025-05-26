@@ -55,11 +55,13 @@ public class CharacterUpdater {
         try {
             Map<String, String> rawMap = objectMapper.readValue(characterJson, new com.fasterxml.jackson.core.type.TypeReference<>() {});
             for (Map.Entry<String, String> entry : rawMap.entrySet()) {
-                String[] parts = entry.getKey().split(" - ");
+                String[] parts = entry.getKey().split("\\s*-\\s*", 2);
                 if (parts.length == 2) {
                     String name = parts[0].trim();
                     String characterId = parts[1].trim();
                     characterList.add(new CharacterDto(name, entry.getValue(), characterId, false, CharacterVoiceType.NO_VOICE));
+                } else {
+                    log.warn("캐릭터 키 분리 실패: {}", entry.getKey());
                 }
             }
         } catch (Exception e) {

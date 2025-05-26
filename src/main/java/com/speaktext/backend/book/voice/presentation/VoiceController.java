@@ -78,7 +78,7 @@ public class VoiceController {
 
     @PostMapping("/merge")
     public ResponseEntity<Void> requestMergeVoiceGeneration(
-            @Admin Long adminId,
+            @Author Long authorId,
             @RequestBody VoiceMergeRequest request
     ) {
         voiceService.requestMergeVoiceGeneration(request.identificationNumber());
