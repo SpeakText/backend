@@ -7,7 +7,8 @@ public record PublishedBookResponse(
         Long sellingBookId,
         String title,
         String coverUrl,
-        String authorName
+        String authorName,
+        String description
 ) {
     public static PublishedBookResponse fromDomain(SellingBook sellingBook, String authorName) {
         return new PublishedBookResponse(
@@ -15,7 +16,8 @@ public record PublishedBookResponse(
                 sellingBook.getSellingBookId(),
                 sellingBook.getTitle(),
                 sellingBook.getCoverUrl(),
-                authorName
+                authorName,
+                sellingBook.getDescription()
         );
     }
 }
