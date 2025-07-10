@@ -37,3 +37,15 @@ services:
       RABBITMQ_DEFAULT_VHOST: /
       TZ: Asia/Seoul
     restart: always
+
+  speak-text-mongodb:
+    image: mongo:6.0
+    container_name: speak-text-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: speak-text-user
+      MONGO_INITDB_ROOT_PASSWORD: speak-text-1234
+      MONGO_INITDB_DATABASE: textspeakdb
+      TZ: Asia/Seoul
+    restart: always
