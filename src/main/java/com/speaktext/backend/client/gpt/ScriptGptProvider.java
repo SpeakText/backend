@@ -15,7 +15,7 @@ import java.util.List;
 public class ScriptGptProvider implements ScriptProvider {
 
     private static final String SYSTEM_PROMPT = "당신은 소설을 스크립트 형태로 재구성하는 언어 분석가입니다.";
-    private static final String MODEL_NAME = "gpt-4o";
+    private static final String MODEL_NAME = "gpt-4.1";
     private static final double TEMPERATURE = 0.1;
 
     private final ScriptGenerationGptClient client;

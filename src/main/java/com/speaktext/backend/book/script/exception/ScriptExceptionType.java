@@ -15,6 +15,7 @@ public enum ScriptExceptionType implements BaseExceptionType {
     VOICE_STATUS_NOT_NOT_GENERATED(BAD_REQUEST, "음성 상태가 NOT_GENERATED가 아닙니다."),
     VOICE_STATUS_NOT_FRAGMENTS_VOICE_GENERATED(BAD_REQUEST, "음성 상태가 FRAGMENTS_VOICE_GENERATED가 아닙니다."),
     VOICE_STATUS_NOT_MERGE_REQUESTED(BAD_REQUEST, "음성 상태가 MERGE_REQUESTED가 아닙니다."),
+    ALREADY_VOICE_GENERATED(BAD_REQUEST, "이미 음성이 생성되었습니다."),
     ;
 
     private final HttpStatus httpStatus;
