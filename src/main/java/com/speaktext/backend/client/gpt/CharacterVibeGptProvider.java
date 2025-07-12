@@ -41,7 +41,7 @@ public class CharacterVibeGptProvider {
 
     public String generateVibe(String userPrompt) {
         VibeGenerationRequest request = VibeGenerationRequest.builder()
-                .model("gpt-4o")
+                .model("gpt-4.1")
                 .temperature(0.7)
                 .messages(List.of(
                         VibeGenerationRequest.Message.builder().role("system").content(SYSTEM_PROMPT).build(),

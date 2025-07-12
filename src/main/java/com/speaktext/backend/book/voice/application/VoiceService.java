@@ -12,6 +12,7 @@ import com.speaktext.backend.book.script.domain.ScriptFragment;
 import com.speaktext.backend.book.script.domain.repository.ScriptFragmentRepository;
 import com.speaktext.backend.book.script.domain.repository.ScriptRepository;
 import com.speaktext.backend.book.script.exception.ScriptException;
+import com.speaktext.backend.book.script.exception.ScriptExceptionType;
 import com.speaktext.backend.book.script.exception.ScriptFragmentException;
 import com.speaktext.backend.book.voice.application.dto.MergeRequestedResponse;
 import com.speaktext.backend.book.voice.application.dto.VoiceStatusResponse;
@@ -21,6 +22,7 @@ import com.speaktext.backend.book.voice.application.factory.CumulativeVoiceDurat
 import com.speaktext.backend.book.voice.domain.CumulativeVoiceDuration;
 import com.speaktext.backend.book.voice.domain.repository.VoiceStorage;
 import com.speaktext.backend.book.voice.exception.VoiceException;
+import com.speaktext.backend.book.voice.exception.VoiceExceptionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -58,6 +60,10 @@ public class VoiceService {
     public void generateVoice(String identificationNumber) {
         Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
                 .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+
+        if (script.getVoiceStatus() != Script.VoiceStatus.NOT_GENERATED) {
+            throw new ScriptException(ScriptExceptionType.ALREADY_VOICE_GENERATED);
+        }
 
         List<ScriptCharacter> scriptCharacters = characterSearcher.findScriptCharactersByScript(script);
         validate(script, scriptCharacters);
@@ -179,4 +185,13 @@ public class VoiceService {
                 .toList();
     }
 
+    public Path getMergedVoice(String identificationNumber) {
+        Script script = scriptSearcher.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new ScriptException(SCRIPT_NOT_FOUND));
+
+        if (script.getMergedVoicePath() == null) {
+            throw new VoiceException(VoiceExceptionType.MERGED_VOICE_NOT_FOUND);
+        }
+        return Path.of(script.getMergedVoicePath());
+    }
 }

@@ -8,9 +8,15 @@ import com.speaktext.backend.book.voice.application.dto.*;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceDownloadRequest;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceGenerateRequest;
 import com.speaktext.backend.book.voice.presentation.dto.VoiceMergeRequest;
+import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -85,4 +91,25 @@ public class VoiceController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/preview/{identificationNumber}")
+    public ResponseEntity<Resource> previewVoice(
+            @PathVariable String identificationNumber
+    ) {
+        try {
+            Path filePath = voiceService.getMergedVoice(identificationNumber);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType("audio/mpeg"))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                throw new RuntimeException("Could not read the file!");
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Error: " + e.getMessage());
+        }
+    }
 }
+
