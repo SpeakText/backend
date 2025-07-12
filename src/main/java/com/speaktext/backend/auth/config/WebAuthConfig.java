@@ -6,6 +6,7 @@ import com.speaktext.backend.auth.presentation.interceptor.MemberArgumentResolve
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -23,6 +24,14 @@ public class WebAuthConfig implements WebMvcConfigurer {
         resolvers.add(memberArgumentResolver);
         resolvers.add(authorArgumentResolver);
         resolvers.add(adminArgumentResolver);
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")
+                .allowedOrigins("http://134.185.100.62:5173")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowCredentials(true);
     }
 
 }
