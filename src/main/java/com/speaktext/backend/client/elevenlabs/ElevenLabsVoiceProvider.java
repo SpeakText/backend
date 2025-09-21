@@ -46,13 +46,9 @@ public class ElevenLabsVoiceProvider implements CharacterVoiceProvider {
         // voice_settings 제거 - curl에서는 사용하지 않음
 
         try {
-            System.out.println("ElevenLabs 요청: voiceId=" + voiceId + ", modelId=" + modelId);
             System.out.println("요청 본문: " + request);
 
             ResponseEntity<byte[]> response = elevenLabsVoiceClient.generateSpeech(voiceId, request);
-
-            System.out.println("응답 상태: " + response.getStatusCode());
-            System.out.println("응답 헤더: " + response.getHeaders());
 
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 return new VoiceData(new ByteArrayInputStream(response.getBody()), fileName);
