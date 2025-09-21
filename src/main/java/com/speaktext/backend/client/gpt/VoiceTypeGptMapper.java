@@ -13,10 +13,11 @@ public class VoiceTypeGptMapper {
         return switch (type) {
             case NO_VOICE -> null;
             case RACHEL, BELLA, ELLI, DOMI, DOROTHY, FREYA, GIGI, GLINDA, GRACE,
-                 MATILDA, SERENA, EMILY, MIMI, NICOLE, JESSIE -> "alloy";  // 여성 기본값
+                 MATILDA, SERENA, EMILY, MIMI, NICOLE, JESSIE, ROSA_OH, SUNNY -> "alloy";  // 여성 기본값
             case ADAM, ANTONI, ARNOLD, JOSH, SAM, CALLUM, CHARLIE, CLYDE,
                  DANIEL, DAVE, ETHAN, FIN, GIOVANNI, HARRY, JAMES, JEREMY,
-                 JOSEPH, LIAM, MATTHEW, MICHAEL, PATRICK, RYAN, THOMAS -> "ballad";  // 남성 기본값
+                 JOSEPH, LIAM, MATTHEW, MICHAEL, PATRICK, RYAN, THOMAS,
+                 LEONIDAS, HARRY_KIM, HUNMIN -> "ballad";  // 남성 기본값
         };
     }
 
