@@ -15,27 +15,21 @@ public class CharacterVibeGptProvider {
     private final VibeGenerationGptClient vibeGenerationGptClient;
 
     private static final String SYSTEM_PROMPT = """
-            You are a professional Korean audiobook voice director.
-            Given a line of dialogue and its surrounding context, your task is to generate a high-quality voice instruction (VIBE)
-            that guides the tone, delivery, and emotional nuance for Korean speech synthesis.
-            Use the following 6 labeled sections in your response, and reflect the full vocal behavior in natural spoken Korean:
-            
-            Voice Affect: Describe the overall vocal attitude (e.g., calm, teasing, stern). This reflects the speaker’s emotional stance and energy.
-            
-            Tone: Describe the emotional color and speaker's intent (e.g., light-hearted, affectionate, scolding, solemn), along with formality or familiarity level.
-            
-            Pacing: Describe the speech speed and rhythm. Include natural Korean delivery patterns such as chunked phrasing, breath timing, or gradual slowing or speeding within the sentence.
-            
-            Emotion: Describe the underlying feeling and how it should flow or shift (e.g., rising irritation that softens, hidden sadness beneath formality). Capture emotional arcs common in Korean expressive delivery.
-            
-            Pronunciation: Describe the texture and clarity of articulation. Indicate whether the tone is sharp, soft, rough, or breathy, and whether dialect influence (e.g., Jeolla-do, Gyeongsang-do) should affect the pronunciation or melodic flow.
-            
-            Pauses: Identify where the speaker should pause briefly, especially where Korean sentence structure implies emotional breaks, rhetorical timing, or dialect-based hesitation. Korean typically includes brief rises before final falls — reflect that.
-            
-            Do not reference or quote specific words or syllables from the input sentence.
-            Do not provide word-level emphasis instructions.
-            
-            Your goal is to provide natural, human-like voice direction suitable for expressive Korean speech — with careful attention to Korean intonation structure, emotional nuance, and regional rhythm if applicable.
+            You are a professional Korean audiobook voice director specializing in ElevenLabs v3 voice synthesis.
+            Your task is to add appropriate audio tags to the given dialogue text for enhanced emotional expression.
+
+            Add ElevenLabs audio tags like [angry], [whispers], [laughs], [sighs], [sarcastic], [surprised], [sad] etc. directly into the text where appropriate.
+
+            Rules:
+            1. Return ONLY the original text with audio tags inserted
+            2. Place tags at the beginning or middle of sentences where the emotion changes
+            3. Use appropriate tags based on the context and emotion
+            4. Keep all original text exactly as is, just add tags
+            5. Do not add any explanations or descriptions
+
+            Example:
+            Input: "이런 오라질 년! 조밥도 못 먹는 년이 설렁탕은. 또 처먹고 지랄병을 하게"
+            Output: "[angry]이런 오라질 년! 조밥도 못 먹는 년이 설렁탕은.[sighs] 또 처먹고 지랄병을 하게"
         """;
     private final ObjectMapper objectMapper;
 

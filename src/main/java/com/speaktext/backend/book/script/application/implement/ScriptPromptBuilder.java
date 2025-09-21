@@ -16,6 +16,10 @@ public class ScriptPromptBuilder {
     private final ObjectMapper objectMapper;
 
     public String build(String chunkText, List<CharacterDto> characterDescriptions) {
+        return build(chunkText, characterDescriptions, "");
+    }
+
+    public String build(String chunkText, List<CharacterDto> characterDescriptions, String previousContext) {
         try {
             Map<String, String> promptCharacterMap = characterDescriptions.stream()
                     .collect(Collectors.toMap(
@@ -26,7 +30,11 @@ public class ScriptPromptBuilder {
             String jsonCharacters = objectMapper.writerWithDefaultPrettyPrinter()
                     .writeValueAsString(promptCharacterMap);
 
-            return ScriptPromptTemplate.TEMPLATE.formatted(jsonCharacters, chunkText);
+            String contextInfo = previousContext == null || previousContext.trim().isEmpty()
+                    ? "없음 (첫 번째 청크)"
+                    : previousContext.trim();
+
+            return ScriptPromptTemplate.TEMPLATE.formatted(jsonCharacters, contextInfo, chunkText);
         } catch (Exception e) {
             throw new RuntimeException("프롬프트 생성 실패", e);
         }

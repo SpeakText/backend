@@ -55,7 +55,7 @@ public class CharacterManager {
         ScriptCharacter scriptCharacter = characterRepository.findByScriptAndCharacterKey(script, characterKey)
                 .orElseThrow(() -> new ScriptException(CHARACTER_NOT_FOUND));
         scriptCharacter.updateName(newName);
-        scriptCharacter.updateVoice(newVoice);
+        scriptCharacter.updateVoice(newVoice.getVoiceId());
         return scriptCharacter;
     }
 

@@ -9,31 +9,33 @@ public class CharacterVibePromptBuilder {
     public String build(ScriptFragment prev, ScriptFragment current, ScriptFragment next, String speaker) {
         StringBuilder prompt = new StringBuilder();
 
-        prompt.append("You are tasked with generating a VIBE instruction for a character's voice synthesis.\n\n");
+        prompt.append("Context:\n");
 
         if (prev != null) {
-            prompt.append("Previous line:\n")
+            prompt.append("Previous: ")
                     .append(prev.getSpeaker())
                     .append(": ")
                     .append(prev.getUtterance())
-                    .append("\n\n");
+                    .append("\n");
         }
 
-        prompt.append("Current line (to generate VIBE for):\n")
+        prompt.append("Current: ")
                 .append(current.getSpeaker())
                 .append(": ")
                 .append(current.getUtterance())
-                .append("\n\n");
+                .append("\n");
 
         if (next != null) {
-            prompt.append("Next line:\n")
+            prompt.append("Next: ")
                     .append(next.getSpeaker())
                     .append(": ")
                     .append(next.getUtterance())
-                    .append("\n\n");
+                    .append("\n");
         }
 
-        prompt.append(String.format("Generate a VIBE instruction for %s's current line considering the flow of the conversation.", speaker));
+        prompt.append("\nAdd audio tags to this text: \"")
+                .append(current.getUtterance())
+                .append("\"");
 
         return prompt.toString();
     }

@@ -8,17 +8,15 @@ import org.springframework.stereotype.Component;
 public class VoiceTypeGptMapper {
 
     public static String mapToEngineVoiceName(CharacterVoiceType type) {
+        // GPT TTS는 현재 사용하지 않으므로 기본값 반환
+        // ElevenLabs로 전환했으나 GPT 호환성을 위해 유지
         return switch (type) {
-            case MALE_LOW -> "ash";          // 남자 낮은 톤
-            case MALE_MID -> "ballad";       // 남자 중간 톤
-            case MALE_HIGH -> "fable";       // 남자 높은 톤
-            case MALE_UNIQUE -> "echo";      // 남자 독특한 톤
-            case FEMALE_LOW -> "nova";       // 여자 낮은 톤
-            case FEMALE_MID -> "alloy";      // 여자 중간 톤
-            case FEMALE_HIGH -> "coral";     // 여자 높은 톤
-            case FEMALE_ELDERLY -> "shimmer";// 할머니 목소리
-            case NEUTRAL_UNIQUE -> "verse";  // 중성 독특한 목소리
-            default -> throw new IllegalArgumentException("Unsupported voice profile: " + type);
+            case NO_VOICE -> null;
+            case RACHEL, BELLA, ELLI, DOMI, DOROTHY, FREYA, GIGI, GLINDA, GRACE,
+                 MATILDA, SERENA, EMILY, MIMI, NICOLE, JESSIE -> "alloy";  // 여성 기본값
+            case ADAM, ANTONI, ARNOLD, JOSH, SAM, CALLUM, CHARLIE, CLYDE,
+                 DANIEL, DAVE, ETHAN, FIN, GIOVANNI, HARRY, JAMES, JEREMY,
+                 JOSEPH, LIAM, MATTHEW, MICHAEL, PATRICK, RYAN, THOMAS -> "ballad";  // 남성 기본값
         };
     }
 

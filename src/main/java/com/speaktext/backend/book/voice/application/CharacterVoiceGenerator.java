@@ -26,7 +26,10 @@ public class CharacterVoiceGenerator {
                 1.0
         );
 
-        voiceRegisterHandler.registerVoice(identificationNumber, index, response);
+        // VoiceData가 null이면 음성 등록하지 않음 (텍스트가 비어있거나 TTS 실패한 경우)
+        if (response != null) {
+            voiceRegisterHandler.registerVoice(identificationNumber, index, response);
+        }
     }
 
 }

@@ -20,25 +20,25 @@ public class ScriptCharacter {
 
     private String characterKey;
 
-    @Enumerated(EnumType.STRING)
-    private CharacterVoiceType characterVoiceType;
+    @Column(length = 100)
+    private String voiceId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "script_id")
     private Script script;
     private boolean appearedInScript;
 
-    public ScriptCharacter(String name, String description, String characterKey, CharacterVoiceType characterVoiceType, Script script, boolean appearedInScript) {
+    public ScriptCharacter(String name, String description, String characterKey, String voiceId, Script script, boolean appearedInScript) {
         this.name = name;
         this.description = description;
         this.characterKey = characterKey;
-        this.characterVoiceType = characterVoiceType;
+        this.voiceId = voiceId;
         this.script = script;
         this.appearedInScript = appearedInScript;
     }
 
     public static ScriptCharacter init(String name, String description, String characterKey, Script script, boolean appearedInScript) {
-        return new ScriptCharacter(name, description, characterKey, CharacterVoiceType.NO_VOICE, script, appearedInScript);
+        return new ScriptCharacter(name, description, characterKey, "NO_VOICE", script, appearedInScript);
     }
 
     public void updateName(String newName) {
@@ -46,15 +46,19 @@ public class ScriptCharacter {
     }
 
 
-    public void updateVoice(CharacterVoiceType newVoice) {
-        this.characterVoiceType = newVoice;
+    public void updateVoice(String newVoiceId) {
+        this.voiceId = newVoiceId;
     }
 
     public boolean hasVoiceOrNotAppeared() {
         if (!appearedInScript) {
             return true;
         }
-        return characterVoiceType != CharacterVoiceType.NO_VOICE;
+        return voiceId != null && !voiceId.equals("NO_VOICE");
+    }
+
+    public CharacterVoiceType getCharacterVoiceType() {
+        return CharacterVoiceType.from(voiceId);
     }
 
 }

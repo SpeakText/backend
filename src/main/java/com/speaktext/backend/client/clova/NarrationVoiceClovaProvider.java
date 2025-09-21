@@ -41,6 +41,13 @@ public class NarrationVoiceClovaProvider implements NarrationVoiceProvider {
     @Override
     public VoiceData generate(String identificationNumber, Long index, String speaker, String text,
                               NarrationVoiceType voice, String fileName, double speed) {
+
+        // 텍스트가 비어있거나 공백만 있으면 null 반환 (요청하지 않음)
+        if (text == null || text.trim().isEmpty()) {
+            log.info("나레이션 텍스트가 비어있음 - 요청 생략: {}", fileName);
+            return null;
+        }
+
         String clovaVoice = VoiceTypeClovaMapper.mapToEngineVoiceName(voice);
 
         // Form 데이터 구성
@@ -88,6 +95,17 @@ public class NarrationVoiceClovaProvider implements NarrationVoiceProvider {
             return new VoiceData(inputStream, fileName);
 
         } catch (Exception e) {
+            String errorMessage = e.getMessage();
+
+            // "empty synthesized data" 또는 "TN result is empty" 오류면 null 반환
+            if (errorMessage != null &&
+                (errorMessage.contains("empty synthesized data") ||
+                 errorMessage.contains("TN result is empty") ||
+                 errorMessage.contains("text parameter check"))) {
+                log.warn("Clova TTS에서 처리할 수 없는 텍스트 - 요청 생략: {} (오류: {})", fileName, errorMessage);
+                return null;
+            }
+
             throw new RuntimeException("❌ Clova TTS 요청 중 예외 발생", e);
         }
     }
