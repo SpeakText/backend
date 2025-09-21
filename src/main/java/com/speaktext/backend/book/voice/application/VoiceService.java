@@ -95,10 +95,8 @@ public class VoiceService {
                 .toList();
 
         Path outputPath = voiceConcatenator.concatenate(voiceFiles, identificationNumber);
-        log.info("Merged voice file created at: {}", outputPath);
         CumulativeVoiceDuration cumulativeVoiceDuration = cumulativeVoiceDurationFactory.fromFragments(scriptFragments);
         String voiceLengthInfo = cumulativeVoiceDuration.getJson();
-        log.info("Cumulative voice duration: {}", voiceLengthInfo);
         script.markVoiceStatusAsMergedVoiceGenerated();
         script.updateMergedVoicePathAndVoiceLengthInfo(outputPath.toString(), voiceLengthInfo);
         scriptRepository.save(script);
