@@ -44,7 +44,14 @@ public enum CharacterVoiceType {
     MICHAEL("flq6f7yk4E4fJM5XTYuZ"),            // 남성, 깊고 카리스마 있는 음색
     PATRICK("ODq5zmih8GrVes37Dizd"),            // 남성, 활발하고 친근한 음색
     RYAN("wViXBPUzp2ZZixB1xQuM"),               // 남성, 시원하고 현대적인 음색
-    THOMAS("GBv7mTt0atIp3Br8iCZE");             // 남성, 안정되고 신뢰감 있는 음색
+    THOMAS("GBv7mTt0atIp3Br8iCZE"),             // 남성, 안정되고 신뢰감 있는 음색
+
+    // 추가 음성들
+    LEONIDAS("YKrm0N1EAM9Bw27j8kuD"),           // 남성, 슬픈 남자
+    HARRY_KIM("pb3lVZVjdFWbkhPKlelB"),          // 남성, 날티나는 남자
+    HUNMIN("MpbDJfQJUYUnp0i1QvOZ"),             // 남성, 남학생
+    ROSA_OH("sf8Bpb1IU97NI9BHSMRf"),            // 여성, 여학생
+    SUNNY("4p0HBzAAGyju0nYfNntV");              // 여성, 쓸쓸한 아내
 
     private final String voiceId;
 
